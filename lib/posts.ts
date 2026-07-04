@@ -15,6 +15,7 @@ export interface PostMeta {
   tags: string[];
   excerpt: string;
   coverImage: string;
+  draft?: boolean;
 }
 
 export interface Post extends PostMeta {

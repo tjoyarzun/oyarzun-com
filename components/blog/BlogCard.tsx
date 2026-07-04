@@ -73,6 +73,13 @@ export default function BlogCard({ post }: BlogCardProps) {
             {post.readTime} min read
           </span>
 
+          {/* Draft chip */}
+          {post.draft && (
+            <span className="text-xs font-medium rounded-full px-2.5 py-0.5 bg-gray-100 dark:bg-white/10 text-gray-400 dark:text-gray-500">
+              draft
+            </span>
+          )}
+
           {/* First 2 tags */}
           <div className="flex gap-1.5 ml-auto">
             {post.tags.slice(0, 2).map((tag) => (

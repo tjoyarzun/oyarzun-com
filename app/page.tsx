@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import HeroSection from "@/components/home/HeroSection";
-import StatsTicker from "@/components/home/StatsTicker";
 import MemoryOfDay from "@/components/home/MemoryOfDay";
 import NavGrid from "@/components/home/NavGrid";
 import CurrentlyWidget from "@/components/home/CurrentlyWidget";
@@ -28,8 +27,6 @@ export default function HomePage() {
       <HeroSection />
 
       <div className="bg-slate dark:bg-[#121110]">
-        <StatsTicker />
-
         <div className="max-w-7xl mx-auto px-4 py-16">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main column */}

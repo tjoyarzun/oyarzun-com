@@ -12,7 +12,7 @@ import {
 } from "recharts";
 interface MonthlyHiking {
   month: string;
-  miles: number;
+  hikes: number;
 }
 
 interface HikingChartProps {
@@ -27,7 +27,7 @@ export default function HikingChart({ data }: HikingChartProps) {
           <Mountain className="w-5 h-5 text-white" />
         </div>
         <h2 className="font-display text-xl font-bold text-[#1C1917] dark:text-white">
-          Hiking Miles by Month
+          Hikes per Month
         </h2>
       </div>
 
@@ -57,11 +57,11 @@ export default function HikingChart({ data }: HikingChartProps) {
               color: "#f8fafc",
             }}
             labelStyle={{ color: "#94a3b8", marginBottom: 4 }}
-            formatter={(value: number) => [`${value} mi`, "Miles"]}
+            formatter={(value: number) => [`${value}`, "Hikes"]}
           />
           <Line
             type="monotone"
-            dataKey="miles"
+            dataKey="hikes"
             stroke="#C8973E"
             strokeWidth={2}
             dot={{ fill: "#C8973E", r: 4, strokeWidth: 0 }}

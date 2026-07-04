@@ -60,7 +60,7 @@ function SectionCard({
 function Bullet({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-start gap-2 text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-      <span className="text-[#C8973E] font-bold mt-0.5 shrink-0">→</span>
+      <span className="text-gray-400 mt-0.5 shrink-0">·</span>
       <span>{children}</span>
     </div>
   );
@@ -93,25 +93,10 @@ export default function NowPage() {
           transition={{ duration: 0.4 }}
           className="mb-10"
         >
-          <p className="text-xs tracking-widest text-[#C8973E] uppercase mb-3 font-medium">
-            Status Update
-          </p>
           <h1 className="font-display text-5xl font-bold text-[#1C1917] dark:text-white leading-tight">
             What We&apos;re Up To
           </h1>
-          <p className="text-sm text-gray-400 mt-2">Updated {now.updatedAt}</p>
-          <div className="w-16 h-1 bg-[#C8973E] rounded mt-4 mb-6" />
-          <div className="flex flex-wrap gap-2">
-            <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium bg-[#D4614A]/10 text-[#D4614A] border border-[#D4614A]/20">
-              Utah 🏔️
-            </span>
-            <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium bg-[#C8973E]/10 text-[#C8973E] border border-[#C8973E]/20">
-              Data 📊
-            </span>
-            <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium bg-[#1C1917]/10 text-[#1C1917] dark:bg-white/10 dark:text-white border border-[#1C1917]/20 dark:border-white/20">
-              Family ❤️
-            </span>
-          </div>
+          <p className="text-sm text-gray-400 mt-3">Updated {now.updatedAt}</p>
         </motion.div>
 
         {/* Sections */}

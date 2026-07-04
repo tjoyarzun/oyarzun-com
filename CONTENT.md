@@ -52,9 +52,9 @@ The home page has three dynamic sections.
 
 These are the four short one-liners shown in the home page sidebar. Keep them brief — they truncate if too long.
 
-### Stats Ticker
+### Memory of the Day photo
 
-The scrolling numbers at the top of the home page (hikes, ski days, books, etc.) are pulled from the same data as the Dashboard. See the [Dashboard](#dashboard) section.
+To use a real photo, drop the image into `public/images/` in the repo and set `imageUrl` to `/images/your-filename.jpg`. See [Uploading Photos](#uploading-photos) for details.
 
 ---
 
@@ -181,15 +181,15 @@ The dashboard charts pull from several data arrays. Find each by searching the f
 
 Update `days`, `vertical` (total feet skied), and `runs` at the end of each ski season.
 
-### Monthly hiking miles (`monthlyHiking`)
+### Monthly hikes (`hikingData`)
+
+Search for `export const hikingData`. Update the `hikes` count for each month — just the number of hikes you did, no distance needed:
 
 ```ts
-{ month: "Jan", miles: 12 },
-{ month: "Feb", miles: 8 },
+{ month: "Jan", hikes: 2 },
+{ month: "Feb", hikes: 3 },
 // ... one entry per month
 ```
-
-Update the number for each month as you go.
 
 ### Books read (`books`)
 
@@ -268,6 +268,17 @@ Write normally — bold, italic, code blocks, lists all work.
 | `tags` | Must be in the `["Tag One", "Tag Two"]` format. Tags appear as filter chips on the blog page. |
 | `coverImage` | Any public image URL, or `/photos/your-image.jpg` from `public/photos/` |
 
+### Adding a real cover image to a post
+
+By default posts use placeholder images. To use a real photo:
+
+1. Drop the image into `public/images/` in the repo (see [Uploading Photos](#uploading-photos)).
+2. In the post's `.mdx` file, update the `coverImage` frontmatter field:
+   ```
+   coverImage: "/images/your-photo.jpg"
+   ```
+3. In `lib/data.ts`, find the matching entry in `export const blogPosts` (search by slug) and update its `coverImage` field to the same path. Both need to match or the home page preview and the post page will show different images.
+
 ### Editing an existing post
 
 Open the `.mdx` file in `content/posts/` and edit directly. Both the frontmatter fields and the body text are editable.
@@ -338,8 +349,11 @@ This single file drives both the **Currently widget on the home page** and the f
 
 For any section where you want to use a real photo instead of a placeholder:
 
-1. In GitHub, navigate to `public/photos/` (create the folder if it doesn't exist by uploading a file into it).
-2. Upload your image file.
-3. Reference it as `/photos/your-filename.jpg` in any `imageUrl` or `coverImage` field.
+1. In GitHub, navigate to `public/images/` in the repo.
+2. Click **Add file → Upload files** and drop your image in.
+3. Reference it as `/images/your-filename.jpg` in any `imageUrl` or `coverImage` field.
 
-Images should be under 1MB for fast load times. JPG is preferred over PNG for photos.
+**Tips:**
+- Keep images under 1MB for fast load times. JPG is preferred over PNG for photos.
+- If your photo is a HEIC (iPhone) or DNG (RAW), convert it to JPG first using the Mac Photos app (File → Export → Export 1 Photo → JPG).
+- Name files clearly: `zermatt-ski-2023.jpg` not `IMG_4821.jpg`.

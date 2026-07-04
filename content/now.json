@@ -1,31 +1,27 @@
 {
-  "updatedAt": "December 2024",
+  "updatedAt": "July 2026",
   "currently": {
-    "reading": "Designing Data-Intensive Applications",
-    "watching": "Severance Season 2",
-    "building": "Oyarzun.com",
-    "listening": "Hozier — Unreal Unearth"
+    "reading": "Do Androids Dream of Electric Sheep? by Philip K. Dick",
+    "watching": "Cape Fear on AppleTV+",
+    "building": "Oyarzun.com and a new house in Sandy",
+    "listening": "Modest Mouse"
   },
   "building": [
-    "Oyarzun.com — this very site",
-    "A personal data lakehouse on AWS with dbt + Redshift"
+    "This site with Claude Code and Vercel",
+    "Repairing a MacBook Pro screen"
   ],
   "reading": {
-    "him": "Designing Data-Intensive Applications by Martin Kleppmann",
-    "her": "The Data Warehouse Toolkit by Ralph Kimball"
+    "him": "Do Androids Dream of Electric Sheep? by Philip K. Dick",
+    "her": "The Tell: Oprah's Book Club, A Memoir"
   },
-  "watching": [
-    "Severance (Season 2) — This show is everything.",
-    "The Bear (Rewatch) — Still stressful."
-  ],
-  "listening": ["Hozier", "Lord Huron", "Khruangbin"],
+  "watching": ["Cape Fear on AppleTV+"],
+  "listening": ["Modest Mouse"],
   "utahStatus": [
-    "Ski season is HERE. Park City opening day was absolutely amazing.",
-    "Planning a spring trip to Havasupai Falls in Arizona."
+    "Building a new custom home in Dimple Dell. Foundation starts next week."
   ],
   "excitedAbout": [
-    "dbt 1.9 features dropping this month",
-    "Watching the Utah tech scene grow into something special",
-    "Our first family ski trip with the kids this February"
+    "Just got back from two weeks in Rome and Sicily, stayed at Tommy's mom's new place there",
+    "The home build is gaining real momentum",
+    "Watching this site come together"
   ]
 }

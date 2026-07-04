@@ -36,7 +36,7 @@ const stats = [
   },
   {
     icon: "🥾",
-    label: "Adventures Logged",
+    label: "Trips Logged",
     value: travelStats.adventuresLogged,
     suffix: "",
   },
@@ -113,14 +113,14 @@ export default function TravelsPage() {
             variants={fadeUp}
             className="font-display text-5xl sm:text-6xl font-bold text-white leading-tight"
           >
-            Travels & Adventures
+            Travels
           </motion.h1>
 
           <motion.p
             variants={fadeUp}
             className="text-xl sm:text-2xl font-light text-white/80"
           >
-            {travelStats.adventuresLogged} adventures across{" "}
+            {travelStats.adventuresLogged} trips across{" "}
             {travelStats.countriesVisited} countries and counting
           </motion.p>
 
@@ -128,8 +128,8 @@ export default function TravelsPage() {
             variants={fadeUp}
             className="max-w-xl mx-auto text-white/60 text-sm leading-relaxed"
           >
-            Every hike, ski day, beach, and city we have explored together —
-            from the Wasatch to the fjords of Norway.
+            Julia finds the flights, Tommy overpacks and gets us where we need
+            to be. Rough direction, good food, a beach when possible.
           </motion.p>
         </div>
       </motion.div>
@@ -173,11 +173,21 @@ export default function TravelsPage() {
         <motion.section variants={fadeUp}>
           <SectionHeading
             icon={<List size={20} />}
-            title="Adventure Log"
+            title="Trip Log"
             subtitle="The full record — sortable and filterable"
           />
           <AdventureLog adventures={adventures} />
         </motion.section>
+
+        {/* Beach aside */}
+        <motion.p
+          variants={fadeUp}
+          className="text-sm text-gray-400 dark:text-gray-500 italic border-l-2 border-gray-200 dark:border-gray-700 pl-4"
+        >
+          Tommy once gave a work presentation titled &ldquo;How Much Beach Is
+          Too Much Beach.&rdquo; The answer, per the Brazilian side of this
+          family, is that there is no such thing.
+        </motion.p>
 
         {/* Bucket List */}
         <motion.section variants={fadeUp}>

@@ -138,7 +138,7 @@ export default function AdventureLog({ adventures }: AdventureLogProps) {
           <span className="font-semibold text-gray-700 dark:text-gray-200">
             {adventures.length}
           </span>{" "}
-          adventures
+          trips
         </span>
       </div>
 

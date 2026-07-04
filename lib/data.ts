@@ -63,6 +63,7 @@ interface BlogPost {
   excerpt: string;
   coverImage: string;
   slug: string;
+  draft?: boolean;
 }
 
 interface SkiResort {
@@ -74,7 +75,7 @@ interface SkiResort {
 
 interface MonthlyHiking {
   month: string;
-  miles: number;
+  hikes: number;
 }
 
 interface Book {
@@ -212,7 +213,7 @@ export const profiles: { him: Profile; her: Profile } = {
     name: "Julia Velicev",
     title: "Senior Data Engineer",
     company: "1-800 Contacts",
-    bio: "Senior Data Engineer at 1-800 Contacts building the pipelines that power e-commerce decisions for millions of customers. I geek out on stream processing, data quality, and the art of making data pipelines boring in the best way possible. After hours I am usually on a trail, in the kitchen, or convincing Tommy we need to hike one more mountain.",
+    bio: "Senior Data Engineer at 1-800 Contacts. Brazilian, came to the US as a teenager and stayed. The kind of person who listens more than she talks and somehow always knows exactly what to say. Outside of engineering she advocates for recycling, high-density housing, and women and moms in tech. Snowboarder, swimmer, and the reason this family actually finishes hikes.",
     skills: [
       { skill: "SQL", value: 92 },
       { skill: "Python", value: 90 },
@@ -618,27 +619,29 @@ export const travelStats = {
 export const blogPosts: BlogPost[] = [
   {
     id: 1,
-    title: "Building a Personal Data Stack for Your Family",
+    title: "Our Utah Ski Resort Tier List — Fully Quantified",
     author: "both",
-    date: "2024-11-15",
-    readTime: 8,
-    tags: ["Data Engineering", "Family", "Tutorial"],
+    date: "2024-03-15",
+    readTime: 7,
+    tags: ["Utah", "Analytics", "Winter"],
     excerpt:
-      "We built a full data lakehouse for our personal life — tracking hikes, books, recipes, and family photos. Here is exactly how we did it with dbt, DuckDB, and a lot of love.",
-    coverImage: "https://picsum.photos/seed/blog1/800/450",
-    slug: "personal-data-stack-family",
+      "After 34 ski days across 8 Utah resorts, we built a scoring model weighing terrain variety, snow quality, lift lines, and vibes. The rankings might surprise you.",
+    coverImage: "https://picsum.photos/seed/blog5/800/450",
+    slug: "utah-ski-resort-tier-list",
+    draft: true,
   },
   {
     id: 2,
-    title: "Why We Moved Our Data Stack to dbt Cloud",
-    author: "him",
-    date: "2024-10-02",
-    readTime: 6,
-    tags: ["Data Engineering", "dbt", "Tools & Stack"],
+    title: "From Analyst to Data Engineer: My Career Pivot",
+    author: "her",
+    date: "2024-02-08",
+    readTime: 10,
+    tags: ["Career", "Data Engineering"],
     excerpt:
-      "After running dbt Core on a self-managed Airflow for two years, the maintenance overhead finally got to us. Here is what tipped the scales and what we learned in the migration.",
-    coverImage: "https://picsum.photos/seed/blog2/800/450",
-    slug: "moved-to-dbt-cloud",
+      "Three years ago I was writing SQL reports in Tableau. Now I architect Spark streaming pipelines processing billions of events. Here is exactly what the transition looked like, honestly.",
+    coverImage: "https://picsum.photos/seed/blog6/800/450",
+    slug: "analyst-to-data-engineer",
+    draft: true,
   },
   {
     id: 3,
@@ -651,66 +654,7 @@ export const blogPosts: BlogPost[] = [
       "We ranked 47 hikes within 90 minutes of Salt Lake City using a weighted scoring model: scenery, difficulty curve, crowd levels, trail conditions, and elevation payoff.",
     coverImage: "https://picsum.photos/seed/blog3/800/450",
     slug: "best-slc-hikes-data-ranked",
-  },
-  {
-    id: 4,
-    title: "Building a Family Dashboard with Python & Streamlit",
-    author: "her",
-    date: "2024-08-12",
-    readTime: 12,
-    tags: ["Analytics", "Python", "Family", "Tutorial"],
-    excerpt:
-      "I built a private Streamlit dashboard that pulls from Strava, Goodreads, our recipe database, and Google Photos to give us a live snapshot of our family life. Here is the full stack.",
-    coverImage: "https://picsum.photos/seed/blog4/800/450",
-    slug: "family-dashboard-streamlit",
-  },
-  {
-    id: 5,
-    title: "Our Utah Ski Resort Tier List — Fully Quantified",
-    author: "both",
-    date: "2024-03-15",
-    readTime: 7,
-    tags: ["Utah", "Analytics", "Winter"],
-    excerpt:
-      "After 34 ski days across 8 Utah resorts, we built a scoring model weighing terrain variety, snow quality, lift lines, and vibes. The rankings might surprise you.",
-    coverImage: "https://picsum.photos/seed/blog5/800/450",
-    slug: "utah-ski-resort-tier-list",
-  },
-  {
-    id: 6,
-    title: "From Analyst to Data Engineer: My Career Pivot",
-    author: "her",
-    date: "2024-02-08",
-    readTime: 10,
-    tags: ["Career", "Data Engineering"],
-    excerpt:
-      "Three years ago I was writing SQL reports in Tableau. Now I architect Spark streaming pipelines processing billions of events. Here is exactly what the transition looked like, honestly.",
-    coverImage: "https://picsum.photos/seed/blog6/800/450",
-    slug: "analyst-to-data-engineer",
-  },
-  {
-    id: 7,
-    title: "The Modern Data Stack in 2025: What We Actually Use",
-    author: "him",
-    date: "2024-01-20",
-    readTime: 8,
-    tags: ["Tools & Stack", "Data Engineering"],
-    excerpt:
-      "Every year brings a new hot tool and a graveyard of deprecated pipelines. Here is our actual current stack — what we use daily, what we tried and dropped, and what we are watching.",
-    coverImage: "https://picsum.photos/seed/blog7/800/450",
-    slug: "modern-data-stack-2025",
-  },
-  {
-    id: 8,
-    title: "Our First Year in Utah: What Nobody Tells You",
-    author: "both",
-    date: "2023-08-05",
-    readTime: 6,
-    tags: ["Utah", "Family", "Life"],
-    excerpt:
-      "We moved from the Bay Area to Salt Lake City expecting mountains. We got that, plus a tech scene, a surprisingly amazing food scene, and the most outdoor-obsessed neighbors imaginable.",
-    coverImage: "https://picsum.photos/seed/blog8/800/450",
-    slug: "first-year-utah",
+    draft: true,
   },
 ];
 
@@ -762,24 +706,17 @@ export const familyPhotos: Photo[] = Array.from({ length: 20 }, (_, i) => ({
 
 export const currentlyReading: Book[] = [
   {
-    title: "Designing Data-Intensive Applications",
-    author: "Martin Kleppmann",
-    progress: 65,
-    coverColor: "#1C1917",
-    genre: "Engineering",
-  },
-  {
-    title: "The Data Warehouse Toolkit",
-    author: "Ralph Kimball",
+    title: "Do Androids Dream of Electric Sheep?",
+    author: "Philip K. Dick",
     progress: 40,
-    coverColor: "#C8973E",
-    genre: "Data Modeling",
+    coverColor: "#1C1917",
+    genre: "Sci-Fi",
   },
   {
-    title: "Educated",
-    author: "Tara Westover",
-    progress: 100,
-    coverColor: "#D4614A",
+    title: "The Tell: Oprah's Book Club, A Memoir",
+    author: "",
+    progress: 25,
+    coverColor: "#C8973E",
     genre: "Memoir",
   },
 ];
@@ -820,18 +757,18 @@ export const skiResorts: SkiResort[] = [
 ];
 
 export const hikingData: MonthlyHiking[] = [
-  { month: "Jan", miles: 28 },
-  { month: "Feb", miles: 35 },
-  { month: "Mar", miles: 62 },
-  { month: "Apr", miles: 95 },
-  { month: "May", miles: 112 },
-  { month: "Jun", miles: 134 },
-  { month: "Jul", miles: 142 },
-  { month: "Aug", miles: 118 },
-  { month: "Sep", miles: 98 },
-  { month: "Oct", miles: 72 },
-  { month: "Nov", miles: 41 },
-  { month: "Dec", miles: 25 },
+  { month: "Jan", hikes: 2 },
+  { month: "Feb", hikes: 2 },
+  { month: "Mar", hikes: 4 },
+  { month: "Apr", hikes: 6 },
+  { month: "May", hikes: 7 },
+  { month: "Jun", hikes: 8 },
+  { month: "Jul", hikes: 9 },
+  { month: "Aug", hikes: 7 },
+  { month: "Sep", hikes: 6 },
+  { month: "Oct", hikes: 5 },
+  { month: "Nov", hikes: 3 },
+  { month: "Dec", hikes: 2 },
 ];
 
 export const bucketListItems: BucketListItem[] = [
