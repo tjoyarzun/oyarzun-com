@@ -89,11 +89,11 @@ export default function HeroSection() {
         <motion.div
           variants={childVariants}
           className="flex-shrink-0 hidden md:block"
-          style={{ rotate: -2 }}
+          style={{ rotate: "-2deg" }}
         >
           <div
             className="bg-white p-2 pb-8 shadow-2xl shadow-black/40"
-            style={{ rotate: 2 }}
+            style={{ rotate: "2deg" }}
           >
             <div className="relative w-[260px] h-[340px] overflow-hidden">
               <Image
