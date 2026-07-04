@@ -75,7 +75,7 @@ export default function BooksChart() {
               color: "#f8fafc",
             }}
             labelStyle={{ color: "#94a3b8", marginBottom: 4 }}
-            formatter={(value: number) => [`${value} books`, "Books Read"]}
+            formatter={(value) => [`${value ?? ""} books`, "Books Read"]}
           />
           <Area
             type="monotone"

@@ -63,7 +63,7 @@ export default function SkiChart({ resorts }: SkiChartProps) {
               color: "#f8fafc",
             }}
             labelStyle={{ color: "#94a3b8", marginBottom: 4 }}
-            formatter={(value: number) => [`${value} days`, "Ski Days"]}
+            formatter={(value) => [`${value ?? ""} days`, "Ski Days"]}
           />
           <Bar dataKey="days" fill="#D4614A" radius={[4, 4, 0, 0]} />
         </BarChart>

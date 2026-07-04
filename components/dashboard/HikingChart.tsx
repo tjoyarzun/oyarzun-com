@@ -57,7 +57,7 @@ export default function HikingChart({ data }: HikingChartProps) {
               color: "#f8fafc",
             }}
             labelStyle={{ color: "#94a3b8", marginBottom: 4 }}
-            formatter={(value: number) => [`${value}`, "Hikes"]}
+            formatter={(value) => [`${value ?? ""}`, "Hikes"]}
           />
           <Line
             type="monotone"

@@ -57,7 +57,7 @@ export default function SkillRadar({ skills, color }: SkillRadarProps) {
               borderRadius: "8px",
               fontSize: "12px",
             }}
-            formatter={(value: number) => [`${value}%`, "Proficiency"]}
+            formatter={(value) => [`${value ?? ""}%`, "Proficiency"]}
           />
         </RadarChart>
       </ResponsiveContainer>
