@@ -1,0 +1,68 @@
+---
+title: "Building a Personal Data Stack for Your Family"
+author: "both"
+date: "2024-11-15"
+readTime: 8
+tags: ["Data Engineering", "Family", "Tutorial"]
+excerpt: "We built a full data lakehouse for our personal life — tracking hikes, books, recipes, and family photos. Here is exactly how we did it with dbt, DuckDB, and a lot of love."
+coverImage: "https://picsum.photos/seed/blog1/800/450"
+---
+
+We are both data engineers by trade. So naturally, when we moved to Utah and started building a life together, the first thing we did was build a data pipeline for it.
+
+Not kidding.
+
+## The Problem With Tracking Your Life in Spreadsheets
+
+For years we kept a Google Sheet for hikes, another for books, a third for recipes. Julia tracked our ski days in Notion. I had a half-finished Airtable base for trip planning. None of it talked to each other, and none of it was actually fun to look at.
+
+We wanted a single place to answer questions like:
+- How many miles did we hike this year vs. last year?
+- Which ski resort gave us the best powder-to-crowd ratio?
+- How many books did we each read per quarter?
+
+## The Stack
+
+We landed on something embarrassingly simple given what we do for work:
+
+**Ingestion:** Python scripts + cron jobs pulling from Strava, Goodreads, and a few manual CSV uploads
+
+**Storage:** DuckDB as our local analytical engine (seriously underrated for personal projects)
+
+**Transformation:** dbt running locally — because old habits die hard
+
+**Visualization:** Streamlit for the family dashboard, plus this website
+
+**Orchestration:** A `Makefile`. Yes, really.
+
+## Why DuckDB
+
+We considered spinning up a Postgres instance on AWS but the monthly cost felt silly for a personal project. DuckDB runs in-process, queries Parquet files directly, and handles our data volume (a few hundred thousand rows max) in milliseconds.
+
+The killer feature: it reads from S3 directly without needing a running server. We store our Parquet files in an S3 bucket for $0.03/month and DuckDB queries them on demand.
+
+## The dbt Models
+
+We have three layers, same as we'd build at work:
+
+```
+staging/      -- raw source cleanup (strava, goodreads, manual)
+intermediate/ -- joins and business logic  
+marts/        -- final tables the dashboard reads from
+    fct_hikes
+    fct_ski_days
+    fct_books_read
+    dim_locations
+```
+
+The `fct_hikes` model joins Strava activity data with our hand-curated location tags so we can slice by national park, trail difficulty, and season.
+
+## Lessons Learned
+
+**Start with the question, not the tool.** We wasted two weekends on ingestion architecture before we had a single dashboard worth looking at. Now we add sources only when we have a specific question they'd answer.
+
+**Manual data entry is fine.** About 30% of our data is still manual CSV uploads — book ratings, recipes we want to save, family events. Automation is great but not everything needs a webhook.
+
+**Build for the dashboard you want.** We designed the dbt models backwards from the Streamlit charts we actually wanted to see. That constraint made every modeling decision easier.
+
+The whole thing takes maybe two hours a month to maintain, and it's become one of our favorite weekend project conversations.

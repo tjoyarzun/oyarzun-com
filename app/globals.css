@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy: #1c1917;
+  --teal: #c8973e;
+  --teal-dark: #8b6b2a;
+  --orange: #d4614a;
+  --sand: #f0e9da;
+  --slate: #f7f2eb;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #c8973e;
+  border-radius: 3px;
+}
+
+/* Leaflet map styles */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  border-radius: 0.75rem;
+}
+
+/* Typography utilities */
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-playfair), serif;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-playfair), serif;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}

@@ -1,0 +1,67 @@
+---
+title: "From Analyst to Data Engineer: My Career Pivot"
+author: "her"
+date: "2024-02-08"
+readTime: 10
+tags: ["Career", "Data Engineering"]
+excerpt: "Three years ago I was writing SQL reports in Tableau. Now I architect Spark streaming pipelines processing billions of events. Here is exactly what the transition looked like, honestly."
+coverImage: "https://picsum.photos/seed/blog6/800/450"
+---
+
+Three years ago my job was writing SQL, building Tableau dashboards, and answering one-off questions from stakeholders. Today I design Spark Streaming pipelines that process billions of clickstream events per hour.
+
+The transition was not linear, not quick, and not free of impostor syndrome. Here is the real version.
+
+## Why I Wanted to Switch
+
+I was good at analytics. I could write complex SQL, build clean dashboards, and translate ambiguous business questions into clear answers. But I kept running into the same ceiling: the data I needed either did not exist, was in terrible shape, or took days to arrive from an upstream team.
+
+I started resenting pipelines instead of understanding them. The moment I realized I wanted to switch was when I spent a week building a beautiful Tableau dashboard only to discover the underlying data had been wrong for months. Nobody owned it. Nobody knew.
+
+I wanted to be the person who owned it.
+
+## What I Actually Did
+
+I did not quit my job, do a bootcamp, and start over. That is not a realistic option for most people. Instead:
+
+**Year 1 — Shadowing and skilling up in place**
+
+I started sitting in on engineering standups. I asked our data engineers if I could review PRs — not to approve them, just to read and ask questions. I took the dbt Fundamentals course on my own time. I built dbt models on top of our existing warehouse for my own analytics work, which impressed exactly one person (my manager) and annoyed two others.
+
+I also started taking on hybrid tickets: analytics work that involved writing a Python script to pull data from an API, or building a dbt model from scratch rather than just querying an existing table.
+
+**Year 2 — The title change that was not a promotion**
+
+I moved to a "Data Analytics Engineer" role at the same company — lateral move, same salary, different team. This was intentional. I needed to be embedded with engineers to actually learn how they worked.
+
+The first six months were humbling. I did not know how to use git properly (I thought I did). I wrote Python that worked but that my teammates would kindly describe as "interesting." I did not understand why we needed staging areas in a data warehouse when you could just query the source directly.
+
+I learned by being wrong frequently and in a low-stakes environment.
+
+**Year 3 — Actually engineering**
+
+By the third year I was writing production Python, designing schemas, and contributing to architecture decisions. I still had gaps — distributed systems, stream processing, infrastructure — but I had enough foundation to learn those on the job.
+
+I joined 1-800 Contacts as a Senior Data Engineer. First week I was handed a Spark Streaming project. I had never written a single line of Spark.
+
+## What the Transition Actually Required
+
+**SQL is not enough, but it is the foundation.** If you do not have strong SQL instincts, get those first. Everything in data engineering sits on top of relational thinking.
+
+**Learn Python like a software engineer, not like an analyst.** Functions, classes, error handling, testing. The way analysts write Python (scripts that run top to bottom, no functions, no tests) will get you fired as an engineer.
+
+**Get comfortable with git.** Branching, rebasing, resolving conflicts. Non-negotiable.
+
+**Pick one cloud provider and go deep.** I chose AWS. Learn IAM, S3, EC2, and whichever managed services your team uses. The concepts transfer across providers but the specifics matter.
+
+**Be patient with yourself on distributed systems.** This is the part that takes time regardless of how smart you are. Spark, Kafka, and distributed storage require a different mental model than anything in analytics. Give yourself a year to actually understand it.
+
+## The Part Nobody Talks About
+
+The hardest thing was not learning technical skills. It was giving up being good at my job.
+
+When you are a competent analyst, people come to you with questions and you have answers. You are useful immediately. When you transition to engineering, you spend 18 months being the slowest person on every ticket, asking what feel like basic questions, and contributing at a fraction of your previous rate.
+
+That is normal. That is what learning looks like. The analyst identity does not transfer automatically, and the engineering identity takes time to build.
+
+Three years later: absolutely worth it. I would not go back.

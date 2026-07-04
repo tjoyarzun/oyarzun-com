@@ -1,0 +1,31 @@
+{
+  "updatedAt": "December 2024",
+  "currently": {
+    "reading": "Designing Data-Intensive Applications",
+    "watching": "Severance Season 2",
+    "building": "Oyarzun.com",
+    "listening": "Hozier — Unreal Unearth"
+  },
+  "building": [
+    "Oyarzun.com — this very site",
+    "A personal data lakehouse on AWS with dbt + Redshift"
+  ],
+  "reading": {
+    "him": "Designing Data-Intensive Applications by Martin Kleppmann",
+    "her": "The Data Warehouse Toolkit by Ralph Kimball"
+  },
+  "watching": [
+    "Severance (Season 2) — This show is everything.",
+    "The Bear (Rewatch) — Still stressful."
+  ],
+  "listening": ["Hozier", "Lord Huron", "Khruangbin"],
+  "utahStatus": [
+    "Ski season is HERE. Park City opening day was absolutely amazing.",
+    "Planning a spring trip to Havasupai Falls in Arizona."
+  ],
+  "excitedAbout": [
+    "dbt 1.9 features dropping this month",
+    "Watching the Utah tech scene grow into something special",
+    "Our first family ski trip with the kids this February"
+  ]
+}

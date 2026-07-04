@@ -1,0 +1,69 @@
+---
+title: "The Modern Data Stack in 2025: What We Actually Use"
+author: "him"
+date: "2024-01-20"
+readTime: 8
+tags: ["Tools & Stack", "Data Engineering"]
+excerpt: "Every year brings a new hot tool and a graveyard of deprecated pipelines. Here is our actual current stack — what we use daily, what we tried and dropped, and what we are watching."
+coverImage: "https://picsum.photos/seed/blog7/800/450"
+---
+
+Every six months someone publishes a "modern data stack" diagram and it looks nothing like what any real team actually runs. Here is ours — what is in production, what we tried and retired, and what we are watching.
+
+## What We Actually Use
+
+### Ingestion: Fivetran + custom Python
+
+Fivetran for the connectors that exist (Salesforce, HubSpot, Google Ads, Stripe). Python for everything else — internal APIs, flat file processing, anything Fivetran does not cover or charges too much to cover.
+
+The ratio at my current company: about 60% Fivetran, 40% Python. A few years ago that would have been 80/20 in Fivetran's favor. The connectors have gotten more expensive and the Python tooling has gotten better (shoutout to `dlt` as a Fivetran alternative worth watching).
+
+### Storage: Snowflake
+
+Snowflake remains the default for enterprise. The separation of compute and storage, the cloning for dev environments, and the ecosystem integrations justify the cost for teams above a certain size.
+
+For personal and small-team projects I use DuckDB, which is a legitimate miracle for analytical workloads that fit in memory.
+
+### Transformation: dbt Cloud
+
+Covered this in depth in my dbt Cloud post. Short version: dbt Core is great, dbt Cloud removes the maintenance overhead that kills small teams.
+
+The thing I keep coming back to: dbt's philosophy of bringing software engineering practices to analytics transforms how a team operates, not just how it builds. Version control, testing, documentation, and code review on SQL are not optional once you have lived with them.
+
+### Orchestration: dbt Cloud jobs + Airflow (via MWAA)
+
+For dbt-only workflows: dbt Cloud's native scheduler. For cross-tool orchestration (dbt + Spark + custom Python): Airflow on MWAA. The two coexist fine via the Airflow dbt operator.
+
+Dagster gets mentioned in every evaluation. We have not shipped it in production yet. The asset-first mental model is genuinely compelling for complex pipelines.
+
+### Visualization: Domo
+
+I work at Domo, so this is not exactly an unbiased opinion. But the self-serve analytics platform we built on Domo is genuinely used by executives daily, which is the actual measure of whether a BI tool is working.
+
+For technical exploration and ad-hoc analysis: Python notebooks (Jupyter + whatever cloud the company runs).
+
+### Reverse ETL: Census
+
+Getting data out of the warehouse and into operational tools (Salesforce, HubSpot, Marketo) used to be a hand-rolled Python script that broke every time the CRM changed its API. Census handles this reliably and the sync configuration is actually maintainable.
+
+## What We Tried and Dropped
+
+**dbt Metrics Layer** — Great idea, hard to operationalize in practice. Teams that do not have strong dbt governance get into trouble quickly. We use it selectively, not as the single source of truth it was marketed as.
+
+**Airbyte self-hosted** — More maintenance than it saved vs. Fivetran at our scale. Worth reconsidering for cost-sensitive teams with engineering bandwidth.
+
+**Preset (hosted Superset)** — Good tool. Lost the internal evaluation to Domo because of the self-serve capability gap.
+
+## What We Are Watching
+
+**dlt (data load tool)** — Open source Python library for building data pipelines. The ergonomics are good and the price is right (free). Could meaningfully displace Fivetran connectors for teams with Python-comfortable engineers.
+
+**DuckDB in production** — MotherDuck (managed DuckDB) is interesting for small-to-medium analytical workloads where Snowflake is overkill. We are running a proof of concept.
+
+**AI-native analytics** — Not "use ChatGPT to write your SQL." Actual AI-native workflows: LLM-generated data quality checks, anomaly detection that learns from patterns rather than static thresholds, natural language interfaces that actually work. Early innings. Worth paying attention to.
+
+## The Honest Take
+
+The modern data stack has settled. The tooling choices that were novel in 2020 (dbt, cloud warehouses, Fivetran) are now standard. The differentiation is not in tool selection anymore — it is in how well your team actually uses the tools, whether your data is trusted, and whether the business actually makes decisions from it.
+
+The best data teams I have seen are not the ones with the most sophisticated stacks. They are the ones where every stakeholder can answer their own questions.
