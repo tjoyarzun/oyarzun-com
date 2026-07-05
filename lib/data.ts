@@ -869,7 +869,7 @@ export const recentActivities = [
   },
 ];
 
-export const goalsYear = "2024";
+export const goalsYear = "2026";
 
 export const goals = [
   { label: "Hike Miles", current: 847, goal: 1000, pct: 84.7 },
@@ -879,16 +879,15 @@ export const goals = [
 ];
 
 export const booksPerQuarter = [
-  { quarter: "Q1 22", books: 5 },
-  { quarter: "Q2 22", books: 7 },
-  { quarter: "Q3 22", books: 6 },
-  { quarter: "Q4 22", books: 8 },
-  { quarter: "Q1 23", books: 6 },
-  { quarter: "Q2 23", books: 8 },
-  { quarter: "Q3 23", books: 9 },
-  { quarter: "Q4 23", books: 7 },
-  { quarter: "Q1 24", books: 7 },
-  { quarter: "Q2 24", books: 8 },
+  { quarter: "Q1 24", books: 5 },
+  { quarter: "Q2 24", books: 7 },
   { quarter: "Q3 24", books: 6 },
-  { quarter: "Q4 24", books: 3 },
+  { quarter: "Q4 24", books: 8 },
+  { quarter: "Q1 25", books: 6 },
+  { quarter: "Q2 25", books: 8 },
+  { quarter: "Q3 25", books: 9 },
+  { quarter: "Q4 25", books: 7 },
+  { quarter: "Q1 26", books: 7 },
+  { quarter: "Q2 26", books: 8 },
+  { quarter: "Q3 26", books: 1 },
 ];
