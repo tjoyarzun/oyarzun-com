@@ -875,7 +875,7 @@ export const goals = [
   { label: "Hike Miles", current: 847, goal: 1000, pct: 84.7 },
   { label: "Ski Days", current: 34, goal: 40, pct: 85 },
   { label: "Books Read", current: 24, goal: 30, pct: 80 },
-  { label: "Blog Posts", current: 23, goal: 25, pct: 92 },
+  { label: "Blog Posts", current: 3, goal: 5, pct: 60 },
 ];
 
 export const booksPerQuarter = [
