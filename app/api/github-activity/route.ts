@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export const revalidate = 86400;
+export const dynamic = "force-dynamic";
 
 const GITHUB_GRAPHQL = "https://api.github.com/graphql";
 
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
           to: to.toISOString(),
         },
       }),
-      next: { revalidate: 86400 },
+      cache: "no-store",
     });
 
     if (!res.ok) {
