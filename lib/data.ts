@@ -130,13 +130,14 @@ export const profiles: { him: Profile; her: Profile } = {
     bio: "Analytics and data leader with 12+ years building D&A organizations at consumer subscription, SaaS, and enterprise software companies. Specializes in transforming analytics teams from reporting functions into strategic partners through org design, experimentation, self-serve BI products, and AI-native workflows. Based in Sandy, UT.",
     skills: [
       { skill: "SQL", value: 95 },
-      { skill: "Python", value: 80 },
-      { skill: "dbt", value: 88 },
-      { skill: "Apache Spark", value: 72 },
-      { skill: "Airflow", value: 78 },
+      { skill: "Python", value: 75 },
+      { skill: "dbt", value: 75 },
+      { skill: "Apache Spark", value: 30 },
+      { skill: "Airflow", value: 50 },
       { skill: "Tableau/Looker", value: 82 },
       { skill: "Data Modeling", value: 90 },
       { skill: "Cloud (AWS/GCP)", value: 75 },
+      { skill: "Domo", value: 95 },
     ],
     career: [
       {
