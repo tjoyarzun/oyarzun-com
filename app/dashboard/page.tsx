@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { dashboardStats, hikingData, skiResorts, profiles } from "@/lib/data";
+import {
+  dashboardStats,
+  hikingData,
+  skiResorts,
+  profiles,
+  blogPosts,
+} from "@/lib/data";
 import StatsGrid from "@/components/dashboard/StatsGrid";
 import HikingChart from "@/components/dashboard/HikingChart";
 import SkiChart from "@/components/dashboard/SkiChart";
@@ -39,7 +45,13 @@ export default function DashboardPage() {
         </div>
 
         {/* Stats */}
-        <StatsGrid stats={{ ...dashboardStats, githubCommits: githubTotal }} />
+        <StatsGrid
+          stats={{
+            ...dashboardStats,
+            githubCommits: githubTotal,
+            blogPosts: blogPosts.length,
+          }}
+        />
 
         {/* Hiking + Ski charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
