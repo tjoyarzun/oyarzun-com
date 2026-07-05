@@ -136,8 +136,9 @@ export const profiles: { him: Profile; her: Profile } = {
       { skill: "Airflow", value: 50 },
       { skill: "Tableau/Looker", value: 82 },
       { skill: "Data Modeling", value: 90 },
-      { skill: "Cloud (AWS/GCP)", value: 75 },
+      { skill: "Cloud (Databricks/GCP)", value: 75 },
       { skill: "Domo", value: 95 },
+      { skill: "AI (Cluade/Gemini)", value: 75 },
     ],
     career: [
       {
@@ -202,14 +203,15 @@ export const profiles: { him: Profile; her: Profile } = {
     company: "SeekWell",
     bio: "Data Engineer III at SeekWell. Brazilian, came to the US as a teenager and stayed. The kind of person who listens more than she talks and somehow always knows exactly what to say. Outside of engineering she advocates for recycling, high-density housing, and women and moms in tech. Snowboarder, swimmer, and the reason this family actually finishes hikes.",
     skills: [
-      { skill: "SQL", value: 92 },
+      { skill: "SQL", value: 95 },
       { skill: "Python", value: 90 },
-      { skill: "dbt", value: 85 },
-      { skill: "Apache Spark", value: 88 },
-      { skill: "Airflow", value: 83 },
+      { skill: "dbt", value: 65 },
+      { skill: "Apache Spark", value: 85 },
+      { skill: "Airflow", value: 88 },
       { skill: "Tableau/Looker", value: 70 },
-      { skill: "Data Modeling", value: 87 },
-      { skill: "Cloud (AWS/GCP)", value: 85 },
+      { skill: "Data Modeling", value: 90 },
+      { skill: "Cloud (Databricks/GCP)", value: 95 },
+      { skill: "AI (Cluade/Gemini)", value: 70 },
     ],
     career: [
       {
