@@ -257,26 +257,11 @@ export const profiles: { him: Profile; her: Profile } = {
     ],
     projects: [
       {
-        title: "Real-Time Commerce Pipeline",
+        title: "Tech Moms — Career Journey Talk",
         description:
-          "Spark Streaming pipeline that processes 10M+ clickstream events per hour from the 1-800 Contacts website into a Delta Lake on S3 for sub-minute analytics.",
-        tags: ["Apache Spark", "Delta Lake", "Kafka", "AWS EMR", "Python"],
-        githubUrl: "https://github.com/jvelicev/rt-commerce-pipeline",
-      },
-      {
-        title: "Family Data Stack",
-        description:
-          "Personal data lakehouse using dbt + DuckDB that aggregates Strava, Goodreads, and Google Photos into a family life dashboard.",
-        tags: ["dbt", "DuckDB", "Python", "Streamlit", "Goodreads API"],
-        githubUrl: "https://github.com/jvelicev/family-data-stack",
-        liveUrl: "https://family.oyarzun.com/dashboard",
-      },
-      {
-        title: "Utah Ski Resort Analytics",
-        description:
-          "Scrapes snow reports, lift status, and conditions from 8 Utah resorts to predict powder days and crowd levels.",
-        tags: ["Python", "BeautifulSoup", "PostgreSQL", "Plotly"],
-        githubUrl: "https://github.com/jvelicev/utah-ski-analytics",
+          "Speaker at Tech Moms on navigating data engineering as a foreign-born woman with a non-traditional education and career path. On making it work without the typical CS degree or Silicon Valley on-ramp.",
+        tags: ["Speaking", "Career", "Women in Tech"],
+        githubUrl: "https://www.linkedin.com/in/julia-velicev",
       },
     ],
     github: "jvelicev",

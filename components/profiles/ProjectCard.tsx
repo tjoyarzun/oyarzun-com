@@ -59,7 +59,7 @@ export default function ProjectCard({ project, color }: ProjectCardProps) {
           className={`inline-flex items-center gap-1 text-xs font-medium transition-colors ${c.link}`}
         >
           <ExternalLink size={12} />
-          GitHub
+          {project.githubUrl.includes("github.com") ? "GitHub" : "View"}
         </a>
         {project.liveUrl && (
           <a
