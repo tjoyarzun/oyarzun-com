@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 
 interface GitHubHeatmapProps {
   username: string;
@@ -23,7 +23,7 @@ const MONTHS = [
 const WEEKS = 52;
 const DAYS_PER_WEEK = 7;
 
-// Seeded PRNG (LCG) — same username → same grid on server and client
+// Seeded PRNG fallback — same username → same grid on every render
 function seededRng(seed: number) {
   let s = seed;
   return () => {
@@ -51,7 +51,6 @@ function generateMockContributions(username: string): number[] {
       const burst = isBurstWeek ? 0.3 : 0;
       const rand = rng();
       const prob = base + burst;
-
       let level = 0;
       if (rand < prob * 0.3) level = 1;
       else if (rand < prob * 0.55) level = 2;
@@ -71,32 +70,49 @@ const cellColors = [
   "bg-teal",
 ];
 
-const levelLabels = ["No contributions", "1-3", "4-6", "7-9", "10+"];
+const levelLabels = ["No contributions", "1–3", "4–6", "7–9", "10+"];
 
 export default function GitHubHeatmap({ username }: GitHubHeatmapProps) {
-  const contributions = useMemo(
-    () => generateMockContributions(username),
-    [username],
-  );
+  const mock = useMemo(() => generateMockContributions(username), [username]);
+  const mockTotal =
+    mock.filter((v) => v > 0).length * 2 + (strToSeed(username) % 50);
 
-  // Build per-week columns: each column is 7 days
+  const [contributions, setContributions] = useState<number[]>(mock);
+  const [total, setTotal] = useState<number>(mockTotal);
+  const [isReal, setIsReal] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/github-activity?username=${encodeURIComponent(username)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.contributions?.length) {
+          setContributions(data.contributions);
+          setTotal(data.total);
+          setIsReal(true);
+        }
+      })
+      .catch(() => {});
+  }, [username]);
+
+  // Pad or trim to exactly WEEKS * DAYS_PER_WEEK cells
+  const cells = useMemo(() => {
+    const target = WEEKS * DAYS_PER_WEEK;
+    if (contributions.length >= target) return contributions.slice(-target);
+    return [...Array(target - contributions.length).fill(0), ...contributions];
+  }, [contributions]);
+
   const weeks: number[][] = [];
   for (let w = 0; w < WEEKS; w++) {
-    weeks.push(contributions.slice(w * DAYS_PER_WEEK, (w + 1) * DAYS_PER_WEEK));
+    weeks.push(cells.slice(w * DAYS_PER_WEEK, (w + 1) * DAYS_PER_WEEK));
   }
 
-  // Month label positions — approximate: one label every ~4.33 weeks
   const monthLabels = MONTHS.map((month, i) => ({
     month,
     weekIndex: Math.round((i * WEEKS) / 12),
   }));
 
-  const totalContributions =
-    contributions.filter((v) => v > 0).length * 2 + (strToSeed(username) % 50);
-
   return (
     <div className="bg-white dark:bg-[#1C1A18] rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
-      {/* Header */}
       <div className="flex items-center justify-between mb-4 flex-wrap gap-1">
         <h3 className="font-display text-lg font-semibold text-navy dark:text-white">
           GitHub Activity
@@ -107,10 +123,14 @@ export default function GitHubHeatmap({ username }: GitHubHeatmapProps) {
       </div>
 
       <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-        {totalContributions} contributions in the last year
+        {total} contributions in the last year
+        {!isReal && (
+          <span className="ml-1 text-gray-300 dark:text-gray-600">
+            (preview)
+          </span>
+        )}
       </p>
 
-      {/* Scrollable heatmap */}
       <div className="overflow-x-auto">
         <div className="min-w-[660px]">
           {/* Month labels */}

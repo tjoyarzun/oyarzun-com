@@ -64,6 +64,20 @@ To use a real photo, drop the image into `public/images/` in the repo and set `i
 
 Search for `export const profiles` (around line 123). There are two profile objects: `him` (Tommy) and `her` (Julia).
 
+### GitHub Activity Heatmap
+
+The heatmap on Tommy's profile pulls **real contribution data** from the GitHub API when a token is configured. Without a token it shows a placeholder grid marked "(preview)".
+
+**One-time setup:**
+
+1. Go to [github.com/settings/tokens](https://github.com/settings/tokens) → **Generate new token (classic)**
+2. Give it a name (e.g. `oyarzun-com`) and select only the `read:user` scope
+3. Copy the token
+4. **Locally:** paste it into `.env.local` as `GITHUB_TOKEN=ghp_...`
+5. **On Vercel:** Settings → Environment Variables → add `GITHUB_TOKEN` with the same value
+
+The heatmap refreshes every 24 hours via Next.js caching — no manual update needed. Julia's side shows the placeholder since she doesn't have a public GitHub profile linked.
+
 ### Fields you'll update most often
 
 ```ts
