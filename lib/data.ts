@@ -693,32 +693,6 @@ export const currentlyReading: Book[] = [
   },
 ];
 
-export const nowPageData = {
-  building: [
-    "Oyarzun.com — this very site",
-    "A personal data lakehouse on AWS with dbt + Redshift",
-  ],
-  reading: {
-    him: {
-      title: "Designing Data-Intensive Applications",
-      author: "Martin Kleppmann",
-    },
-    her: { title: "The Data Warehouse Toolkit", author: "Ralph Kimball" },
-  },
-  watching: ["Severance (Season 2)", "The Bear (Rewatch)"],
-  listening: ["Hozier", "Lord Huron", "Khruangbin"],
-  utahStatus: [
-    "Ski season is HERE. Park City opening day was absolutely amazing.",
-    "Planning a spring trip to Havasupai Falls in Arizona.",
-  ],
-  excitedAbout: [
-    "dbt 1.9 features dropping this month",
-    "Watching the Utah tech scene grow into something special",
-    "Our first family ski trip with the kids this February",
-  ],
-  updatedAt: "December 2024",
-};
-
 export const skiResorts: SkiResort[] = [
   { name: "Park City", days: 18, vertical: 3100, runs: 330 },
   { name: "Snowbird", days: 8, vertical: 3240, runs: 169 },
