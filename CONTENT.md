@@ -138,7 +138,7 @@ Search for `export const adventures`. Adventures can be anywhere in the world �
   lat: 40.5765,                        // latitude for the map pin
   lng: -111.8010,                      // longitude for the map pin
   date: "2025-08-15",
-  type: "hike",                        // "hike" | "ski" | "camp" | "bike"
+  type: "hike",                        // "hike" | "ski" | "camp" | "bike" | "sightseeing"
   miles: 5.2,
   elevationGain: 1800,
   difficulty: "Hard",                  // "Easy" | "Moderate" | "Hard" | "Epic"
@@ -149,6 +149,16 @@ Search for `export const adventures`. Adventures can be anywhere in the world �
 ```
 
 To find lat/lng for a location: search the place in Google Maps, right-click the pin, and copy the coordinates.
+
+### Adding a new trip type
+
+If you want to use a type not in the list above (e.g. a new category beyond hike/ski/camp/bike/sightseeing), you must update **three files** or the Vercel build will fail:
+
+1. **`lib/data.ts`** — find `type AdventureType =` near the top and add the new value to the union.
+2. **`components/travels/AdventureLog.tsx`** — find `type AdventureType =` and add the same value. Also add it to `TYPE_ICON` (the emoji map) and `TYPE_FILTERS` (the filter chip list).
+3. **`components/travels/BucketList.tsx`** — find `type AdventureType =` and add the same value. Also add it to `TYPE_ICON`.
+
+All three files keep their own copy of the type — they must stay in sync.
 
 ### Bucket List
 
