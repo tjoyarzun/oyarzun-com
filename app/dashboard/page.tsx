@@ -1,6 +1,7 @@
 "use client";
 
-import { dashboardStats, hikingData, skiResorts } from "@/lib/data";
+import { useEffect, useState } from "react";
+import { dashboardStats, hikingData, skiResorts, profiles } from "@/lib/data";
 import StatsGrid from "@/components/dashboard/StatsGrid";
 import HikingChart from "@/components/dashboard/HikingChart";
 import SkiChart from "@/components/dashboard/SkiChart";
@@ -9,6 +10,22 @@ import GoalsChart from "@/components/dashboard/GoalsChart";
 import ActivityFeed from "@/components/dashboard/ActivityFeed";
 
 export default function DashboardPage() {
+  const [githubTotal, setGithubTotal] = useState<number>(
+    dashboardStats.githubCommits,
+  );
+
+  useEffect(() => {
+    fetch(
+      `/api/github-activity?username=${encodeURIComponent(profiles.him.github)}`,
+      { cache: "no-store" },
+    )
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.total) setGithubTotal(data.total);
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <main className="bg-[#f8fafc] dark:bg-[#121110] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-12 space-y-8">
@@ -23,7 +40,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Stats */}
-        <StatsGrid stats={dashboardStats} />
+        <StatsGrid stats={{ ...dashboardStats, githubCommits: githubTotal }} />
 
         {/* Hiking + Ski charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
