@@ -1,6 +1,6 @@
 // Types
 type Difficulty = "Easy" | "Moderate" | "Hard" | "Epic";
-type AdventureType = "hike" | "ski" | "camp" | "bike";
+type AdventureType = "hike" | "ski" | "camp" | "bike" | "sightseeing";
 type Author = "him" | "her" | "both";
 
 interface Skill {
