@@ -177,22 +177,16 @@ export default function GitHubHeatmap({ username }: GitHubHeatmapProps) {
 
       <div className="overflow-x-auto">
         <div className="min-w-[660px]">
-          {/* Month labels */}
-          <div className="flex mb-1 pl-0">
+          {/* Month labels — relative container, each label absolutely placed */}
+          <div className="relative h-4 mb-1">
             {monthLabels.map(({ month, weekIndex }) => (
-              <div
+              <span
                 key={`${month}-${weekIndex}`}
-                className="absolute text-[10px] text-gray-400 dark:text-gray-500"
-                style={{
-                  marginLeft: `${weekIndex * 14}px`,
-                  position: "relative",
-                  width: 0,
-                  overflow: "visible",
-                  whiteSpace: "nowrap",
-                }}
+                className="absolute text-[10px] text-gray-400 dark:text-gray-500 whitespace-nowrap"
+                style={{ left: `${weekIndex * 14}px` }}
               >
                 {month}
-              </div>
+              </span>
             ))}
           </div>
 
