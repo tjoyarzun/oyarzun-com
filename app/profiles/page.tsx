@@ -84,10 +84,6 @@ export default function ProfilesPage() {
             </div>
 
             <div>
-              <GitHubHeatmap username={profiles.her.github} />
-            </div>
-
-            <div>
               <div className="bg-white dark:bg-[#1C1A18] rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
                 <SectionHeading>Featured Projects</SectionHeading>
                 <div className="space-y-4">
