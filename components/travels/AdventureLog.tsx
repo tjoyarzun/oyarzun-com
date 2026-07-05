@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 
 type Difficulty = "Easy" | "Moderate" | "Hard" | "Epic";
-type AdventureType = "hike" | "ski" | "camp" | "bike";
+type AdventureType = "hike" | "ski" | "camp" | "bike" | "sightseeing";
 
 interface Adventure {
   id: number;
@@ -34,6 +34,7 @@ const TYPE_FILTERS: { label: string; value: FilterType }[] = [
   { label: "⛷️ Ski", value: "ski" },
   { label: "🏕️ Camp", value: "camp" },
   { label: "🚴 Bike", value: "bike" },
+  { label: "🗺️ Sightseeing", value: "sightseeing" },
 ];
 
 const TYPE_ICON: Record<AdventureType, string> = {
@@ -41,6 +42,7 @@ const TYPE_ICON: Record<AdventureType, string> = {
   ski: "⛷️",
   camp: "🏕️",
   bike: "🚴",
+  sightseeing: "🗺️",
 };
 
 const DIFFICULTY_ORDER: Record<Difficulty, number> = {
