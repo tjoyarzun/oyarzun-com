@@ -17,7 +17,6 @@ export default function DashboardPage() {
   useEffect(() => {
     fetch(
       `/api/github-activity?username=${encodeURIComponent(profiles.him.github)}`,
-      { cache: "no-store" },
     )
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {

@@ -114,9 +114,7 @@ export default function GitHubHeatmap({ username }: GitHubHeatmapProps) {
   const [isReal, setIsReal] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/github-activity?username=${encodeURIComponent(username)}`, {
-      cache: "no-store",
-    })
+    fetch(`/api/github-activity?username=${encodeURIComponent(username)}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (data?.contributions?.length) {

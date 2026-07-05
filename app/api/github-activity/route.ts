@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400; // revalidate once per day
 
 const GITHUB_GRAPHQL = "https://api.github.com/graphql";
 
@@ -64,7 +64,6 @@ export async function GET(request: NextRequest) {
           to: to.toISOString(),
         },
       }),
-      cache: "no-store",
     });
 
     if (!res.ok) {
@@ -89,11 +88,15 @@ export async function GET(request: NextRequest) {
     );
     const dates: string[] = days.map((d: ContribDay) => d.date);
 
-    return NextResponse.json({
-      contributions,
-      dates,
-      total: calendar.totalContributions,
-    });
+    return NextResponse.json(
+      { contributions, dates, total: calendar.totalContributions },
+      {
+        headers: {
+          "Cache-Control":
+            "public, s-maxage=86400, stale-while-revalidate=86400",
+        },
+      },
+    );
   } catch {
     return NextResponse.json({ error: "Fetch failed" }, { status: 502 });
   }
