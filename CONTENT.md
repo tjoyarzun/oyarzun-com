@@ -205,15 +205,9 @@ The dashboard charts pull from several data arrays. Find each by searching the f
 
 Update `days`, `vertical` (total feet skied), and `runs` at the end of each ski season.
 
-### Monthly hikes (`hikingData`)
+### Adventures by Year (auto-aggregated)
 
-Search for `export const hikingData`. Update the `hikes` count for each month — just the number of hikes you did, no distance needed:
-
-```ts
-{ month: "Jan", hikes: 2 },
-{ month: "Feb", hikes: 3 },
-// ... one entry per month
-```
+No edits needed — this chart reads directly from the `adventures` array in the Travels section. Every time you add a new adventure entry with a `date`, this chart updates automatically.
 
 ### Books read (`books`)
 
@@ -241,14 +235,16 @@ Update each goal's `current` and `pct` as you make progress. Change `goal` to re
 
 ```ts
 export const goals = [
-  { label: "Hike Miles", current: 847, goal: 1000, pct: 84.7 },
-  { label: "Ski Days",   current: 34,  goal: 40,   pct: 85 },
-  { label: "Books Read", current: 24,  goal: 30,   pct: 80 },
-  { label: "Blog Posts", current: 23,  goal: 25,   pct: 92 },
+  { label: "Adventures", current: 0, goal: 20, pct: 0 },  // ← auto-counted, don't edit current/pct
+  { label: "Ski Days",   current: 34, goal: 40, pct: 85 },
+  { label: "Books Read", current: 24, goal: 30, pct: 80 },
+  { label: "Blog Posts", current: 3,  goal: 5,  pct: 60 },
 ];
 ```
 
-`pct` is the percentage shown on the bar — set it to `(current / goal * 100)` rounded to one decimal.
+**Adventures is auto-counted** from your logged adventures for the current year — just update `goal` (the target). The `current` and `pct` fields for Adventures are ignored; they're computed at runtime.
+
+For all other goals: update `current` as you make progress, and set `pct` to `Math.round(current / goal * 100)`.
 
 ### Books read per quarter (`booksPerQuarter`)
 
@@ -266,21 +262,16 @@ export const booksPerQuarter = [
 
 The quarter label format is `"Q# YY"` (e.g. `"Q1 25"` for January–March 2025).
 
-### Activity Feed
+### KPI Cards
 
-Search for `export const activityFeed`. These are the recent activity items in the feed:
+The 4 stat cards pull from `dashboardStats` in `lib/data.ts`:
 
-```ts
-{
-  id: 6,
-  type: "hike",
-  title: "Bells Canyon",
-  date: "2025-08-15",
-  detail: "5.2 mi · 1,800 ft gain",
-},
-```
-
-Types: `"hike"` | `"ski"` | `"book"` | `"code"` | `"travel"`
+| Card | Field | Notes |
+|---|---|---|
+| GitHub Commits | `githubCommits` | Static fallback; overridden by live API on page load |
+| Blog Posts | auto-counted | Counts entries in `blogPosts` array — no edit needed |
+| Books Read | `booksRead2024` | Update manually each year |
+| Countries Visited | `countriesVisited` | Update after each new country |
 
 ---
 

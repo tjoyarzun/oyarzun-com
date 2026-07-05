@@ -1,19 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  dashboardStats,
-  hikingData,
-  skiResorts,
-  profiles,
-  blogPosts,
-} from "@/lib/data";
+import { dashboardStats, skiResorts, profiles, blogPosts } from "@/lib/data";
 import StatsGrid from "@/components/dashboard/StatsGrid";
-import HikingChart from "@/components/dashboard/HikingChart";
+import TravelChart from "@/components/dashboard/TravelChart";
 import SkiChart from "@/components/dashboard/SkiChart";
 import BooksChart from "@/components/dashboard/BooksChart";
 import GoalsChart from "@/components/dashboard/GoalsChart";
-import ActivityFeed from "@/components/dashboard/ActivityFeed";
 
 export default function DashboardPage() {
   const [githubTotal, setGithubTotal] = useState<number>(
@@ -53,9 +46,9 @@ export default function DashboardPage() {
           }}
         />
 
-        {/* Hiking + Ski charts */}
+        {/* Travel + Ski charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <HikingChart data={hikingData} />
+          <TravelChart />
           <SkiChart resorts={skiResorts} />
         </div>
 
@@ -64,9 +57,6 @@ export default function DashboardPage() {
           <BooksChart />
           <GoalsChart />
         </div>
-
-        {/* Activity feed */}
-        <ActivityFeed />
       </div>
     </main>
   );

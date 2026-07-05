@@ -2,7 +2,22 @@
 
 import { motion } from "framer-motion";
 import { Target } from "lucide-react";
-import { goals, goalsYear } from "@/lib/data";
+import { goals, goalsYear, adventures } from "@/lib/data";
+
+const currentYear = new Date().getFullYear().toString();
+const adventuresThisYear = adventures.filter((a) =>
+  a.date.startsWith(currentYear),
+).length;
+
+const liveGoals = goals.map((g) =>
+  g.label === "Adventures"
+    ? {
+        ...g,
+        current: adventuresThisYear,
+        pct: Math.round((adventuresThisYear / g.goal) * 100),
+      }
+    : g,
+);
 
 interface GoalBarProps {
   label: string;
@@ -49,7 +64,7 @@ export default function GoalsChart() {
       </div>
 
       <div className="space-y-6">
-        {goals.map((goal, i) => (
+        {liveGoals.map((goal, i) => (
           <GoalBar key={goal.label} {...goal} index={i} />
         ))}
       </div>

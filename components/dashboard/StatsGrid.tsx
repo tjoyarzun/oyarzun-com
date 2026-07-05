@@ -1,6 +1,6 @@
 "use client";
 
-import { GitBranch, FileText, BookOpen, Camera } from "lucide-react";
+import { GitBranch, FileText, BookOpen, Globe } from "lucide-react";
 import { dashboardStats } from "@/lib/data";
 
 type DashboardStats = typeof dashboardStats;
@@ -55,10 +55,10 @@ export default function StatsGrid({ stats }: StatsGridProps) {
       label: "Books Read",
     },
     {
-      icon: <Camera className="w-5 h-5 text-white" />,
+      icon: <Globe className="w-5 h-5 text-white" />,
       iconBg: "bg-[#D4614A]",
-      value: stats.photosInLibrary.toLocaleString(),
-      label: "Photos",
+      value: stats.countriesVisited.toLocaleString(),
+      label: "Countries Visited",
     },
   ];
 

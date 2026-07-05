@@ -1,45 +1,55 @@
 "use client";
 
-import { Mountain } from "lucide-react";
+import { Map } from "lucide-react";
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-interface MonthlyHiking {
-  month: string;
-  hikes: number;
-}
+import { adventures } from "@/lib/data";
 
-interface HikingChartProps {
-  data: MonthlyHiking[];
-}
+const byYear = adventures.reduce(
+  (acc, a) => {
+    const year = a.date.slice(0, 4);
+    acc[year] = (acc[year] ?? 0) + 1;
+    return acc;
+  },
+  {} as Record<string, number>,
+);
 
-export default function HikingChart({ data }: HikingChartProps) {
+const data = Object.entries(byYear)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([year, count]) => ({ year, adventures: count }));
+
+export default function TravelChart() {
   return (
     <div className="bg-white dark:bg-[#1C1A18] p-6 rounded-2xl shadow-sm">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-9 h-9 rounded-full bg-[#C8973E] flex items-center justify-center">
-          <Mountain className="w-5 h-5 text-white" />
+        <div className="w-9 h-9 rounded-full bg-[#D4614A] flex items-center justify-center">
+          <Map className="w-5 h-5 text-white" />
         </div>
         <h2 className="font-display text-xl font-bold text-[#1C1917] dark:text-white">
-          Hikes per Month
+          Adventures by Year
         </h2>
       </div>
 
       <ResponsiveContainer width="100%" height={300}>
-        <LineChart
+        <BarChart
           data={data}
           margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="#334155"
+            vertical={false}
+          />
           <XAxis
-            dataKey="month"
-            tick={{ fill: "#94a3b8", fontSize: 12 }}
+            dataKey="year"
+            tick={{ fill: "#94a3b8", fontSize: 11 }}
             axisLine={{ stroke: "#334155" }}
             tickLine={false}
           />
@@ -47,7 +57,7 @@ export default function HikingChart({ data }: HikingChartProps) {
             tick={{ fill: "#94a3b8", fontSize: 12 }}
             axisLine={false}
             tickLine={false}
-            width={35}
+            width={30}
           />
           <Tooltip
             contentStyle={{
@@ -57,22 +67,10 @@ export default function HikingChart({ data }: HikingChartProps) {
               color: "#f8fafc",
             }}
             labelStyle={{ color: "#94a3b8", marginBottom: 4 }}
-            formatter={(value) => [`${value ?? ""}`, "Hikes"]}
+            formatter={(value) => [`${value ?? ""}`, "Adventures"]}
           />
-          <Line
-            type="monotone"
-            dataKey="hikes"
-            stroke="#C8973E"
-            strokeWidth={2}
-            dot={{ fill: "#C8973E", r: 4, strokeWidth: 0 }}
-            activeDot={{
-              r: 6,
-              fill: "#C8973E",
-              stroke: "#fff",
-              strokeWidth: 2,
-            }}
-          />
-        </LineChart>
+          <Bar dataKey="adventures" fill="#C8973E" radius={[4, 4, 0, 0]} />
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );
