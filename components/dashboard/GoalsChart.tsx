@@ -2,13 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Target } from "lucide-react";
-
-const goals = [
-  { label: "Hike Miles", current: 847, goal: 1000, pct: 84.7 },
-  { label: "Ski Days", current: 34, goal: 40, pct: 85 },
-  { label: "Books Read", current: 24, goal: 30, pct: 80 },
-  { label: "Blog Posts", current: 23, goal: 25, pct: 92 },
-];
+import { goals, goalsYear } from "@/lib/data";
 
 interface GoalBarProps {
   label: string;
@@ -50,7 +44,7 @@ export default function GoalsChart() {
           <Target className="w-5 h-5 text-white" />
         </div>
         <h2 className="font-display text-xl font-bold text-[#1C1917] dark:text-white">
-          2024 Annual Goals Progress
+          {goalsYear} Annual Goals Progress
         </h2>
       </div>
 

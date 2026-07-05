@@ -868,3 +868,27 @@ export const recentActivities = [
     duration: "5h 22m",
   },
 ];
+
+export const goalsYear = "2024";
+
+export const goals = [
+  { label: "Hike Miles", current: 847, goal: 1000, pct: 84.7 },
+  { label: "Ski Days", current: 34, goal: 40, pct: 85 },
+  { label: "Books Read", current: 24, goal: 30, pct: 80 },
+  { label: "Blog Posts", current: 23, goal: 25, pct: 92 },
+];
+
+export const booksPerQuarter = [
+  { quarter: "Q1 22", books: 5 },
+  { quarter: "Q2 22", books: 7 },
+  { quarter: "Q3 22", books: 6 },
+  { quarter: "Q4 22", books: 8 },
+  { quarter: "Q1 23", books: 6 },
+  { quarter: "Q2 23", books: 8 },
+  { quarter: "Q3 23", books: 9 },
+  { quarter: "Q4 23", books: 7 },
+  { quarter: "Q1 24", books: 7 },
+  { quarter: "Q2 24", books: 8 },
+  { quarter: "Q3 24", books: 6 },
+  { quarter: "Q4 24", books: 3 },
+];

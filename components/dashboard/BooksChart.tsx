@@ -10,21 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-
-const data = [
-  { quarter: "Q1 22", books: 5 },
-  { quarter: "Q2 22", books: 7 },
-  { quarter: "Q3 22", books: 6 },
-  { quarter: "Q4 22", books: 8 },
-  { quarter: "Q1 23", books: 6 },
-  { quarter: "Q2 23", books: 8 },
-  { quarter: "Q3 23", books: 9 },
-  { quarter: "Q4 23", books: 7 },
-  { quarter: "Q1 24", books: 7 },
-  { quarter: "Q2 24", books: 8 },
-  { quarter: "Q3 24", books: 6 },
-  { quarter: "Q4 24", books: 3 },
-];
+import { booksPerQuarter } from "@/lib/data";
 
 export default function BooksChart() {
   return (
@@ -40,7 +26,7 @@ export default function BooksChart() {
 
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart
-          data={data}
+          data={booksPerQuarter}
           margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
         >
           <defs>
