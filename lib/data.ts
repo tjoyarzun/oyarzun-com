@@ -226,45 +226,17 @@ export const profiles: { him: Profile; her: Profile } = {
       },
       {
         company: "Overstock.com",
-        title: "Manager, Data Engineering – Marketing",
-        years: "2022–2023",
+        title: "BI Developer → Manager, Data Engineering",
+        years: "2014–2023",
         description:
-          "Led a team of 6–8 ETL developers. Drove the data warehouse migration from on-premise Teradata to BigQuery, saving $1.6M/year. Introduced Kanban methodology and mentored engineers to present at technical conferences.",
-      },
-      {
-        company: "Overstock.com",
-        title: "Senior Data Engineer",
-        years: "2020–2022",
-        description:
-          "Built the company's first Cloud Functions to stream real-time data from Cloud Storage into BigQuery. Developed REST API connectors in Python, wrote shell scripts for SFTP automation, and tuned legacy SQL pipelines for performance.",
-      },
-      {
-        company: "Overstock.com",
-        title: "Data Engineer",
-        years: "2017–2020",
-        description:
-          "Built and maintained ETL pipelines using Teradata and BigQuery. Automated scheduling with Control-M.",
-      },
-      {
-        company: "Overstock.com",
-        title: "Business Intelligence Developer",
-        years: "2014–2017",
-        description:
-          "MicroStrategy specialist — built Intelligent Cubes, presented visualization best practices to executives, and mentored new BI developers.",
+          "Grew from BI Developer to managing the Marketing Data Engineering team over 8 years. Led the warehouse migration from on-premise Teradata to BigQuery, saving $1.6M/year. Built the company's first Cloud Functions for real-time streaming. Managed a team of 6–8 engineers and mentored staff to present at technical conferences.",
       },
       {
         company: "Department of Workforce Services",
-        title: "Senior Business Analyst",
-        years: "2013–2014",
+        title: "Employment Counselor → Senior Business Analyst",
+        years: "2008–2014",
         description:
-          "Built automated and ad hoc reports in IBM Cognos. Translated business requirements into dashboards and ensured accurate federal reporting.",
-      },
-      {
-        company: "Department of Workforce Services",
-        title: "Project Manager / Program Specialist",
-        years: "2010–2013",
-        description:
-          "Used Agile methodology to deliver a large Youth Services program in-house. Monitored outcomes and compliance with federal WIA regulations.",
+          "Started as an Employment Counselor and grew into project management and senior analytics roles. Built automated federal reporting in IBM Cognos and used Agile to deliver a large Youth Services program in-house.",
       },
     ],
     projects: [
