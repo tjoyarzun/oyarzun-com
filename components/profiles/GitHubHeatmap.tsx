@@ -183,7 +183,7 @@ export default function GitHubHeatmap({ username }: GitHubHeatmapProps) {
               <span
                 key={`${month}-${weekIndex}`}
                 className="absolute text-[10px] text-gray-400 dark:text-gray-500 whitespace-nowrap"
-                style={{ left: `${weekIndex * 14}px` }}
+                style={{ left: `${weekIndex * 12}px` }}
               >
                 {month}
               </span>
