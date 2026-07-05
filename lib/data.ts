@@ -178,16 +178,9 @@ export const profiles: { him: Profile; her: Profile } = {
     ],
     projects: [
       {
-        title: "Marketing Data Lakehouse",
-        description:
-          "End-to-end ELT pipeline on AWS (S3 + Redshift + dbt) powering all CMO dashboards. Processes 40M+ events per day.",
-        tags: ["dbt", "Redshift", "Airflow", "Python", "AWS"],
-        githubUrl: "https://github.com/tjoyarzun/marketing-lakehouse",
-      },
-      {
         title: "Oyarzun.com",
         description:
-          "This very site — a Next.js 14 personal/family website with Framer Motion animations, interactive Utah maps, and data dashboards.",
+          "This very site — a Next.js 14 personal/family website with Framer Motion animations, an interactive world travel map, and data dashboards.",
         tags: [
           "Next.js",
           "TypeScript",
@@ -198,13 +191,6 @@ export const profiles: { him: Profile; her: Profile } = {
         githubUrl: "https://github.com/tjoyarzun/oyarzun-com",
         liveUrl: "https://oyarzun.com",
       },
-      {
-        title: "Utah Trail Ranker",
-        description:
-          "A data-driven trail recommendation engine using Strava segments, AllTrails reviews, and crowd-sourced difficulty ratings.",
-        tags: ["Python", "FastAPI", "PostgreSQL", "React"],
-        githubUrl: "https://github.com/tjoyarzun/utah-trail-ranker",
-      },
     ],
     github: "tjoyarzun",
     linkedin: "tom-oyarzun",
@@ -212,9 +198,9 @@ export const profiles: { him: Profile; her: Profile } = {
   },
   her: {
     name: "Julia Velicev",
-    title: "Senior Data Engineer",
-    company: "1-800 Contacts",
-    bio: "Senior Data Engineer at 1-800 Contacts. Brazilian, came to the US as a teenager and stayed. The kind of person who listens more than she talks and somehow always knows exactly what to say. Outside of engineering she advocates for recycling, high-density housing, and women and moms in tech. Snowboarder, swimmer, and the reason this family actually finishes hikes.",
+    title: "Data Engineer III",
+    company: "SeekWell",
+    bio: "Data Engineer III at SeekWell. Brazilian, came to the US as a teenager and stayed. The kind of person who listens more than she talks and somehow always knows exactly what to say. Outside of engineering she advocates for recycling, high-density housing, and women and moms in tech. Snowboarder, swimmer, and the reason this family actually finishes hikes.",
     skills: [
       { skill: "SQL", value: 92 },
       { skill: "Python", value: 90 },
@@ -227,32 +213,58 @@ export const profiles: { him: Profile; her: Profile } = {
     ],
     career: [
       {
-        company: "1-800 Contacts",
+        company: "SeekWell",
+        title: "Data Engineer III",
+        years: "2025–Present",
+        description: "Full-time hybrid role based in Draper, UT.",
+      },
+      {
+        company: "Hello Eyes",
+        title: "Data Engineer III",
+        years: "2023–2025",
+        description: "Remote data engineering role for two years.",
+      },
+      {
+        company: "Overstock.com",
+        title: "Manager, Data Engineering – Marketing",
+        years: "2022–2023",
+        description:
+          "Led a team of 6–8 ETL developers. Drove the data warehouse migration from on-premise Teradata to BigQuery, saving $1.6M/year. Introduced Kanban methodology and mentored engineers to present at technical conferences.",
+      },
+      {
+        company: "Overstock.com",
         title: "Senior Data Engineer",
-        years: "2023–Present",
+        years: "2020–2022",
         description:
-          "Architecting the real-time data platform using Spark Streaming and Delta Lake on AWS.",
+          "Built the company's first Cloud Functions to stream real-time data from Cloud Storage into BigQuery. Developed REST API connectors in Python, wrote shell scripts for SFTP automation, and tuned legacy SQL pipelines for performance.",
       },
       {
-        company: "Entrata",
+        company: "Overstock.com",
         title: "Data Engineer",
-        years: "2021–2023",
+        years: "2017–2020",
         description:
-          "Built multi-tenant data pipelines for property management SaaS serving 20K+ units.",
+          "Built and maintained ETL pipelines using Teradata and BigQuery. Automated scheduling with Control-M.",
       },
       {
-        company: "Podium",
-        title: "Data Analyst",
-        years: "2019–2021",
+        company: "Overstock.com",
+        title: "Business Intelligence Developer",
+        years: "2014–2017",
         description:
-          "Customer analytics for messaging platform — churn prediction and activation modeling.",
+          "MicroStrategy specialist — built Intelligent Cubes, presented visualization best practices to executives, and mentored new BI developers.",
       },
       {
-        company: "Vivint",
-        title: "Junior Data Analyst",
-        years: "2017–2019",
+        company: "Department of Workforce Services",
+        title: "Senior Business Analyst",
+        years: "2013–2014",
         description:
-          "IoT sensor data analysis and smart home customer behavior reporting.",
+          "Built automated and ad hoc reports in IBM Cognos. Translated business requirements into dashboards and ensured accurate federal reporting.",
+      },
+      {
+        company: "Department of Workforce Services",
+        title: "Project Manager / Program Specialist",
+        years: "2010–2013",
+        description:
+          "Used Agile methodology to deliver a large Youth Services program in-house. Monitored outcomes and compliance with federal WIA regulations.",
       },
     ],
     projects: [
