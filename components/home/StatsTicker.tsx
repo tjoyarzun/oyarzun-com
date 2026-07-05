@@ -1,11 +1,19 @@
 "use client";
 
+import { dashboardStats } from "@/lib/data";
+
 const stats = [
-  { label: "Books Read", value: "24" },
-  { label: "Miles Hiked", value: "847" },
-  { label: "Ski Days", value: "34" },
-  { label: "States Visited", value: "28" },
-  { label: "GitHub Commits", value: "1,203" },
+  { label: "Books Read", value: dashboardStats.booksRead2024.toLocaleString() },
+  { label: "Miles Hiked", value: dashboardStats.milesHiked.toLocaleString() },
+  { label: "Ski Days", value: dashboardStats.skiDays.toLocaleString() },
+  {
+    label: "States Visited",
+    value: dashboardStats.statesVisited.toLocaleString(),
+  },
+  {
+    label: "GitHub Commits",
+    value: dashboardStats.githubCommits.toLocaleString(),
+  },
 ];
 
 export default function StatsTicker() {
