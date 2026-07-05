@@ -172,6 +172,9 @@ export default function AdventureLog({ adventures }: AdventureLogProps) {
                   <span className="text-sm font-medium text-gray-900 dark:text-white">
                     {adventure.location}
                   </span>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 max-w-xs">
+                    {adventure.description}
+                  </p>
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
                   <span className="inline-flex items-center gap-1.5">
@@ -224,6 +227,9 @@ export default function AdventureLog({ adventures }: AdventureLogProps) {
               </span>
               <span>{formatNights(adventure.nights)}</span>
             </div>
+            <p className="text-xs text-gray-400 dark:text-gray-500 leading-relaxed border-t border-gray-100 dark:border-gray-800 pt-2">
+              {adventure.description}
+            </p>
           </div>
         ))}
       </div>
