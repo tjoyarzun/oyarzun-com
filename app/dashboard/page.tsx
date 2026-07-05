@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { dashboardStats, skiResorts, profiles, blogPosts } from "@/lib/data";
+import {
+  dashboardStats,
+  skiResorts,
+  profiles,
+  blogPosts,
+  travelStats,
+} from "@/lib/data";
 import StatsGrid from "@/components/dashboard/StatsGrid";
 import TravelChart from "@/components/dashboard/TravelChart";
 import SkiChart from "@/components/dashboard/SkiChart";
@@ -44,6 +50,7 @@ export default function DashboardPage() {
             ...dashboardStats,
             githubCommits: githubTotal,
             blogPosts: blogPosts.length,
+            countriesVisited: travelStats.countriesVisited,
           }}
         />
 
