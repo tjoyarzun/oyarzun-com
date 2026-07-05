@@ -638,7 +638,7 @@ export const dashboardStats = {
   skiResortsVisited: 8,
   utahNationalParks: 5,
   elevationRecord: 11752,
-  githubCommits: 1203,
+  githubCommits: 0,
   milesHiked: 847,
   skiDays: 34,
   statesVisited: 28,
