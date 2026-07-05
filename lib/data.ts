@@ -693,12 +693,11 @@ export const currentlyReading: Book[] = [
 ];
 
 export const skiResorts: SkiResort[] = [
-  { name: "Park City", days: 18, vertical: 3100, runs: 330 },
-  { name: "Snowbird", days: 8, vertical: 3240, runs: 169 },
+  { name: "Snowbird", days: 18, vertical: 3100, runs: 330 },
+  { name: "Solitude", days: 8, vertical: 3240, runs: 169 },
   { name: "Alta", days: 6, vertical: 2538, runs: 119 },
-  { name: "Deer Valley", days: 4, vertical: 3000, runs: 103 },
   { name: "Brighton", days: 3, vertical: 1875, runs: 66 },
-  { name: "Sundance", days: 2, vertical: 2150, runs: 42 },
+  { name: "Park City", days: 2, vertical: 2150, runs: 42 },
 ];
 
 export const hikingData: MonthlyHiking[] = [
@@ -743,33 +742,6 @@ export const bucketListItems: BucketListItem[] = [
       "The ultimate slot canyon backpacking trip — 38 miles of otherworldly canyon walls.",
     imageUrl: "https://picsum.photos/seed/paria/400/280",
     type: "camp",
-  },
-  {
-    id: 4,
-    name: "The Wave",
-    state: "Arizona",
-    description:
-      "Lottery-only sandstone formation with swirling patterns. We have entered every year.",
-    imageUrl: "https://picsum.photos/seed/thewave/400/280",
-    type: "hike",
-  },
-  {
-    id: 5,
-    name: "White Rim Trail",
-    state: "Utah",
-    description:
-      "100-mile mountain bike route through Canyonlands. A 4-day dream trip.",
-    imageUrl: "https://picsum.photos/seed/whiterim/400/280",
-    type: "bike",
-  },
-  {
-    id: 6,
-    name: "Antelope Canyon",
-    state: "Arizona",
-    description:
-      "The most photographed slot canyon. Slot canyon light shafts in person must be incredible.",
-    imageUrl: "https://picsum.photos/seed/antelope/400/280",
-    type: "hike",
   },
 ];
 
