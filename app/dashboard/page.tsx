@@ -7,6 +7,7 @@ import TravelChart from "@/components/dashboard/TravelChart";
 import SkiChart from "@/components/dashboard/SkiChart";
 import BooksChart from "@/components/dashboard/BooksChart";
 import GoalsChart from "@/components/dashboard/GoalsChart";
+import CurrentlyReadingCard from "@/components/dashboard/CurrentlyReadingCard";
 
 export default function DashboardPage() {
   const [githubTotal, setGithubTotal] = useState<number>(
@@ -52,11 +53,14 @@ export default function DashboardPage() {
           <SkiChart resorts={skiResorts} />
         </div>
 
-        {/* Books + Goals charts */}
+        {/* Books + Currently Reading */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <BooksChart />
-          <GoalsChart />
+          <CurrentlyReadingCard />
         </div>
+
+        {/* Goals */}
+        <GoalsChart />
       </div>
     </main>
   );
