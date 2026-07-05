@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { GitBranch, FileText, BookOpen, Camera } from "lucide-react";
-import { dashboardStats, profiles } from "@/lib/data";
+import { dashboardStats } from "@/lib/data";
 
 type DashboardStats = typeof dashboardStats;
 
@@ -31,46 +30,17 @@ function StatCard({ icon, iconBg, value, label }: StatCardProps) {
   );
 }
 
-function computeStreak(contributions: number[], dates: string[]): number {
-  const today = new Date().toISOString().slice(0, 10);
-  let i = dates.length - 1;
-  // Skip today if no contributions yet — day might not be over
-  if (dates[i] === today && contributions[i] === 0) i--;
-  let streak = 0;
-  while (i >= 0 && contributions[i] > 0) {
-    streak++;
-    i--;
-  }
-  return streak;
-}
-
 interface StatsGridProps {
   stats: DashboardStats;
 }
 
 export default function StatsGrid({ stats }: StatsGridProps) {
-  const [streak, setStreak] = useState<number>(stats.githubStreak);
-
-  useEffect(() => {
-    fetch(
-      `/api/github-activity?username=${encodeURIComponent(profiles.him.github)}`,
-      { cache: "no-store" },
-    )
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data?.contributions?.length && data?.dates?.length) {
-          setStreak(computeStreak(data.contributions, data.dates));
-        }
-      })
-      .catch(() => {});
-  }, []);
-
   const cards = [
     {
       icon: <GitBranch className="w-5 h-5 text-white" />,
       iconBg: "bg-[#C8973E]",
-      value: `${streak}`,
-      label: "GitHub Streak (days)",
+      value: stats.githubCommits.toLocaleString(),
+      label: "GitHub Commits",
     },
     {
       icon: <FileText className="w-5 h-5 text-white" />,

@@ -631,7 +631,6 @@ export const blogPosts: BlogPost[] = [
 ];
 
 export const dashboardStats = {
-  githubStreak: 47,
   blogPosts: 23,
   booksRead2024: 24,
   photosInLibrary: 3847,
