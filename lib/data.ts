@@ -1,5 +1,5 @@
 // Types
-type AdventureType = "hike" | "ski" | "camp" | "bike" | "sightseeing";
+type AdventureType = "hike" | "ski" | "camp" | "bike" | "sightseeing" | "beach";
 type Author = "him" | "her" | "both";
 
 interface Skill {
@@ -442,7 +442,7 @@ export const adventures: Adventure[] = [
     lat: -23.8004,
     lng: -45.5592,
     date: "2023-01-07",
-    type: "camp",
+    type: "beach",
     who: "Family",
     nights: 10,
     emoji: "🏖️",

@@ -2,7 +2,7 @@
 
 import { Mountain } from "lucide-react";
 
-type AdventureType = "hike" | "ski" | "camp" | "bike" | "sightseeing";
+type AdventureType = "hike" | "ski" | "camp" | "bike" | "sightseeing" | "beach";
 
 interface BucketListItem {
   id: number;
@@ -23,6 +23,7 @@ const TYPE_ICON: Record<AdventureType, string> = {
   camp: "🏕️",
   bike: "🚴",
   sightseeing: "🗺️",
+  beach: "🏖️",
 };
 
 export default function BucketList({ items }: BucketListProps) {

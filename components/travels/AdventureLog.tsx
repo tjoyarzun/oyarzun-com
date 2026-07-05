@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 
-type AdventureType = "hike" | "ski" | "camp" | "bike" | "sightseeing";
+type AdventureType = "hike" | "ski" | "camp" | "bike" | "sightseeing" | "beach";
 
 interface Adventure {
   id: number;
@@ -32,6 +32,7 @@ const TYPE_FILTERS: { label: string; value: FilterType }[] = [
   { label: "🏕️ Camp", value: "camp" },
   { label: "🚴 Bike", value: "bike" },
   { label: "🗺️ Sightseeing", value: "sightseeing" },
+  { label: "🏖️ Beach", value: "beach" },
 ];
 
 const TYPE_ICON: Record<AdventureType, string> = {
@@ -40,6 +41,7 @@ const TYPE_ICON: Record<AdventureType, string> = {
   camp: "🏕️",
   bike: "🚴",
   sightseeing: "🗺️",
+  beach: "🏖️",
 };
 
 function formatNights(n: number): string {
