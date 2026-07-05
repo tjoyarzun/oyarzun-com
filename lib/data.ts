@@ -680,14 +680,14 @@ export const currentlyReading: Book[] = [
   {
     title: "Do Androids Dream of Electric Sheep?",
     author: "Philip K. Dick",
-    progress: 40,
+    progress: 25,
     coverColor: "#1C1917",
     genre: "Sci-Fi",
   },
   {
     title: "The Tell: Oprah's Book Club, A Memoir",
-    author: "",
-    progress: 25,
+    author: "Amy Griffin",
+    progress: 50,
     coverColor: "#C8973E",
     genre: "Memoir",
   },
