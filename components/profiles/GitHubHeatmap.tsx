@@ -106,10 +106,27 @@ export default function GitHubHeatmap({ username }: GitHubHeatmapProps) {
     weeks.push(cells.slice(w * DAYS_PER_WEEK, (w + 1) * DAYS_PER_WEEK));
   }
 
-  const monthLabels = MONTHS.map((month, i) => ({
-    month,
-    weekIndex: Math.round((i * WEEKS) / 12),
-  }));
+  // Compute month labels from the actual date range shown (last 52 weeks ending today)
+  const monthLabels = useMemo(() => {
+    const today = new Date();
+    const startDate = new Date(today);
+    startDate.setDate(today.getDate() - (WEEKS * DAYS_PER_WEEK - 1));
+    const labels: { month: string; weekIndex: number }[] = [];
+    let currentMonth = -1;
+    for (let i = 0; i < WEEKS * DAYS_PER_WEEK; i++) {
+      const d = new Date(startDate);
+      d.setDate(startDate.getDate() + i);
+      const m = d.getMonth();
+      if (m !== currentMonth) {
+        currentMonth = m;
+        labels.push({
+          month: MONTHS[m],
+          weekIndex: Math.floor(i / DAYS_PER_WEEK),
+        });
+      }
+    }
+    return labels;
+  }, []);
 
   return (
     <div className="bg-white dark:bg-[#1C1A18] rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
