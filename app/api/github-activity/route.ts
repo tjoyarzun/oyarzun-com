@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Cache responses for 24 hours
 export const revalidate = 86400;
 
 const GITHUB_GRAPHQL = "https://api.github.com/graphql";
 
+// Explicitly pass from/to so we always get the last 52 weeks ending today.
 const CONTRIBUTION_QUERY = `
-  query($username: String!) {
+  query($username: String!, $from: DateTime!, $to: DateTime!) {
     user(login: $username) {
-      contributionsCollection {
+      contributionsCollection(from: $from, to: $to) {
         contributionCalendar {
           totalContributions
           weeks {
@@ -45,6 +45,10 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  const to = new Date();
+  const from = new Date(to);
+  from.setFullYear(from.getFullYear() - 1);
+
   try {
     const res = await fetch(GITHUB_GRAPHQL, {
       method: "POST",
@@ -54,7 +58,11 @@ export async function GET(request: NextRequest) {
       },
       body: JSON.stringify({
         query: CONTRIBUTION_QUERY,
-        variables: { username },
+        variables: {
+          username,
+          from: from.toISOString(),
+          to: to.toISOString(),
+        },
       }),
       next: { revalidate: 86400 },
     });
@@ -71,14 +79,19 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "No data returned" }, { status: 502 });
     }
 
-    // Flatten weeks → days → levels (same shape GitHubHeatmap expects)
-    const contributions: number[] = calendar.weeks.flatMap(
-      (week: { contributionDays: { contributionCount: number }[] }) =>
-        week.contributionDays.map((day) => countToLevel(day.contributionCount)),
+    type ContribDay = { contributionCount: number; date: string };
+    type ContribWeek = { contributionDays: ContribDay[] };
+
+    // Flatten to parallel arrays so the client can compute accurate month labels
+    const days = calendar.weeks.flatMap((w: ContribWeek) => w.contributionDays);
+    const contributions: number[] = days.map((d: ContribDay) =>
+      countToLevel(d.contributionCount),
     );
+    const dates: string[] = days.map((d: ContribDay) => d.date);
 
     return NextResponse.json({
       contributions,
+      dates,
       total: calendar.totalContributions,
     });
   } catch {

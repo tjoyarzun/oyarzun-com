@@ -23,7 +23,6 @@ const MONTHS = [
 const WEEKS = 52;
 const DAYS_PER_WEEK = 7;
 
-// Seeded PRNG fallback — same username → same grid on every render
 function seededRng(seed: number) {
   let s = seed;
   return () => {
@@ -62,6 +61,38 @@ function generateMockContributions(username: string): number[] {
   return data;
 }
 
+// Build month labels from an array of ISO date strings (one per cell).
+// Each month label appears at the week column where that month first starts.
+function labelsFromDates(
+  dates: string[],
+): { month: string; weekIndex: number }[] {
+  const labels: { month: string; weekIndex: number }[] = [];
+  let currentMonth = -1;
+  for (let i = 0; i < dates.length; i++) {
+    const m = new Date(dates[i] + "T12:00:00").getMonth();
+    if (m !== currentMonth) {
+      currentMonth = m;
+      labels.push({
+        month: MONTHS[m],
+        weekIndex: Math.floor(i / DAYS_PER_WEEK),
+      });
+    }
+  }
+  return labels;
+}
+
+// Fallback: derive dates client-side when using mock data
+function mockDates(): string[] {
+  const today = new Date();
+  const result: string[] = [];
+  for (let i = WEEKS * DAYS_PER_WEEK - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    result.push(d.toISOString().slice(0, 10));
+  }
+  return result;
+}
+
 const cellColors = [
   "bg-gray-100 dark:bg-[#1C1A18]",
   "bg-teal/20",
@@ -78,6 +109,7 @@ export default function GitHubHeatmap({ username }: GitHubHeatmapProps) {
     mock.filter((v) => v > 0).length * 2 + (strToSeed(username) % 50);
 
   const [contributions, setContributions] = useState<number[]>(mock);
+  const [dates, setDates] = useState<string[]>(() => mockDates());
   const [total, setTotal] = useState<number>(mockTotal);
   const [isReal, setIsReal] = useState(false);
 
@@ -87,6 +119,7 @@ export default function GitHubHeatmap({ username }: GitHubHeatmapProps) {
       .then((data) => {
         if (data?.contributions?.length) {
           setContributions(data.contributions);
+          setDates(data.dates);
           setTotal(data.total);
           setIsReal(true);
         }
@@ -94,39 +127,31 @@ export default function GitHubHeatmap({ username }: GitHubHeatmapProps) {
       .catch(() => {});
   }, [username]);
 
-  // Pad or trim to exactly WEEKS * DAYS_PER_WEEK cells
-  const cells = useMemo(() => {
+  // Trim/pad to exactly 52 weeks, keeping dates and contributions aligned
+  const { cells, cellDates } = useMemo(() => {
     const target = WEEKS * DAYS_PER_WEEK;
-    if (contributions.length >= target) return contributions.slice(-target);
-    return [...Array(target - contributions.length).fill(0), ...contributions];
-  }, [contributions]);
-
-  const weeks: number[][] = [];
-  for (let w = 0; w < WEEKS; w++) {
-    weeks.push(cells.slice(w * DAYS_PER_WEEK, (w + 1) * DAYS_PER_WEEK));
-  }
-
-  // Compute month labels from the actual date range shown (last 52 weeks ending today)
-  const monthLabels = useMemo(() => {
-    const today = new Date();
-    const startDate = new Date(today);
-    startDate.setDate(today.getDate() - (WEEKS * DAYS_PER_WEEK - 1));
-    const labels: { month: string; weekIndex: number }[] = [];
-    let currentMonth = -1;
-    for (let i = 0; i < WEEKS * DAYS_PER_WEEK; i++) {
-      const d = new Date(startDate);
-      d.setDate(startDate.getDate() + i);
-      const m = d.getMonth();
-      if (m !== currentMonth) {
-        currentMonth = m;
-        labels.push({
-          month: MONTHS[m],
-          weekIndex: Math.floor(i / DAYS_PER_WEEK),
-        });
-      }
+    if (contributions.length >= target) {
+      return {
+        cells: contributions.slice(-target),
+        cellDates: dates.slice(-target),
+      };
     }
-    return labels;
-  }, []);
+    const pad = target - contributions.length;
+    return {
+      cells: [...Array(pad).fill(0), ...contributions],
+      cellDates: [...Array(pad).fill(""), ...dates],
+    };
+  }, [contributions, dates]);
+
+  const weeks = useMemo(() => {
+    const result: number[][] = [];
+    for (let w = 0; w < WEEKS; w++) {
+      result.push(cells.slice(w * DAYS_PER_WEEK, (w + 1) * DAYS_PER_WEEK));
+    }
+    return result;
+  }, [cells]);
+
+  const monthLabels = useMemo(() => labelsFromDates(cellDates), [cellDates]);
 
   return (
     <div className="bg-white dark:bg-[#1C1A18] rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
@@ -154,7 +179,7 @@ export default function GitHubHeatmap({ username }: GitHubHeatmapProps) {
           <div className="flex mb-1 pl-0">
             {monthLabels.map(({ month, weekIndex }) => (
               <div
-                key={month}
+                key={`${month}-${weekIndex}`}
                 className="absolute text-[10px] text-gray-400 dark:text-gray-500"
                 style={{
                   marginLeft: `${weekIndex * 14}px`,
@@ -176,7 +201,9 @@ export default function GitHubHeatmap({ username }: GitHubHeatmapProps) {
                 {week.map((level, di) => (
                   <div
                     key={di}
-                    title={`Level ${level}`}
+                    title={
+                      cellDates[wi * DAYS_PER_WEEK + di] || `Level ${level}`
+                    }
                     className={`w-2.5 h-2.5 rounded-sm ${cellColors[level]} transition-opacity hover:opacity-80`}
                   />
                 ))}
