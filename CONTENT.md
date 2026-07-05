@@ -146,16 +146,15 @@ Search for `export const adventures`. Adventures can be anywhere in the world �
 
 ```ts
 {
-  id: 10,                              // must be unique — increment from the last one
+  id: 21,                              // must be unique — increment from the last one
   name: "Bells Canyon Upper Falls",
   location: "Sandy, UT",
   lat: 40.5765,                        // latitude for the map pin
   lng: -111.8010,                      // longitude for the map pin
   date: "2025-08-15",
   type: "hike",                        // "hike" | "ski" | "camp" | "bike" | "sightseeing"
-  miles: 5.2,
-  elevationGain: 1800,
-  difficulty: "Hard",                  // "Easy" | "Moderate" | "Hard" | "Epic"
+  who: "Family",                       // "Family" | "Just Us" | "Solo"
+  nights: 0,                           // 0 = day trip; 1+ = overnight stays
   emoji: "🥾",
   description: "One sentence about the adventure.",
   imageUrl: "https://picsum.photos/seed/bells/400/300",

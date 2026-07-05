@@ -41,10 +41,10 @@ const stats = [
     suffix: "",
   },
   {
-    icon: "📈",
-    label: "Highest Summit",
-    value: travelStats.highestSummitFt.toLocaleString(),
-    suffix: " ft",
+    icon: "🌙",
+    label: "Nights Away",
+    value: travelStats.nightsAway,
+    suffix: "",
   },
 ];
 

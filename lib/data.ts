@@ -1,5 +1,4 @@
 // Types
-type Difficulty = "Easy" | "Moderate" | "Hard" | "Epic";
 type AdventureType = "hike" | "ski" | "camp" | "bike" | "sightseeing";
 type Author = "him" | "her" | "both";
 
@@ -45,9 +44,8 @@ interface Adventure {
   lng: number;
   date: string;
   type: AdventureType;
-  miles: number;
-  elevationGain: number;
-  difficulty: Difficulty;
+  who: "Family" | "Just Us" | "Solo";
+  nights: number;
   emoji: string;
   description: string;
   imageUrl: string;
@@ -264,9 +262,8 @@ export const adventures: Adventure[] = [
     lng: -112.9469,
     date: "2024-04-15",
     type: "hike",
-    miles: 5.4,
-    elevationGain: 1488,
-    difficulty: "Hard",
+    who: "Just Us",
+    nights: 0,
     emoji: "🥾",
     description:
       "The iconic chains section with breathtaking views of Zion Canyon.",
@@ -280,9 +277,8 @@ export const adventures: Adventure[] = [
     lng: -112.1871,
     date: "2023-12-28",
     type: "hike",
-    miles: 6.2,
-    elevationGain: 400,
-    difficulty: "Moderate",
+    who: "Family",
+    nights: 1,
     emoji: "❄️",
     description: "Winter wonderland through the hoodoos on snowshoes.",
     imageUrl: "https://picsum.photos/seed/bryce/400/250",
@@ -295,9 +291,8 @@ export const adventures: Adventure[] = [
     lng: -109.4993,
     date: "2023-10-12",
     type: "hike",
-    miles: 3.0,
-    elevationGain: 480,
-    difficulty: "Moderate",
+    who: "Just Us",
+    nights: 0,
     emoji: "🥾",
     description: "Golden hour at Utah's most iconic arch. Worth every step.",
     imageUrl: "https://picsum.photos/seed/arches/400/250",
@@ -310,9 +305,8 @@ export const adventures: Adventure[] = [
     lng: -111.508,
     date: "2024-01-15",
     type: "ski",
-    miles: 0,
-    elevationGain: 3100,
-    difficulty: "Hard",
+    who: "Just Us",
+    nights: 0,
     emoji: "⛷️",
     description:
       "18 days of the best snow in the world. Utah truly has the Greatest Snow on Earth.",
@@ -326,9 +320,8 @@ export const adventures: Adventure[] = [
     lng: -111.891,
     date: "2022-06-01",
     type: "hike",
-    miles: 0,
-    elevationGain: 0,
-    difficulty: "Easy",
+    who: "Family",
+    nights: 0,
     emoji: "🏠",
     description:
       "Our home in the Wasatch foothills. Best backyard in the world.",
@@ -342,9 +335,8 @@ export const adventures: Adventure[] = [
     lng: -109.5498,
     date: "2024-05-10",
     type: "bike",
-    miles: 12.0,
-    elevationGain: 1800,
-    difficulty: "Hard",
+    who: "Just Us",
+    nights: 0,
     emoji: "🚴",
     description:
       "The Slickrock Trail — 12 miles of pure sandstone riding with canyon views.",
@@ -358,9 +350,8 @@ export const adventures: Adventure[] = [
     lng: -109.8174,
     date: "2024-03-22",
     type: "camp",
-    miles: 18.5,
-    elevationGain: 1200,
-    difficulty: "Hard",
+    who: "Just Us",
+    nights: 2,
     emoji: "🏕️",
     description: "Three-day backpacking trip through the Chesler Park loop.",
     imageUrl: "https://picsum.photos/seed/canyonlands/400/250",
@@ -373,9 +364,8 @@ export const adventures: Adventure[] = [
     lng: -111.2611,
     date: "2023-09-08",
     type: "camp",
-    miles: 7.0,
-    elevationGain: 900,
-    difficulty: "Moderate",
+    who: "Family",
+    nights: 2,
     emoji: "🏕️",
     description:
       "Camping under the stars with fresh apples from the historic Fruita orchards.",
@@ -389,9 +379,8 @@ export const adventures: Adventure[] = [
     lng: -111.6447,
     date: "2023-07-22",
     type: "hike",
-    miles: 17.7,
-    elevationGain: 4580,
-    difficulty: "Epic",
+    who: "Just Us",
+    nights: 0,
     emoji: "🏔️",
     description:
       "Summit at 11,752 ft. 14 hours roundtrip. Absolutely worth it.",
@@ -405,9 +394,8 @@ export const adventures: Adventure[] = [
     lng: -111.6554,
     date: "2024-02-03",
     type: "ski",
-    miles: 0,
-    elevationGain: 3240,
-    difficulty: "Hard",
+    who: "Just Us",
+    nights: 0,
     emoji: "⛷️",
     description: "18 inches overnight. First chair at Mineral Basin. Unreal.",
     imageUrl: "https://picsum.photos/seed/snowbird/400/250",
@@ -420,9 +408,8 @@ export const adventures: Adventure[] = [
     lng: -112.9469,
     date: "2023-06-17",
     type: "hike",
-    miles: 9.4,
-    elevationGain: 334,
-    difficulty: "Moderate",
+    who: "Family",
+    nights: 0,
     emoji: "💧",
     description:
       "Wading through the Virgin River in Zion's legendary slot canyon.",
@@ -436,9 +423,8 @@ export const adventures: Adventure[] = [
     lng: -111.8335,
     date: "2024-04-28",
     type: "hike",
-    miles: 8.1,
-    elevationGain: 720,
-    difficulty: "Easy",
+    who: "Family",
+    nights: 0,
     emoji: "🥾",
     description:
       "Spring wildflowers on our favorite local trail above Salt Lake.",
@@ -452,9 +438,8 @@ export const adventures: Adventure[] = [
     lng: -111.6376,
     date: "2024-01-27",
     type: "ski",
-    miles: 0,
-    elevationGain: 2538,
-    difficulty: "Hard",
+    who: "Just Us",
+    nights: 0,
     emoji: "⛷️",
     description:
       "Pow day at Alta. Skiing-only resort means less crowds and more powder.",
@@ -468,9 +453,8 @@ export const adventures: Adventure[] = [
     lng: -110.7079,
     date: "2023-10-28",
     type: "camp",
-    miles: 4.0,
-    elevationGain: 200,
-    difficulty: "Easy",
+    who: "Family",
+    nights: 1,
     emoji: "👾",
     description:
       "Camping among the goblins. Kids loved it. Otherworldly landscape.",
@@ -484,9 +468,8 @@ export const adventures: Adventure[] = [
     lng: -111.5814,
     date: "2024-03-08",
     type: "ski",
-    miles: 0,
-    elevationGain: 1875,
-    difficulty: "Moderate",
+    who: "Just Us",
+    nights: 0,
     emoji: "⛷️",
     description:
       "Late season spring skiing at Brighton. Sunshine and corn snow.",
@@ -501,9 +484,8 @@ export const adventures: Adventure[] = [
     lng: 7.7491,
     date: "2023-02-18",
     type: "ski",
-    miles: 0,
-    elevationGain: 4921,
-    difficulty: "Epic",
+    who: "Just Us",
+    nights: 5,
     emoji: "⛷️",
     description:
       "Skiing the glacier runs above Zermatt with the Matterhorn in full view. One of the best days on snow either of us has ever had.",
@@ -518,9 +500,8 @@ export const adventures: Adventure[] = [
     lng: 6.1886,
     date: "2022-07-12",
     type: "hike",
-    miles: 5.0,
-    elevationGain: 1542,
-    difficulty: "Moderate",
+    who: "Just Us",
+    nights: 7,
     emoji: "🥾",
     description:
       "The classic Norway hike — 604 meters straight down to the Lysefjord. Worth every step.",
@@ -535,9 +516,8 @@ export const adventures: Adventure[] = [
     lng: -45.5592,
     date: "2023-01-07",
     type: "camp",
-    miles: 2.0,
-    elevationGain: 0,
-    difficulty: "Easy",
+    who: "Family",
+    nights: 10,
     emoji: "🏖️",
     description:
       "New Year's at Julia's family beach house. Caipirinha, fresh fish, and her whole family. Perfect.",
@@ -552,9 +532,8 @@ export const adventures: Adventure[] = [
     lng: 12.4922,
     date: "2022-09-03",
     type: "hike",
-    miles: 4.5,
-    elevationGain: 131,
-    difficulty: "Easy",
+    who: "Just Us",
+    nights: 4,
     emoji: "🏛️",
     description:
       "Walking the ancient city on foot. Palatine Hill at golden hour is something we'll never forget.",
@@ -569,9 +548,8 @@ export const adventures: Adventure[] = [
     lng: 9.7361,
     date: "2024-06-14",
     type: "hike",
-    miles: 7.5,
-    elevationGain: 1150,
-    difficulty: "Hard",
+    who: "Just Us",
+    nights: 3,
     emoji: "🥾",
     description:
       "Hiking the clifftop trail between the five villages. Mom's new place in Sicily made this whole Italian trip possible.",
@@ -584,7 +562,7 @@ export const travelStats = {
   skiResorts: new Set(
     adventures.filter((a) => a.type === "ski").map((a) => a.location),
   ).size,
-  highestSummitFt: Math.max(...adventures.map((a) => a.elevationGain)),
+  nightsAway: adventures.reduce((sum, a) => sum + a.nights, 0),
   countriesVisited: new Set(adventures.map((a) => a.country ?? "USA")).size,
 };
 

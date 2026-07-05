@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 
-type Difficulty = "Easy" | "Moderate" | "Hard" | "Epic";
 type AdventureType = "hike" | "ski" | "camp" | "bike" | "sightseeing";
 
 interface Adventure {
@@ -11,9 +10,8 @@ interface Adventure {
   location: string;
   date: string;
   type: AdventureType;
-  miles: number;
-  elevationGain: number;
-  difficulty: Difficulty;
+  who: "Family" | "Just Us" | "Solo";
+  nights: number;
   emoji: string;
   description: string;
   imageUrl: string;
@@ -24,8 +22,7 @@ interface AdventureLogProps {
 }
 
 type FilterType = "all" | AdventureType;
-type SortKey =
-  "date" | "location" | "type" | "miles" | "elevationGain" | "difficulty";
+type SortKey = "date" | "location" | "type" | "who" | "nights";
 type SortDir = "asc" | "desc";
 
 const TYPE_FILTERS: { label: string; value: FilterType }[] = [
@@ -45,20 +42,10 @@ const TYPE_ICON: Record<AdventureType, string> = {
   sightseeing: "🗺️",
 };
 
-const DIFFICULTY_ORDER: Record<Difficulty, number> = {
-  Easy: 0,
-  Moderate: 1,
-  Hard: 2,
-  Epic: 3,
-};
-
-const difficultyBadge: Record<Difficulty, string> = {
-  Easy: "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300",
-  Moderate:
-    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300",
-  Hard: "bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300",
-  Epic: "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300",
-};
+function formatNights(n: number): string {
+  if (n === 0) return "Day Trip";
+  return n === 1 ? "1 night" : `${n} nights`;
+}
 
 function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
   if (!active)
@@ -97,14 +84,11 @@ export default function AdventureLog({ adventures }: AdventureLogProps) {
         case "type":
           cmp = a.type.localeCompare(b.type);
           break;
-        case "miles":
-          cmp = a.miles - b.miles;
+        case "who":
+          cmp = a.who.localeCompare(b.who);
           break;
-        case "elevationGain":
-          cmp = a.elevationGain - b.elevationGain;
-          break;
-        case "difficulty":
-          cmp = DIFFICULTY_ORDER[a.difficulty] - DIFFICULTY_ORDER[b.difficulty];
+        case "nights":
+          cmp = a.nights - b.nights;
           break;
       }
       return sortDir === "asc" ? cmp : -cmp;
@@ -159,19 +143,11 @@ export default function AdventureLog({ adventures }: AdventureLogProps) {
               <th className={thClass} onClick={() => handleSort("type")}>
                 Type <SortIcon active={sortKey === "type"} dir={sortDir} />
               </th>
-              <th className={thClass} onClick={() => handleSort("miles")}>
-                Miles <SortIcon active={sortKey === "miles"} dir={sortDir} />
+              <th className={thClass} onClick={() => handleSort("who")}>
+                Who <SortIcon active={sortKey === "who"} dir={sortDir} />
               </th>
-              <th
-                className={thClass}
-                onClick={() => handleSort("elevationGain")}
-              >
-                Elev Gain{" "}
-                <SortIcon active={sortKey === "elevationGain"} dir={sortDir} />
-              </th>
-              <th className={thClass} onClick={() => handleSort("difficulty")}>
-                Difficulty{" "}
-                <SortIcon active={sortKey === "difficulty"} dir={sortDir} />
+              <th className={thClass} onClick={() => handleSort("nights")}>
+                Nights <SortIcon active={sortKey === "nights"} dir={sortDir} />
               </th>
             </tr>
           </thead>
@@ -206,19 +182,10 @@ export default function AdventureLog({ adventures }: AdventureLogProps) {
                   </span>
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
-                  {adventure.miles > 0 ? `${adventure.miles} mi` : "—"}
+                  {adventure.who}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
-                  {adventure.elevationGain > 0
-                    ? `+${adventure.elevationGain.toLocaleString()} ft`
-                    : "—"}
-                </td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${difficultyBadge[adventure.difficulty]}`}
-                  >
-                    {adventure.difficulty}
-                  </span>
+                  {formatNights(adventure.nights)}
                 </td>
               </tr>
             ))}
@@ -246,10 +213,8 @@ export default function AdventureLog({ adventures }: AdventureLogProps) {
                   })}
                 </p>
               </div>
-              <span
-                className={`shrink-0 inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${difficultyBadge[adventure.difficulty]}`}
-              >
-                {adventure.difficulty}
+              <span className="shrink-0 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-[#121110] px-2 py-0.5 rounded-full">
+                {adventure.who}
               </span>
             </div>
             <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
@@ -257,10 +222,7 @@ export default function AdventureLog({ adventures }: AdventureLogProps) {
                 {TYPE_ICON[adventure.type as AdventureType] ?? "📍"}{" "}
                 <span className="capitalize">{adventure.type}</span>
               </span>
-              {adventure.miles > 0 && <span>{adventure.miles} mi</span>}
-              {adventure.elevationGain > 0 && (
-                <span>+{adventure.elevationGain.toLocaleString()} ft</span>
-              )}
+              <span>{formatNights(adventure.nights)}</span>
             </div>
           </div>
         ))}
