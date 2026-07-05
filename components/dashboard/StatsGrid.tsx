@@ -52,7 +52,7 @@ export default function StatsGrid({ stats }: StatsGridProps) {
       icon: <BookOpen className="w-5 h-5 text-white" />,
       iconBg: "bg-[#C8973E]",
       value: `${stats.booksRead2024}`,
-      label: "Books Read 2024",
+      label: "Books Read",
     },
     {
       icon: <Camera className="w-5 h-5 text-white" />,
