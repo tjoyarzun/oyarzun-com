@@ -1,11 +1,9 @@
-"use client";
-
 import Link from "next/link";
 import HeroSection from "@/components/home/HeroSection";
 import MemoryOfDay from "@/components/home/MemoryOfDay";
 import NavGrid from "@/components/home/NavGrid";
 import CurrentlyWidget from "@/components/home/CurrentlyWidget";
-import { blogPosts } from "@/lib/data";
+import { getAllPosts } from "@/lib/posts";
 
 const authorLabel: Record<string, string> = {
   him: "Tommy",
@@ -20,7 +18,7 @@ const authorColor: Record<string, string> = {
 };
 
 export default function HomePage() {
-  const featured = blogPosts.slice(0, 3);
+  const featured = getAllPosts().slice(0, 3);
 
   return (
     <>
@@ -43,7 +41,7 @@ export default function HomePage() {
                 <div className="space-y-4">
                   {featured.map((post) => (
                     <Link
-                      key={post.id}
+                      key={post.slug}
                       href={`/blog/${post.slug}`}
                       className="block group"
                     >
