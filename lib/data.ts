@@ -649,7 +649,7 @@ export const goalsYear = "2026";
 
 export const goals = [
   { label: "Adventures", current: 0, goal: 20, pct: 0 },
-  { label: "Ski Days", current: 34, goal: 40, pct: 85 },
+  { label: "Ski Days", current: 0, goal: 40, pct: 0 },
   { label: "Books Read", current: 24, goal: 30, pct: 80 },
   { label: "Blog Posts", current: 3, goal: 5, pct: 60 },
 ];
