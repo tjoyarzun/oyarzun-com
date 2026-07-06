@@ -494,30 +494,12 @@ export const hikingData: MonthlyHiking[] = [
 export const bucketListItems: BucketListItem[] = [
   {
     id: 1,
-    name: "Havasupai Falls",
-    state: "Arizona",
+    name: "Tahiti",
+    state: "French Polynesia",
     description:
-      "Turquoise waterfalls deep in the Grand Canyon — one of the most beautiful places on earth.",
+      "We do love beaches.",
     imageUrl: "https://picsum.photos/seed/havasupai/400/280",
-    type: "hike",
-  },
-  {
-    id: 2,
-    name: "The Enchantments",
-    state: "Washington",
-    description:
-      "Alpine lakes and larch trees in the Cascade Mountains. Permit lottery dream destination.",
-    imageUrl: "https://picsum.photos/seed/enchantments/400/280",
-    type: "hike",
-  },
-  {
-    id: 3,
-    name: "Paria Canyon-Vermilion Cliffs",
-    state: "Utah/Arizona",
-    description:
-      "The ultimate slot canyon backpacking trip — 38 miles of otherworldly canyon walls.",
-    imageUrl: "https://picsum.photos/seed/paria/400/280",
-    type: "camp",
+    type: "beach",
   },
 ];
 
