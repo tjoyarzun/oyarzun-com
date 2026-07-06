@@ -498,7 +498,7 @@ export const bucketListItems: BucketListItem[] = [
     state: "French Polynesia",
     description:
       "We do love beaches.",
-    imageUrl: "https://picsum.photos/seed/havasupai/400/280",
+    imageUrl: "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFqGv3nPOT8Yf94pbS8BLo8C-2wCmjapIKitsiV0HNDgEF9NTPngQT9eVvwU-OiTXygr-9P7n2xZTuZNDBOACMnFVlcGe9kAzR0eQEILqUGZRFpmFutuV2p3eff5kSGxqUUA0L6mg=w426-h240-k-no",
     type: "beach",
   },
 ];
