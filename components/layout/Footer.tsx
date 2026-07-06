@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Github, Linkedin } from "lucide-react";
+import { siLetterboxd } from "simple-icons";
 
 const siteLinks = [
   { label: "Home", href: "/" },
@@ -11,14 +12,19 @@ const siteLinks = [
   { label: "Family Hub", href: "/family" },
 ];
 
-const socialLinks = [
-  { label: "GitHub", href: "https://github.com/tjoyarzun", icon: Github },
-  {
-    label: "LinkedIn",
-    href: "https://linkedin.com/in/tom-oyarzun",
-    icon: Linkedin,
-  },
-];
+function LetterboxdIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d={siLetterboxd.path} />
+    </svg>
+  );
+}
 
 export default function Footer() {
   return (
@@ -68,18 +74,33 @@ export default function Footer() {
               Connect
             </h3>
             <div className="flex items-center gap-3">
-              {socialLinks.map(({ label, href, icon: Icon }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="w-9 h-9 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
-                >
-                  <Icon size={18} />
-                </a>
-              ))}
+              <a
+                href="https://github.com/tjoyarzun"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                className="w-9 h-9 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+              >
+                <Github size={18} />
+              </a>
+              <a
+                href="https://linkedin.com/in/tom-oyarzun"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="w-9 h-9 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+              >
+                <Linkedin size={18} />
+              </a>
+              <a
+                href="https://letterboxd.com/toyarzun"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Letterboxd"
+                className="w-9 h-9 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+              >
+                <LetterboxdIcon size={18} />
+              </a>
             </div>
           </div>
         </div>
