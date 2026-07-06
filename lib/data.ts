@@ -655,15 +655,10 @@ export const goals = [
 ];
 
 export const booksPerQuarter = [
-  { quarter: "Q1 24", books: 5 },
-  { quarter: "Q2 24", books: 7 },
-  { quarter: "Q3 24", books: 6 },
-  { quarter: "Q4 24", books: 8 },
-  { quarter: "Q1 25", books: 6 },
-  { quarter: "Q2 25", books: 8 },
-  { quarter: "Q3 25", books: 9 },
-  { quarter: "Q4 25", books: 7 },
-  { quarter: "Q1 26", books: 7 },
-  { quarter: "Q2 26", books: 8 },
-  { quarter: "Q3 26", books: 1 },
+  { quarter: "Q2 25", books: 2 },
+  { quarter: "Q3 25", books: 4 },
+  { quarter: "Q4 25", books: 3 },
+  { quarter: "Q1 26", books: 2 },
+  { quarter: "Q2 26", books: 4 },
+  { quarter: "Q3 26", books: 2 },
 ];
