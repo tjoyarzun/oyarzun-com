@@ -20,7 +20,7 @@ const MONTHS = [
   "Nov",
   "Dec",
 ];
-const WEEKS = 26;
+const WEEKS = 43;
 const DAYS_PER_WEEK = 7;
 
 function seededRng(seed: number) {
@@ -165,7 +165,7 @@ export default function GitHubHeatmap({ username }: GitHubHeatmapProps) {
       </div>
 
       <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-        {total} contributions in the last 6 months
+        {total} contributions in the last 10 months
         {!isReal && (
           <span className="ml-1 text-gray-300 dark:text-gray-600">
             (preview)
