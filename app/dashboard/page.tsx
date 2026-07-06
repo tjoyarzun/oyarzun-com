@@ -38,10 +38,10 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="space-y-2">
           <h1 className="font-display text-4xl font-bold text-[#1C1917] dark:text-white">
-            The Oyarzun Numbers
+            Our Numbers
           </h1>
           <p className="text-gray-500 dark:text-gray-400 text-lg">
-            Because we track everything
+            Because... data
           </p>
         </div>
 
