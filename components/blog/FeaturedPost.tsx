@@ -35,7 +35,7 @@ export default function FeaturedPost({ post }: FeaturedPostProps) {
         {/* Cover Image — full width on mobile, 60% on md+ */}
         <div className="w-full md:w-[60%] relative overflow-hidden min-h-64 md:min-h-0">
           <img
-            src={`https://picsum.photos/seed/${post.slug}/800/450`}
+            src={post.coverImage}
             alt={post.title}
             className="w-full h-full object-cover"
             style={{ minHeight: "260px" }}
