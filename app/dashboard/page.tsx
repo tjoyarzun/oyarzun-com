@@ -14,6 +14,7 @@ import SkiChart from "@/components/dashboard/SkiChart";
 import BooksChart from "@/components/dashboard/BooksChart";
 import GoalsChart from "@/components/dashboard/GoalsChart";
 import CurrentlyReadingCard from "@/components/dashboard/CurrentlyReadingCard";
+import FavoriteMoviesCard from "@/components/dashboard/FavoriteMoviesCard";
 
 export default function DashboardPage() {
   const [githubTotal, setGithubTotal] = useState<number>(
@@ -60,10 +61,11 @@ export default function DashboardPage() {
           <SkiChart resorts={skiResorts} />
         </div>
 
-        {/* Books + Currently Reading */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Books + Currently Reading + Movies */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <BooksChart />
           <CurrentlyReadingCard />
+          <FavoriteMoviesCard />
         </div>
 
         {/* Goals */}

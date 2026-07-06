@@ -84,6 +84,16 @@ interface Book {
   genre: string;
 }
 
+interface Movie {
+  title: string;
+  year: number;
+  director: string;
+  posterColor: string;
+  genre: string;
+  rating: number;
+  platform?: string;
+}
+
 interface Photo {
   id: number;
   url: string;
@@ -466,7 +476,6 @@ export const adventures: Adventure[] = [
       "Walking the ancient city on foot. Palatine Hill at golden hour is something we'll never forget.",
     imageUrl: "https://picsum.photos/seed/rome/400/250",
   },
-
 ];
 
 export const travelStats = {
@@ -579,6 +588,36 @@ export const currentlyReading: Book[] = [
     progress: 50,
     coverColor: "#C8973E",
     genre: "Memoir",
+  },
+];
+
+export const favoriteMovies: Movie[] = [
+  {
+    title: "Anora",
+    year: 2024,
+    director: "Sean Baker",
+    posterColor: "#C8973E",
+    genre: "Drama",
+    rating: 5,
+    platform: "Theater",
+  },
+  {
+    title: "The Substance",
+    year: 2024,
+    director: "Coralie Fargeat",
+    posterColor: "#D4614A",
+    genre: "Horror / Satire",
+    rating: 4,
+    platform: "MUBI",
+  },
+  {
+    title: "Dune: Part Two",
+    year: 2024,
+    director: "Denis Villeneuve",
+    posterColor: "#8B6B2A",
+    genre: "Sci-Fi",
+    rating: 5,
+    platform: "Theater",
   },
 ];
 

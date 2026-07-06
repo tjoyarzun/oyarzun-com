@@ -261,6 +261,36 @@ export const booksPerQuarter = [
 
 The quarter label format is `"Q# YY"` (e.g. `"Q1 25"` for January–March 2025).
 
+### Recent Favorite Movies (`favoriteMovies`)
+
+**File:** `lib/data.ts` — search for `export const favoriteMovies`
+
+Each entry is one movie card on the dashboard. Keep the list to 3–5 movies; remove older entries as you add new ones.
+
+```ts
+{
+  title: "Anora",
+  year: 2024,
+  director: "Sean Baker",
+  posterColor: "#C8973E",   // hex color for the poster color swatch
+  genre: "Drama",
+  rating: 5,                // whole number 1–5
+  platform: "Theater",      // optional — "Theater", "Netflix", "AppleTV+", "MUBI", etc.
+},
+```
+
+| Field | Notes |
+|---|---|
+| `title` | Movie title |
+| `year` | Release year |
+| `director` | Director's name |
+| `posterColor` | Hex color for the cover swatch — pick something evocative of the film's palette |
+| `genre` | Short label, e.g. `"Drama"` or `"Sci-Fi / Action"` |
+| `rating` | Whole number 1–5 |
+| `platform` | Optional — omit if you don't remember or don't want to show it |
+
+---
+
 ### KPI Cards
 
 The 4 stat cards pull from `dashboardStats` in `lib/data.ts`:
