@@ -593,31 +593,31 @@ export const currentlyReading: Book[] = [
 
 export const favoriteMovies: Movie[] = [
   {
-    title: "Anora",
-    year: 2024,
-    director: "Sean Baker",
+    title: "Backrooms",
+    year: 2026,
+    director: "Kane Parsons",
     posterColor: "#C8973E",
-    genre: "Drama",
+    genre: "Horror",
     rating: 5,
     platform: "Theater",
   },
   {
-    title: "The Substance",
-    year: 2024,
-    director: "Coralie Fargeat",
+    title: "Obsession",
+    year: 2025,
+    director: "Curry Barker",
     posterColor: "#D4614A",
-    genre: "Horror / Satire",
+    genre: "Horror",
     rating: 4,
-    platform: "MUBI",
+    platform: "Theater",
   },
   {
-    title: "Dune: Part Two",
+    title: "Project Hail Mary",
     year: 2024,
-    director: "Denis Villeneuve",
+    director: "Phil Lord / Christopher Miller",
     posterColor: "#8B6B2A",
     genre: "Sci-Fi",
     rating: 5,
-    platform: "Theater",
+    platform: "AppleTV+",
   },
 ];
 
