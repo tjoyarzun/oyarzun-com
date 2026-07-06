@@ -17,9 +17,60 @@ A quick reference for updating every section of the site. Most updates require e
 
 ## Home
 
-The home page has three dynamic sections.
+The home page has four content areas. Two are edited via simple JSON files (no code needed), and two require editing a component file directly.
 
-### Memory of the Day
+---
+
+### 1. Hero section — names, tagline, photo
+
+**File:** `components/home/HeroSection.tsx` — requires a code editor or GitHub web editor
+
+This is the full-screen intro at the top of the page. Find these lines and edit in place:
+
+#### Location badge (above the names)
+```tsx
+Sandy, Utah
+```
+Change `Sandy, Utah` to whatever city you're in.
+
+#### Names heading
+```tsx
+Tommy Oyarzun
+<br />
+<span className="text-white/60">&</span> Julia Velicev
+```
+Update the names on each line.
+
+#### Tagline paragraph
+```tsx
+Skateboarder-turned-data nerd. Brazilian engineer who runs circles
+around him on the mountain. Based in Sandy, Utah with our kids and
+wherever the next trip takes us.
+```
+Replace with any text. Keep it to 2–3 sentences — it sits below the names and above the buttons.
+
+#### Buttons
+```tsx
+<Link href="/profiles" ...>Our Work</Link>
+<Link href="/travels" ...>Our World</Link>
+```
+Change the button label text (`Our Work`, `Our World`). Don't change the `href` values or the buttons will break.
+
+#### Hero photo
+```tsx
+src="/images/switzerland-dock.jpg"
+```
+Replace with `/images/your-filename.jpg` (upload the image to `public/images/` first — see [Uploading Photos](#uploading-photos)).
+
+Also update the caption below the photo:
+```tsx
+<p ...>Switzerland, 2023</p>
+```
+And the `alt` text on the `<Image>` tag for accessibility.
+
+---
+
+### 2. Memory of the Day
 
 **File:** `content/memory.json` — GitHub web editor ✓
 
@@ -35,9 +86,39 @@ The home page has three dynamic sections.
 |---|---|
 | `date` | The label shown below the photo (e.g. "July 4, 2025") |
 | `caption` | The description shown below the date |
-| `imageUrl` | Any public image URL. For a real photo, upload it to GitHub under `public/photos/` and use `/photos/your-file.jpg` |
+| `imageUrl` | Any public image URL. For a real photo, upload it to `public/images/` and use `/images/your-file.jpg` |
 
-### Currently Widget
+---
+
+### 3. Navigation cards
+
+**File:** `components/home/NavGrid.tsx` — requires a code editor or GitHub web editor
+
+The four clickable cards in the main column (`Our Profiles`, `Travels`, `Data Dashboard`, `Family Hub`). Find the `cards` array:
+
+```ts
+const cards: NavCard[] = [
+  {
+    label: "Our Profiles",
+    description: "Career and projects we are proud of",
+    href: "/profiles",
+    ...
+  },
+  {
+    label: "Travels",
+    description: "Brazil and Utah and everywhere in between",
+    href: "/travels",
+    ...
+  },
+  ...
+];
+```
+
+Edit `label` (the bold card title) and `description` (the small subtitle) for any card. Don't change `href` — that's the link destination.
+
+---
+
+### 4. Currently widget (sidebar)
 
 **File:** `content/now.json` → the `"currently"` block — GitHub web editor ✓
 
@@ -50,11 +131,13 @@ The home page has three dynamic sections.
 }
 ```
 
-These are the four short one-liners shown in the home page sidebar. Keep them brief — they truncate if too long.
+These are the four one-liners in the sidebar. Keep each under ~40 characters — they truncate if too long.
 
-### Memory of the Day photo
+---
 
-To use a real photo, drop the image into `public/images/` in the repo and set `imageUrl` to `/images/your-filename.jpg`. See [Uploading Photos](#uploading-photos) for details.
+### 5. From the Blog (auto-generated)
+
+No edits needed. The three blog previews are pulled automatically from the three most recent entries in `lib/data.ts` → `blogPosts`. Add or edit posts in `content/posts/` and `lib/data.ts` — see [Blog](#blog) for details.
 
 ---
 
