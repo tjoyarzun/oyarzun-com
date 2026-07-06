@@ -12,18 +12,44 @@ import {
 } from "recharts";
 import { adventures } from "@/lib/data";
 
-const byYear = adventures.reduce(
+function dateToQuarterKey(dateStr: string): string {
+  const [yearStr, monthStr] = dateStr.split("-");
+  const q = Math.ceil(parseInt(monthStr) / 3);
+  return `${yearStr}-Q${q}`;
+}
+
+function trailingQuarters(n: number): Array<{ key: string; label: string }> {
+  const now = new Date();
+  let y = now.getFullYear();
+  let q = Math.floor(now.getMonth() / 3) + 1;
+  const result: Array<{ key: string; label: string }> = [];
+  for (let i = 0; i < n; i++) {
+    result.unshift({
+      key: `${y}-Q${q}`,
+      label: `Q${q} ${String(y).slice(2)}`,
+    });
+    q--;
+    if (q === 0) {
+      q = 4;
+      y--;
+    }
+  }
+  return result;
+}
+
+const byQuarter = adventures.reduce(
   (acc, a) => {
-    const year = a.date.slice(0, 4);
-    acc[year] = (acc[year] ?? 0) + 1;
+    const key = dateToQuarterKey(a.date);
+    acc[key] = (acc[key] ?? 0) + 1;
     return acc;
   },
   {} as Record<string, number>,
 );
 
-const data = Object.entries(byYear)
-  .sort(([a], [b]) => a.localeCompare(b))
-  .map(([year, count]) => ({ year, adventures: count }));
+const data = trailingQuarters(6).map(({ key, label }) => ({
+  quarter: label,
+  adventures: byQuarter[key] ?? 0,
+}));
 
 export default function TravelChart() {
   return (
@@ -33,7 +59,7 @@ export default function TravelChart() {
           <Map className="w-5 h-5 text-white" />
         </div>
         <h2 className="font-display text-xl font-bold text-[#1C1917] dark:text-white">
-          Adventures by Year
+          Adventures per Quarter
         </h2>
       </div>
 
@@ -48,7 +74,7 @@ export default function TravelChart() {
             vertical={false}
           />
           <XAxis
-            dataKey="year"
+            dataKey="quarter"
             tick={{ fill: "#94a3b8", fontSize: 11 }}
             axisLine={{ stroke: "#334155" }}
             tickLine={false}
