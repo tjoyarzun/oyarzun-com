@@ -61,9 +61,7 @@ export default function HeroSection() {
             variants={childVariants}
             className="text-white/70 text-base md:text-lg max-w-md mb-10 leading-relaxed"
           >
-            Skateboarder-turned-data nerd. Brazilian engineer who runs circles
-            around him on the mountain. Based in Sandy, Utah with our kids and
-            wherever the next trip takes us.
+            Skater. Tech and data nerd. Married to a Brazilian engineer who smokes me on the slopes. We call Sandy, Utah home, when we aren't dragging our kids on the next trip.
           </motion.p>
 
           <motion.div
