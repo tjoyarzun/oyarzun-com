@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Github, Linkedin } from "lucide-react";
+import { Github, Linkedin, ExternalLink } from "lucide-react";
 import { siLetterboxd } from "simple-icons";
 
 const siteLinks = [
@@ -30,7 +30,7 @@ export default function Footer() {
   return (
     <footer style={{ backgroundColor: "#1C1917" }} className="text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Col 1: Brand */}
           <div className="flex flex-col gap-3">
             <div>
@@ -102,6 +102,37 @@ export default function Footer() {
                 <LetterboxdIcon size={18} />
               </a>
             </div>
+          </div>
+
+          {/* Col 4: Family sites */}
+          <div>
+            <h3 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">
+              Family
+            </h3>
+            <ul className="flex flex-col gap-2">
+              <li>
+                <a
+                  href="https://tomas.oyarzun.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-teal text-sm transition-colors flex items-center gap-1.5"
+                >
+                  Tomas Oyarzun
+                  <ExternalLink size={11} className="opacity-50" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://thehousekeeper.biz"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-teal text-sm transition-colors flex items-center gap-1.5"
+                >
+                  The Housekeeper
+                  <ExternalLink size={11} className="opacity-50" />
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
