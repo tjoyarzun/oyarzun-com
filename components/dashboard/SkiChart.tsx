@@ -36,24 +36,27 @@ export default function SkiChart({ resorts }: SkiChartProps) {
       <ResponsiveContainer width="100%" height={300}>
         <BarChart
           data={resorts}
+          layout="vertical"
           margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
         >
           <CartesianGrid
             strokeDasharray="3 3"
             stroke="#334155"
-            vertical={false}
+            horizontal={false}
           />
           <XAxis
+            type="number"
+            tick={{ fill: "#94a3b8", fontSize: 12 }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis
+            type="category"
             dataKey="name"
             tick={{ fill: "#94a3b8", fontSize: 11 }}
             axisLine={{ stroke: "#334155" }}
             tickLine={false}
-          />
-          <YAxis
-            tick={{ fill: "#94a3b8", fontSize: 12 }}
-            axisLine={false}
-            tickLine={false}
-            width={30}
+            width={72}
           />
           <Tooltip
             contentStyle={{
@@ -65,7 +68,7 @@ export default function SkiChart({ resorts }: SkiChartProps) {
             labelStyle={{ color: "#94a3b8", marginBottom: 4 }}
             formatter={(value) => [`${value ?? ""} days`, "Ski Days"]}
           />
-          <Bar dataKey="days" fill="#D4614A" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="days" fill="#D4614A" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
