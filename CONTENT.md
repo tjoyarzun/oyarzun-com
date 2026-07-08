@@ -12,6 +12,7 @@ A quick reference for updating every section of the site. Most updates require e
 - [Dashboard](#dashboard)
 - [Blog](#blog)
 - [Now](#now)
+- [Footer](#footer)
 
 ---
 
@@ -498,6 +499,98 @@ This single file drives both the **Currently widget on the home page** and the f
 - **`currently.*`** — keep these short (under ~40 characters), they show as a single line on the home page.
 - **Arrays** (`building`, `watching`, `listening`, `utahStatus`, `excitedAbout`) — add or remove items freely. Each item in the array becomes one bullet on the Now page.
 - **`reading`** is structured differently because Tommy and Julia each get their own line. Change `him` and `her` separately.
+
+---
+
+## Footer
+
+**File:** `components/layout/Footer.tsx` — GitHub web editor ✓
+
+The footer has four columns: Brand, Site, Connect, and Family. Each is edited in a different part of the file.
+
+---
+
+### Tagline and description text
+
+Find these two lines near the top of the `Footer` component:
+
+```tsx
+Built with ❤️ and data in Utah
+```
+```tsx
+Personal site for Tommy Oyarzun and Julia Velicev. Data, mountains, and family life in the Wasatch.
+```
+
+Edit the text between the tags. Keep the tagline short (one line) and the description to 1–2 sentences.
+
+---
+
+### Site column (internal navigation links)
+
+Find the `siteLinks` array at the top of the file:
+
+```ts
+const siteLinks = [
+  { label: "Home",       href: "/" },
+  { label: "Profiles",   href: "/profiles" },
+  { label: "Travels",    href: "/travels" },
+  { label: "Dashboard",  href: "/dashboard" },
+  { label: "Blog",       href: "/blog" },
+  { label: "Now",        href: "/now" },
+  { label: "Family Hub", href: "/family" },
+];
+```
+
+- **To rename a link:** change the `label` value.
+- **To remove a link:** delete the entire `{ label: ..., href: ... }` line.
+- **To add a link:** add a new `{ label: "Name", href: "/path" }` entry. Don't change existing `href` values or the links will break.
+
+---
+
+### Connect column (social icons)
+
+Each social link is an `<a>` tag inside the Connect column. Find the block that looks like:
+
+```tsx
+<a href="https://github.com/tjoyarzun" ...>
+<a href="https://linkedin.com/in/tom-oyarzun" ...>
+<a href="https://letterboxd.com/toyarzun" ...>
+```
+
+To update a URL, replace the value inside `href="..."`. Keep the rest of the tag (the `target`, `rel`, `aria-label`, and icon) intact.
+
+---
+
+### Family column (external family sites)
+
+Find the "Col 4: Family sites" block. Each external link looks like:
+
+```tsx
+<a href="https://tomas.oyarzun.com" ...>
+  Tomas Oyarzun
+  <ExternalLink ... />
+</a>
+```
+
+- **To update a URL:** replace the `href` value.
+- **To rename the link text:** replace the text between `>` and `<ExternalLink`.
+- **To add a family site:** copy one of the `<li>` blocks and paste it below. Update the `href` and link text.
+- **To remove a site:** delete the entire `<li>...</li>` block.
+
+---
+
+### Bottom bar
+
+The copyright line and "Made in Utah" badge are at the very bottom of the file:
+
+```tsx
+&copy; {new Date().getFullYear()} Oyarzun.com &middot; All rights reserved
+```
+```tsx
+Made in Utah
+```
+
+Edit the text directly. The year updates automatically via `new Date().getFullYear()` — don't touch that part.
 
 ---
 
