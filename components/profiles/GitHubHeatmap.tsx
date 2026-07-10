@@ -173,8 +173,8 @@ export default function GitHubHeatmap({ username }: GitHubHeatmapProps) {
         )}
       </p>
 
-      <div>
-        <div>
+      <div className="overflow-x-auto">
+        <div style={{ minWidth: `${WEEKS * 12}px` }}>
           {/* Month labels — relative container, each label absolutely placed */}
           <div className="relative h-4 mb-1">
             {monthLabels.map(({ month, weekIndex }) => (
