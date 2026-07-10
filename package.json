@@ -24,6 +24,7 @@
     "react-dom": "^18",
     "react-leaflet": "^4.2",
     "recharts": "^3.0",
+    "remark-gfm": "^4.0.1",
     "simple-icons": "^16.25.0",
     "tailwind-merge": "^2.3"
   },

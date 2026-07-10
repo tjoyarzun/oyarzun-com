@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 import { getAllPosts, getPost } from "@/lib/posts";
 import Link from "next/link";
 
@@ -81,8 +82,11 @@ export default function PostPage({ params }: Props) {
       </div>
 
       {/* Body */}
-      <article className="max-w-4xl mx-auto px-4 py-12 prose prose-lg dark:prose-invert prose-headings:font-display prose-a:text-teal-dark dark:prose-a:text-teal prose-code:text-teal-dark dark:prose-code:text-teal prose-code:bg-gray-100 dark:prose-code:bg-[#1C1A18] prose-pre:bg-[#1C1A18] dark:prose-pre:bg-[#121110]">
-        <MDXRemote source={post.content} />
+      <article className="max-w-4xl mx-auto px-4 py-12 prose prose-lg dark:prose-invert prose-headings:font-display prose-a:text-teal-dark dark:prose-a:text-teal prose-code:text-teal-dark dark:prose-code:text-teal prose-code:bg-gray-100 dark:prose-code:bg-[#1C1A18] prose-pre:bg-[#1C1A18] dark:prose-pre:bg-[#121110] prose-table:w-full prose-th:text-left prose-th:font-semibold prose-td:align-top">
+        <MDXRemote
+          source={post.content}
+          options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+        />
       </article>
 
       {/* Back link */}
