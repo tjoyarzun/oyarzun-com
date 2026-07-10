@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "@/components/providers";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { Analytics } from "@vercel/analytics/next";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -38,6 +39,7 @@ export default function RootLayout({
           <Navbar />
           <main>{children}</main>
           <Footer />
+          <Analytics />
         </Providers>
       </body>
     </html>
