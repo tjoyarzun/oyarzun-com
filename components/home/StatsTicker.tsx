@@ -3,7 +3,10 @@
 import { dashboardStats } from "@/lib/data";
 
 const stats = [
-  { label: "Books Read", value: dashboardStats.booksRead2024.toLocaleString() },
+  {
+    label: "Books Read",
+    value: dashboardStats.booksReadThisYear.toLocaleString(),
+  },
   { label: "Miles Hiked", value: dashboardStats.milesHiked.toLocaleString() },
   { label: "Ski Days", value: dashboardStats.skiDays.toLocaleString() },
   {

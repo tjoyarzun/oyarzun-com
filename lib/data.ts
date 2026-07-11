@@ -379,7 +379,6 @@ export const blogPosts: BlogPost[] = [
 
 export const dashboardStats = {
   blogPosts: 23,
-  booksRead2024: 7,
   photosInLibrary: 3847,
   totalHikes: 53,
   skiResortsVisited: 8,

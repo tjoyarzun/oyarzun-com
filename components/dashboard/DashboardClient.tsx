@@ -63,7 +63,7 @@ export default function DashboardClient({ postCount }: { postCount: number }) {
         </div>
 
         {/* Goals */}
-        <GoalsChart />
+        <GoalsChart postCount={postCount} />
       </div>
     </main>
   );

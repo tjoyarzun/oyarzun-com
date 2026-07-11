@@ -51,7 +51,7 @@ export default function StatsGrid({ stats }: StatsGridProps) {
     {
       icon: <BookOpen className="w-5 h-5 text-white" />,
       iconBg: "bg-[#C8973E]",
-      value: `${stats.booksRead2024}`,
+      value: `${stats.booksReadThisYear}`,
       label: "Books Read",
     },
     {

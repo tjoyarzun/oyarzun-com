@@ -9,16 +9,6 @@ const adventuresThisYear = adventures.filter((a) =>
   a.date.startsWith(currentYear),
 ).length;
 
-const liveGoals = goals.map((g) =>
-  g.label === "Adventures"
-    ? {
-        ...g,
-        current: adventuresThisYear,
-        pct: Math.round((adventuresThisYear / g.goal) * 100),
-      }
-    : g,
-);
-
 interface GoalBarProps {
   label: string;
   current: number;
@@ -51,7 +41,22 @@ function GoalBar({ label, current, goal, pct, index }: GoalBarProps) {
   );
 }
 
-export default function GoalsChart() {
+export default function GoalsChart({ postCount }: { postCount: number }) {
+  const liveGoals = goals.map((g) => {
+    if (g.label === "Adventures")
+      return {
+        ...g,
+        current: adventuresThisYear,
+        pct: Math.round((adventuresThisYear / g.goal) * 100),
+      };
+    if (g.label === "Blog Posts")
+      return {
+        ...g,
+        current: postCount,
+        pct: Math.round((postCount / g.goal) * 100),
+      };
+    return g;
+  });
   return (
     <div className="bg-white dark:bg-[#1C1A18] p-6 rounded-2xl shadow-sm">
       <div className="flex items-center gap-3 mb-6">
