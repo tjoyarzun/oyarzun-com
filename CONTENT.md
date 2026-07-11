@@ -323,23 +323,30 @@ No edits needed — this chart reads directly from the `adventures` array in the
 Update `goalsYear` to change the year shown in the card title:
 
 ```ts
-export const goalsYear = "2025";
+export const goalsYear = "2026";
 ```
 
-Update each goal's `current` and `pct` as you make progress. Change `goal` to reset a target:
+The goals array looks like this:
 
 ```ts
 export const goals = [
-  { label: "Adventures", current: 0, goal: 20, pct: 0 }, // ← auto-counted, don't edit current/pct
-  { label: "Ski Days", current: 34, goal: 40, pct: 85 },
-  { label: "Books Read", current: 24, goal: 30, pct: 80 },
-  { label: "Blog Posts", current: 3, goal: 5, pct: 60 },
+  { label: "Adventures", current: 0, goal: 20, pct: 0 },
+  { label: "Ski Days",   current: 0, goal: 40, pct: 0 },
+  { label: "Books Read", current: 7, goal: 20, pct: 35 },
+  { label: "Blog Posts", current: 0, goal: 5,  pct: 0 },
 ];
 ```
 
-**Adventures is auto-counted** from your logged adventures for the current year — just update `goal` (the target). The `current` and `pct` fields for Adventures are ignored; they're computed at runtime.
+**How each goal's progress is calculated:**
 
-For all other goals: update `current` as you make progress, and set `pct` to `Math.round(current / goal * 100)`.
+| Goal | How `current` is set | What to edit |
+|---|---|---|
+| **Adventures** | Auto-counted from the `adventures` array (entries whose `date` starts with the current year) | Only edit `goal` — `current` and `pct` are ignored |
+| **Blog Posts** | Auto-counted from the actual MDX files in `content/posts/` (excludes drafts) | Only edit `goal` — `current` and `pct` are ignored |
+| **Ski Days** | Manual — update as the season progresses | Edit `current` and recalculate `pct = Math.round(current / goal * 100)` |
+| **Books Read** | Manual — update as you finish books | Edit `current` and recalculate `pct = Math.round(current / goal * 100)` |
+
+**At the start of each new year:** update `goalsYear`, reset `current` to `0` and `pct` to `0` for Ski Days and Books Read, and set new `goal` targets for all four.
 
 ### Books read per quarter (`booksPerQuarter`)
 
@@ -391,12 +398,12 @@ Each entry is one movie card on the dashboard. Keep the list to 3–5 movies; re
 
 The 4 stat cards pull from `dashboardStats` in `lib/data.ts`:
 
-| Card              | Field              | Notes                                                |
-| ----------------- | ------------------ | ---------------------------------------------------- |
-| GitHub Commits    | `githubCommits`    | Static fallback; overridden by live API on page load |
-| Blog Posts        | auto-counted       | Counts entries in `blogPosts` array — no edit needed |
-| Books Read        | `booksRead2024`    | Update manually each year                            |
-| Countries Visited | `countriesVisited` | Update after each new country                        |
+| Card              | Source                         | How to update                                                      |
+|---|---|---|
+| GitHub Commits    | Live GitHub API on page load   | Automatic — no edit needed. Fallback value is `githubCommits` in `dashboardStats` |
+| Blog Posts        | Auto-counted from `content/posts/*.mdx` | Automatic — just publish or delete MDX files         |
+| Books Read        | `booksReadThisYear` in `dashboardStats` | Update manually in `lib/data.ts` as you finish books |
+| Countries Visited | `countriesVisited` in `dashboardStats`  | Update manually after each new country               |
 
 ---
 
