@@ -29,44 +29,56 @@ The home page has four content areas. Two are edited via simple JSON files (no c
 This is the full-screen intro at the top of the page. Find these lines and edit in place:
 
 #### Location badge (above the names)
+
 ```tsx
-Sandy, Utah
+(Sandy, Utah);
 ```
+
 Change `Sandy, Utah` to whatever city you're in.
 
 #### Names heading
+
 ```tsx
 Tommy Oyarzun
 <br />
 <span className="text-white/60">&</span> Julia Velicev
 ```
+
 Update the names on each line.
 
 #### Tagline paragraph
+
 ```tsx
 Skateboarder-turned-data nerd. Brazilian engineer who runs circles
 around him on the mountain. Based in Sandy, Utah with our kids and
 wherever the next trip takes us.
 ```
+
 Replace with any text. Keep it to 2–3 sentences — it sits below the names and above the buttons.
 
 #### Buttons
+
 ```tsx
 <Link href="/profiles" ...>Our Work</Link>
 <Link href="/travels" ...>Our World</Link>
 ```
+
 Change the button label text (`Our Work`, `Our World`). Don't change the `href` values or the buttons will break.
 
 #### Hero photo
+
 ```tsx
-src="/images/switzerland-dock.jpg"
+src = "/images/switzerland-dock.jpg";
 ```
+
 Replace with `/images/your-filename.jpg` (upload the image to `public/images/` first — see [Uploading Photos](#uploading-photos)).
 
 Also update the caption below the photo:
+
 ```tsx
 <p ...>Switzerland, 2023</p>
 ```
+
 And the `alt` text on the `<Image>` tag for accessibility.
 
 ---
@@ -83,10 +95,10 @@ And the `alt` text on the `<Image>` tag for accessibility.
 }
 ```
 
-| Field | What it does |
-|---|---|
-| `date` | The label shown below the photo (e.g. "July 4, 2025") |
-| `caption` | The description shown below the date |
+| Field      | What it does                                                                                          |
+| ---------- | ----------------------------------------------------------------------------------------------------- |
+| `date`     | The label shown below the photo (e.g. "July 4, 2025")                                                 |
+| `caption`  | The description shown below the date                                                                  |
 | `imageUrl` | Any public image URL. For a real photo, upload it to `public/images/` and use `/images/your-file.jpg` |
 
 ---
@@ -318,10 +330,10 @@ Update each goal's `current` and `pct` as you make progress. Change `goal` to re
 
 ```ts
 export const goals = [
-  { label: "Adventures", current: 0, goal: 20, pct: 0 },  // ← auto-counted, don't edit current/pct
-  { label: "Ski Days",   current: 34, goal: 40, pct: 85 },
+  { label: "Adventures", current: 0, goal: 20, pct: 0 }, // ← auto-counted, don't edit current/pct
+  { label: "Ski Days", current: 34, goal: 40, pct: 85 },
   { label: "Books Read", current: 24, goal: 30, pct: 80 },
-  { label: "Blog Posts", current: 3,  goal: 5,  pct: 60 },
+  { label: "Blog Posts", current: 3, goal: 5, pct: 60 },
 ];
 ```
 
@@ -363,15 +375,15 @@ Each entry is one movie card on the dashboard. Keep the list to 3–5 movies; re
 },
 ```
 
-| Field | Notes |
-|---|---|
-| `title` | Movie title |
-| `year` | Release year |
-| `director` | Director's name |
+| Field         | Notes                                                                           |
+| ------------- | ------------------------------------------------------------------------------- |
+| `title`       | Movie title                                                                     |
+| `year`        | Release year                                                                    |
+| `director`    | Director's name                                                                 |
 | `posterColor` | Hex color for the cover swatch — pick something evocative of the film's palette |
-| `genre` | Short label, e.g. `"Drama"` or `"Sci-Fi / Action"` |
-| `rating` | Whole number 1–5 |
-| `platform` | Optional — omit if you don't remember or don't want to show it |
+| `genre`       | Short label, e.g. `"Drama"` or `"Sci-Fi / Action"`                              |
+| `rating`      | Whole number 1–5                                                                |
+| `platform`    | Optional — omit if you don't remember or don't want to show it                  |
 
 ---
 
@@ -379,12 +391,12 @@ Each entry is one movie card on the dashboard. Keep the list to 3–5 movies; re
 
 The 4 stat cards pull from `dashboardStats` in `lib/data.ts`:
 
-| Card | Field | Notes |
-|---|---|---|
-| GitHub Commits | `githubCommits` | Static fallback; overridden by live API on page load |
-| Blog Posts | auto-counted | Counts entries in `blogPosts` array — no edit needed |
-| Books Read | `booksRead2024` | Update manually each year |
-| Countries Visited | `countriesVisited` | Update after each new country |
+| Card              | Field              | Notes                                                |
+| ----------------- | ------------------ | ---------------------------------------------------- |
+| GitHub Commits    | `githubCommits`    | Static fallback; overridden by live API on page load |
+| Blog Posts        | auto-counted       | Counts entries in `blogPosts` array — no edit needed |
+| Books Read        | `booksRead2024`    | Update manually each year                            |
+| Countries Visited | `countriesVisited` | Update after each new country                        |
 
 ---
 
@@ -417,13 +429,13 @@ Your post content goes here in regular Markdown.
 Write normally — bold, italic, code blocks, lists all work.
 ```
 
-| Field | Notes |
-|---|---|
-| `author` | `"him"`, `"her"`, or `"both"` |
-| `date` | `YYYY-MM-DD` format |
-| `readTime` | Estimated minutes — count ~200 words/min |
-| `tags` | Must be in the `["Tag One", "Tag Two"]` format. Tags appear as filter chips on the blog page. |
-| `coverImage` | Any public image URL, or `/photos/your-image.jpg` from `public/photos/` |
+| Field        | Notes                                                                                         |
+| ------------ | --------------------------------------------------------------------------------------------- |
+| `author`     | `"him"`, `"her"`, or `"both"`                                                                 |
+| `date`       | `YYYY-MM-DD` format                                                                           |
+| `readTime`   | Estimated minutes — count ~200 words/min                                                      |
+| `tags`       | Must be in the `["Tag One", "Tag Two"]` format. Tags appear as filter chips on the blog page. |
+| `coverImage` | Any public image URL, or `/photos/your-image.jpg` from `public/photos/`                       |
 
 ### Adding a real cover image to a post
 
@@ -457,9 +469,9 @@ This single file drives both the **Currently widget on the home page** and the f
   "updatedAt": "July 2025",
 
   "currently": {
-    "reading":   "Short one-liner for the home widget",
-    "watching":  "Short one-liner for the home widget",
-    "building":  "Short one-liner for the home widget",
+    "reading": "Short one-liner for the home widget",
+    "watching": "Short one-liner for the home widget",
+    "building": "Short one-liner for the home widget",
     "listening": "Short one-liner for the home widget"
   },
 
@@ -517,6 +529,7 @@ Find these two lines near the top of the `Footer` component:
 ```tsx
 Built with ❤️ and data in Utah
 ```
+
 ```tsx
 Personal site for Tommy Oyarzun and Julia Velicev. Data, mountains, and family life in the Wasatch.
 ```
@@ -531,12 +544,12 @@ Find the `siteLinks` array at the top of the file:
 
 ```ts
 const siteLinks = [
-  { label: "Home",       href: "/" },
-  { label: "Profiles",   href: "/profiles" },
-  { label: "Travels",    href: "/travels" },
-  { label: "Dashboard",  href: "/dashboard" },
-  { label: "Blog",       href: "/blog" },
-  { label: "Now",        href: "/now" },
+  { label: "Home", href: "/" },
+  { label: "Profiles", href: "/profiles" },
+  { label: "Travels", href: "/travels" },
+  { label: "Dashboard", href: "/dashboard" },
+  { label: "Blog", href: "/blog" },
+  { label: "Now", href: "/now" },
   { label: "Family Hub", href: "/family" },
 ];
 ```
@@ -586,8 +599,9 @@ The copyright line and "Made in Utah" badge are at the very bottom of the file:
 ```tsx
 &copy; {new Date().getFullYear()} Oyarzun.com &middot; All rights reserved
 ```
+
 ```tsx
-Made in Utah
+Made in Utah;
 ```
 
 Edit the text directly. The year updates automatically via `new Date().getFullYear()` — don't touch that part.
@@ -603,6 +617,7 @@ For any section where you want to use a real photo instead of a placeholder:
 3. Reference it as `/images/your-filename.jpg` in any `imageUrl` or `coverImage` field.
 
 **Tips:**
+
 - Keep images under 1MB for fast load times. JPG is preferred over PNG for photos.
 - If your photo is a HEIC (iPhone) or DNG (RAW), convert it to JPG first using the Mac Photos app (File → Export → Export 1 Photo → JPG).
 - Name files clearly: `zermatt-ski-2023.jpg` not `IMG_4821.jpg`.

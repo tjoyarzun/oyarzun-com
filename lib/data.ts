@@ -268,7 +268,7 @@ export const adventures: Adventure[] = [
     id: 1,
     name: "Databricks Data+AI Conference",
     location: "San Franciso, CA",
-    lat: 37.784590467519806, 
+    lat: 37.784590467519806,
     lng: -122.40062026495632,
     date: "2026-06-15",
     type: "sightseeing",
@@ -284,20 +284,21 @@ export const adventures: Adventure[] = [
     name: "Summar in Italy",
     location: "Sicily, Italy",
     lat: 37.984094193765635,
-    lng:  13.695563710328907,
+    lng: 13.695563710328907,
     date: "2026-05-26",
     type: "sightseeing",
     who: "Family",
     nights: 10,
     emoji: "🇮🇹",
-    description: "Spent a little over a week at my moms place in Sicily, we loved the beach at Chefalu.",
+    description:
+      "Spent a little over a week at my moms place in Sicily, we loved the beach at Chefalu.",
     imageUrl: "https://picsum.photos/seed/bryce/400/250",
   },
   {
     id: 3,
     name: "Roman Holiday",
     location: "Rome, Italy",
-    lat: 41.88814586569183, 
+    lat: 41.88814586569183,
     lng: 12.479167464654216,
     date: "2026-05-23",
     type: "sightseeing",
@@ -312,7 +313,7 @@ export const adventures: Adventure[] = [
     id: 4,
     name: "July 4th in Vegas",
     location: "Las Vegas",
-    lat: 36.169798592946364, 
+    lat: 36.169798592946364,
     lng: -115.1674570783433,
     date: "2026-07-03",
     type: "sightseeing",
@@ -378,7 +379,7 @@ export const blogPosts: BlogPost[] = [
 
 export const dashboardStats = {
   blogPosts: 23,
-  booksRead2024: 24,
+  booksRead2024: 7,
   photosInLibrary: 3847,
   totalHikes: 53,
   skiResortsVisited: 8,
@@ -388,7 +389,7 @@ export const dashboardStats = {
   milesHiked: 847,
   skiDays: 34,
   statesVisited: 28,
-  booksReadThisYear: 24,
+  booksReadThisYear: 7,
   countriesVisited: 12,
 };
 
@@ -496,9 +497,9 @@ export const bucketListItems: BucketListItem[] = [
     id: 1,
     name: "Tahiti",
     state: "French Polynesia",
-    description:
-      "We do love beaches.",
-    imageUrl: "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFqGv3nPOT8Yf94pbS8BLo8C-2wCmjapIKitsiV0HNDgEF9NTPngQT9eVvwU-OiTXygr-9P7n2xZTuZNDBOACMnFVlcGe9kAzR0eQEILqUGZRFpmFutuV2p3eff5kSGxqUUA0L6mg=w426-h240-k-no",
+    description: "We do love beaches.",
+    imageUrl:
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFqGv3nPOT8Yf94pbS8BLo8C-2wCmjapIKitsiV0HNDgEF9NTPngQT9eVvwU-OiTXygr-9P7n2xZTuZNDBOACMnFVlcGe9kAzR0eQEILqUGZRFpmFutuV2p3eff5kSGxqUUA0L6mg=w426-h240-k-no",
     type: "beach",
   },
 ];
@@ -632,15 +633,15 @@ export const goalsYear = "2026";
 export const goals = [
   { label: "Adventures", current: 0, goal: 20, pct: 0 },
   { label: "Ski Days", current: 0, goal: 40, pct: 0 },
-  { label: "Books Read", current: 24, goal: 30, pct: 80 },
+  { label: "Books Read", current: 7, goal: 20, pct: 35 },
   { label: "Blog Posts", current: 3, goal: 5, pct: 60 },
 ];
 
 export const booksPerQuarter = [
-  { quarter: "Q2 25", books: 2 },
-  { quarter: "Q3 25", books: 4 },
-  { quarter: "Q4 25", books: 3 },
-  { quarter: "Q1 26", books: 2 },
+  { quarter: "Q2 25", books: 0 },
+  { quarter: "Q3 25", books: 0 },
+  { quarter: "Q4 25", books: 0 },
+  { quarter: "Q1 26", books: 0 },
   { quarter: "Q2 26", books: 4 },
-  { quarter: "Q3 26", books: 2 },
+  { quarter: "Q3 26", books: 3 },
 ];
