@@ -96,26 +96,19 @@ The two condensed cards ("Who We Are") show each person's name, title/company, a
 
 ---
 
-### 3. Navigation row
+### 3. Navigation row ("Explore")
 
 **File:** `components/home/NavGrid.tsx` — requires a code editor or GitHub web editor
 
-Two full-width clickable cards (`Travels`, `Data Dashboard`), sitting on their own row between the profiles preview and the blog — this is the homepage's main "explore more" prompt, and where visitors go to see the real numbers (the Dashboard). `Our Profiles` and `Family Hub` are intentionally **not** in this grid — Profiles has its own dedicated homepage section (above), and Family Hub is reachable via the "Family Hub" button in the top navigation bar (`components/layout/Navbar.tsx`) instead of being featured on the public homepage. Find the `cards` array:
+Five clickable cards (`Profiles`, `Travels`, `Dashboard`, `Blog`, `Now`) under an "Explore" heading, sitting on their own row between the profiles preview and the blog — this is the homepage's site-directory row, a quick jump to every section of the site. `Profiles` and `Blog` duplicate the dedicated preview sections elsewhere on the homepage on purpose — those sections are content teasers, this row is pure navigation. `Family Hub` is intentionally **not** in this grid — it's reachable via the "Family Hub" button in the top navigation bar (`components/layout/Navbar.tsx`) instead of being featured on the public homepage. Find the `cards` array:
 
 ```ts
 const cards: NavCard[] = [
-  {
-    label: "Travels",
-    description: "Brazil and Utah and everywhere in between",
-    href: "/travels",
-    ...
-  },
-  {
-    label: "Data Dashboard",
-    description: "Because data...",
-    href: "/dashboard",
-    ...
-  },
+  { label: "Profiles", description: "Career and projects we're proud of", href: "/profiles", ... },
+  { label: "Travels", description: "Brazil and Utah and everywhere in between", href: "/travels", ... },
+  { label: "Dashboard", description: "Because data...", href: "/dashboard", ... },
+  { label: "Blog", description: "Tech, AI, trip stories, and more", href: "/blog", ... },
+  { label: "Now", description: "What we're up to right now", href: "/now", ... },
 ];
 ```
 
