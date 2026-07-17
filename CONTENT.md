@@ -18,7 +18,7 @@ A quick reference for updating every section of the site. Most updates require e
 
 ## Home
 
-The home page has seven content areas, top to bottom: Hero, Profiles preview, Fun Metrics, a navigation row, the blog teaser, and a sidebar (Memory of the Day + Currently). Profiles preview comes right after the hero so a new visitor meets Tommy and Julia before seeing stats about them. Some areas are edited via simple JSON files (no code needed), some auto-pull from `lib/data.ts` (edit once, updates in two places), and a couple require editing a component file directly.
+The home page has six content areas, top to bottom: Hero, Profiles preview, a full-width navigation row, the blog teaser, and a sidebar (Memory of the Day + Currently) that runs alongside the blog. Profiles preview comes right after the hero so a new visitor meets Tommy and Julia before anything else. There's no separate stats/metrics section on the homepage — the real numbers live on the [Dashboard](#dashboard), which the navigation row links to directly. Some areas are edited via simple JSON files (no code needed), some auto-pull from `lib/data.ts` (edit once, updates in two places), and a couple require editing a component file directly.
 
 ---
 
@@ -96,28 +96,11 @@ The two condensed cards ("Who We Are") show each person's name, title/company, a
 
 ---
 
-### 3. Fun Metrics
-
-**File:** `components/home/FunMetrics.tsx` — requires a code editor or GitHub web editor
-
-A row of 4 stat cards right after the profiles preview, mirroring the same 4 headline numbers shown on the [Dashboard](#dashboard) (see `### KPI Cards` under that section for the full breakdown of how each number is sourced):
-
-| Card | Source | Live? |
-| --- | --- | --- |
-| GitHub Commits | `/api/github-activity` (Tommy's GitHub) | Yes — fetched client-side on page load |
-| Blog Posts | Count of non-draft files in `content/posts/*.mdx` | Yes — computed server-side per request |
-| Books Read | `lib/data.ts` → `dashboardStats.booksReadThisYear` | Manual — update the number yourself |
-| Countries Visited | `lib/data.ts` → `travelStats.countriesVisited` (derived from the `adventures` array) | Yes — recalculates whenever you add/edit an adventure |
-
-Each card also shows a small trend line underneath (e.g. "62% to this year's goal", "3 new adventures this year") — these pull from `lib/data.ts` → `goals` (Blog Posts, Books Read) or from counting this year's entries in `adventures` (Countries Visited). No fabricated trend data — if a real number isn't available, the card just doesn't show one.
-
----
-
-### 4. Navigation cards
+### 3. Navigation row
 
 **File:** `components/home/NavGrid.tsx` — requires a code editor or GitHub web editor
 
-Two clickable cards (`Travels`, `Data Dashboard`). `Our Profiles` and `Family Hub` are intentionally **not** in this grid anymore — Profiles now has its own dedicated homepage section (above), and Family Hub is reachable via the "Family Hub" button in the top navigation bar (`components/layout/Navbar.tsx`) instead of being featured on the public homepage. Find the `cards` array:
+Two full-width clickable cards (`Travels`, `Data Dashboard`), sitting on their own row between the profiles preview and the blog — this is the homepage's main "explore more" prompt, and where visitors go to see the real numbers (the Dashboard). `Our Profiles` and `Family Hub` are intentionally **not** in this grid — Profiles has its own dedicated homepage section (above), and Family Hub is reachable via the "Family Hub" button in the top navigation bar (`components/layout/Navbar.tsx`) instead of being featured on the public homepage. Find the `cards` array:
 
 ```ts
 const cards: NavCard[] = [
@@ -140,15 +123,15 @@ Edit `label` (the bold card title) and `description` (the small subtitle) for an
 
 ---
 
-### 5. From the Blog
+### 4. From the Blog
 
 **File:** `components/home/BlogTeaser.tsx` — no edits needed here.
 
-No edits needed. Unlike an earlier version of this doc claimed, blog posts do **not** come from `lib/data.ts` — they're read live from `content/posts/*.mdx` via `getAllPosts()`. This section shows the most recent post large, plus up to 2 more compact cards, and gracefully shrinks if there are fewer than 3 posts (down to just the single featured post if there's only 1). Add or edit posts in `content/posts/` — see [Blog](#blog) for details.
+No edits needed. Unlike an earlier version of this doc claimed, blog posts do **not** come from `lib/data.ts` — they're read live from `content/posts/*.mdx` via `getAllPosts()`. This section shows the most recent post large, plus up to 2 more compact cards, and gracefully shrinks if there are fewer than 3 posts (down to just the single featured post if there's only 1). Runs alongside the sidebar (Memory of the Day + Currently, below). Add or edit posts in `content/posts/` — see [Blog](#blog) for details.
 
 ---
 
-### 6. Memory of the Day (sidebar)
+### 5. Memory of the Day (sidebar)
 
 **File:** `content/memory.json` — GitHub web editor ✓
 
@@ -166,11 +149,11 @@ No edits needed. Unlike an earlier version of this doc claimed, blog posts do **
 | `caption`  | The description shown below the date                                                                  |
 | `imageUrl` | Any public image URL. For a real photo, upload it to `public/images/` and use `/images/your-file.jpg` |
 
-Now lives in the sidebar, alongside the Currently widget, rather than the main column.
+Lives in the sidebar, alongside the Currently widget, next to the blog teaser.
 
 ---
 
-### 7. Currently widget (sidebar)
+### 6. Currently widget (sidebar)
 
 **File:** `content/now.json` → the `"currently"` block — GitHub web editor ✓
 
