@@ -150,9 +150,9 @@ The right-hand column of the final homepage row. Blog posts do **not** come from
 
 ---
 
-### 6. Currently column — About Us + Memory of the Day + Currently widget
+### 6. Currently column — Memory of the Day + Currently widget
 
-The left-hand column of the final homepage row, paired with "From the Blog" on the right. Two labeled mini-sections stacked in one column: [About Us](#2-about-us) first, then a "Currently" heading followed by Memory of the Day and the Currently widget. The "Currently" heading itself lives directly in `app/page.tsx` (not in either component below) — giving that pair of widgets their own clear label again, rather than trailing off under the About Us paragraph unlabeled.
+The left-hand column of the final homepage row, paired with "From the Blog" on the right. The "Currently" heading itself lives directly in `app/page.tsx` (not in either component below) — this is intentional, so its spacing matches "From the Blog"'s heading exactly. [About Us](#2-about-us) previously lived in this column too, but that mixed three unrelated things (a site mission statement, a dated photo memory, and a live status widget) into one column with no narrative connection between them — About Us now stands on its own right after the hero instead.
 
 **Memory of the Day** — **File:** `content/memory.json` — GitHub web editor ✓
 
