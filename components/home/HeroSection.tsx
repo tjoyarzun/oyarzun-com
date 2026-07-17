@@ -81,7 +81,7 @@ export default function HeroSection() {
 
           <motion.div
             variants={childVariants}
-            className="flex flex-col sm:flex-row gap-4"
+            className="flex flex-col sm:flex-row flex-wrap gap-4"
           >
             <Link
               href="/profiles"
@@ -94,6 +94,12 @@ export default function HeroSection() {
               className="px-7 py-3 rounded-full border border-white/30 text-white/80 font-semibold text-sm hover:border-white hover:text-white transition-colors duration-200"
             >
               Our World
+            </Link>
+            <Link
+              href="/blog"
+              className="px-7 py-3 rounded-full border border-white/30 text-white/80 font-semibold text-sm hover:border-white hover:text-white transition-colors duration-200"
+            >
+              Read the Blog
             </Link>
           </motion.div>
         </div>

@@ -14,9 +14,9 @@ export default function HomePage() {
     <>
       <HeroSection />
 
-      <FunMetrics postCount={postCount} />
-
       <ProfilesPreview />
+
+      <FunMetrics postCount={postCount} />
 
       <div className="bg-slate dark:bg-[#121110]">
         <div className="max-w-7xl mx-auto px-4 py-16">

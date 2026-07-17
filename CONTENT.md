@@ -18,7 +18,7 @@ A quick reference for updating every section of the site. Most updates require e
 
 ## Home
 
-The home page has seven content areas, top to bottom: Hero, Fun Metrics, Profiles preview, a navigation row, the blog teaser, and a sidebar (Memory of the Day + Currently). Some are edited via simple JSON files (no code needed), some auto-pull from `lib/data.ts` (edit once, updates in two places), and a couple require editing a component file directly.
+The home page has seven content areas, top to bottom: Hero, Profiles preview, Fun Metrics, a navigation row, the blog teaser, and a sidebar (Memory of the Day + Currently). Profiles preview comes right after the hero so a new visitor meets Tommy and Julia before seeing stats about them. Some areas are edited via simple JSON files (no code needed), some auto-pull from `lib/data.ts` (edit once, updates in two places), and a couple require editing a component file directly.
 
 ---
 
@@ -65,9 +65,10 @@ Replace with any text. Keep it to 1–2 sentences — it sits below the role bad
 ```tsx
 <Link href="/profiles" ...>Our Work</Link>
 <Link href="/travels" ...>Our World</Link>
+<Link href="/blog" ...>Read the Blog</Link>
 ```
 
-Change the button label text (`Our Work`, `Our World`). Don't change the `href` values or the buttons will break.
+Three buttons, one per pillar of the site (professional, personal, blog) — this is deliberate so a first-time visitor sees all three in the first screen. Change the button label text. Don't change the `href` values or the buttons will break.
 
 #### Hero photo
 
@@ -87,11 +88,19 @@ And the `alt` text on the `<Image>` tag for accessibility.
 
 ---
 
-### 2. Fun Metrics
+### 2. Profiles preview
+
+**File:** `components/home/ProfilesPreview.tsx` — no edits needed here.
+
+The two condensed cards ("Who We Are") show each person's name, title/company, and a truncated first line of their bio. These read directly from `lib/data.ts` → `profiles.him`/`profiles.her` — the exact same fields documented under [Profiles](#profiles). Edit there once; it updates the hero badges, this preview, and the full `/profiles` page all together.
+
+---
+
+### 3. Fun Metrics
 
 **File:** `components/home/FunMetrics.tsx` — requires a code editor or GitHub web editor
 
-A row of 4 stat cards just below the hero, mirroring the same 4 headline numbers shown on the [Dashboard](#dashboard) (see `### KPI Cards` under that section for the full breakdown of how each number is sourced):
+A row of 4 stat cards right after the profiles preview, mirroring the same 4 headline numbers shown on the [Dashboard](#dashboard) (see `### KPI Cards` under that section for the full breakdown of how each number is sourced):
 
 | Card | Source | Live? |
 | --- | --- | --- |
@@ -101,14 +110,6 @@ A row of 4 stat cards just below the hero, mirroring the same 4 headline numbers
 | Countries Visited | `lib/data.ts` → `travelStats.countriesVisited` (derived from the `adventures` array) | Yes — recalculates whenever you add/edit an adventure |
 
 Each card also shows a small trend line underneath (e.g. "62% to this year's goal", "3 new adventures this year") — these pull from `lib/data.ts` → `goals` (Blog Posts, Books Read) or from counting this year's entries in `adventures` (Countries Visited). No fabricated trend data — if a real number isn't available, the card just doesn't show one.
-
----
-
-### 3. Profiles preview
-
-**File:** `components/home/ProfilesPreview.tsx` — no edits needed here.
-
-The two condensed cards ("Who We Are") show each person's name, title/company, and a truncated first line of their bio. These read directly from `lib/data.ts` → `profiles.him`/`profiles.her` — the exact same fields documented under [Profiles](#profiles). Edit there once; it updates the hero badges, this preview, and the full `/profiles` page all together.
 
 ---
 
