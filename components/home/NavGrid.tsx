@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { User, Mountain, BarChart2, Newspaper, Clock } from "lucide-react";
+import { dashboardStats, profiles } from "@/lib/data";
 
 interface NavCard {
   icon: React.ElementType;
@@ -30,7 +32,7 @@ const cards: NavCard[] = [
   {
     icon: BarChart2,
     label: "Dashboard",
-    description: "Because data...",
+    description: "Because data...", // overridden with a live GitHub commit count below
     href: "/dashboard",
     color: "teal",
   },
@@ -73,6 +75,30 @@ const cardVariants = {
 };
 
 export default function NavGrid() {
+  const [githubTotal, setGithubTotal] = useState<number>(
+    dashboardStats.githubCommits,
+  );
+
+  useEffect(() => {
+    fetch(
+      `/api/github-activity?username=${encodeURIComponent(profiles.him.github)}`,
+    )
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.total) setGithubTotal(data.total);
+      })
+      .catch(() => {});
+  }, []);
+
+  const liveCards = cards.map((card) =>
+    card.label === "Dashboard"
+      ? {
+          ...card,
+          description: `${githubTotal.toLocaleString()} GitHub commits and counting`,
+        }
+      : card,
+  );
+
   return (
     <section>
       <h2 className="font-display font-bold text-2xl text-navy dark:text-white mb-1">
@@ -89,7 +115,7 @@ export default function NavGrid() {
         whileInView="visible"
         viewport={{ once: true, margin: "-60px" }}
       >
-        {cards.map((card) => {
+        {liveCards.map((card) => {
           const Icon = card.icon;
           return (
             <motion.div key={card.href} variants={cardVariants}>

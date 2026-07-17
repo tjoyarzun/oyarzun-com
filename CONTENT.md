@@ -46,6 +46,15 @@ Tommy Oyarzun
 
 Update the names on each line.
 
+#### Site descriptor
+
+```tsx
+Our corner of the internet — data & tech work, family
+adventures, and whatever we're writing about.
+```
+
+One sentence stating what the site actually is, sitting right under the names — this is meant to be the first thing that orients a new visitor regardless of whether they came for the professional side, the family side, or the blog. Keep it to one sentence.
+
 #### Role/company badges (new — auto-generated, no edit here)
 
 The two small pills under the names (e.g. "Manager, Analytics · Domo" and "Data Engineer III · SeekWell") are **not hand-typed** — they're pulled automatically from `lib/data.ts` → `profiles.him.title`/`profiles.him.company` and `profiles.her.title`/`profiles.her.company`. To change what they say, edit those fields under [Profiles](#profiles); the hero updates automatically.
@@ -113,6 +122,8 @@ const cards: NavCard[] = [
 ```
 
 Edit `label` (the bold card title) and `description` (the small subtitle) for any card. Don't change `href` — that's the link destination.
+
+**Dashboard card's description is live, not the text above.** The `"Because data..."` placeholder in the array is overridden at render time with a real, live GitHub commit count (e.g. "1,203 GitHub commits and counting") — same `/api/github-activity` fetch pattern as the Dashboard page itself, falling back to `dashboardStats.githubCommits` if the live fetch fails. This is a deliberate lightweight signal of real technical activity for visitors coming from the data/tech community, without recreating a whole stats section on the homepage.
 
 ---
 

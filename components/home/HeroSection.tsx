@@ -58,6 +58,14 @@ export default function HeroSection() {
             <span className="text-white/60">&</span> Julia Velicev
           </motion.h1>
 
+          <motion.p
+            variants={childVariants}
+            className="text-white/90 text-lg md:text-xl font-medium max-w-md mb-6 leading-snug"
+          >
+            Our corner of the internet — data &amp; tech work, family
+            adventures, and whatever we&apos;re writing about.
+          </motion.p>
+
           <motion.div
             variants={childVariants}
             className="flex flex-wrap gap-3 mb-6"
