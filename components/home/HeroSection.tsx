@@ -27,7 +27,7 @@ const childVariants = {
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-[75vh] flex flex-col justify-center overflow-hidden bg-gradient-to-br from-[#16402E] via-[#1D5A42] to-navy">
+    <section className="relative min-h-[75vh] flex flex-col justify-center overflow-hidden bg-gradient-to-br from-[#0E3A52] via-[#146B82] to-navy">
       {/* Subtle warm glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/3 left-1/4 w-[500px] h-[400px] bg-teal/5 rounded-full blur-3xl" />
@@ -140,12 +140,12 @@ export default function HeroSection() {
         >
           <path
             d="M0 180 L0 140 L60 100 L110 125 L160 70 L220 105 L280 55 L340 90 L390 40 L440 75 L510 20 L570 60 L620 35 L680 80 L730 50 L780 90 L840 30 L900 65 L960 45 L1020 85 L1080 55 L1130 95 L1190 60 L1250 100 L1310 70 L1380 110 L1440 80 L1440 180 Z"
-            fill="#0E2D20"
+            fill="#0B2C3B"
             fillOpacity="0.22"
           />
           <path
             d="M0 180 L0 155 L80 130 L150 148 L220 115 L300 138 L370 108 L440 130 L520 100 L590 125 L660 110 L740 135 L820 105 L900 130 L970 118 L1050 138 L1130 120 L1200 142 L1280 125 L1360 148 L1440 130 L1440 180 Z"
-            fill="#0E2D20"
+            fill="#0B2C3B"
             fillOpacity="0.35"
           />
         </svg>

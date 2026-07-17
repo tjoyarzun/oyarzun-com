@@ -18,7 +18,7 @@ A quick reference for updating every section of the site. Most updates require e
 
 ## Home
 
-The home page has six content areas, top to bottom: Hero, Profiles preview, a full-width navigation row, the blog teaser, and a sidebar (Memory of the Day + Currently) that runs alongside the blog. Profiles preview comes right after the hero so a new visitor meets Tommy and Julia before anything else. There's no separate stats/metrics section on the homepage — the real numbers live on the [Dashboard](#dashboard), which the navigation row links to directly. Some areas are edited via simple JSON files (no code needed), some auto-pull from `lib/data.ts` (edit once, updates in two places), and a couple require editing a component file directly.
+The home page has six content areas, top to bottom: Hero, Profiles preview, a full-width navigation row, then a final two-column row — "Currently" (Memory of the Day + Currently widget) beside "From the Blog" — of equal width, so the two column headings line up. Profiles preview comes right after the hero so a new visitor meets Tommy and Julia before anything else. There's no separate stats/metrics section on the homepage — the real numbers live on the [Dashboard](#dashboard), which the navigation row links to directly. Some areas are edited via simple JSON files (no code needed), some auto-pull from `lib/data.ts` (edit once, updates in two places), and a couple require editing a component file directly.
 
 ---
 
@@ -127,13 +127,15 @@ Edit `label` (the bold card title) and `description` (the small subtitle) for an
 
 **File:** `components/home/BlogTeaser.tsx` — no edits needed here.
 
-No edits needed. Unlike an earlier version of this doc claimed, blog posts do **not** come from `lib/data.ts` — they're read live from `content/posts/*.mdx` via `getAllPosts()`. This section shows the most recent post large, plus up to 2 more compact cards, and gracefully shrinks if there are fewer than 3 posts (down to just the single featured post if there's only 1). Runs alongside the sidebar (Memory of the Day + Currently, below). Add or edit posts in `content/posts/` — see [Blog](#blog) for details.
+The right-hand column of the final homepage row. Blog posts do **not** come from `lib/data.ts` — they're read live from `content/posts/*.mdx` via `getAllPosts()`. Deliberately de-emphasized: shows up to 3 posts as small thumbnail + short-summary rows (not the large featured-post treatment used on the actual `/blog` page), and shrinks gracefully if there are fewer than 3 posts. Add or edit posts in `content/posts/` — see [Blog](#blog) for details.
 
 ---
 
-### 5. Memory of the Day (sidebar)
+### 5. Currently column — Memory of the Day + Currently widget
 
-**File:** `content/memory.json` — GitHub web editor ✓
+The left-hand column of the final homepage row, paired with "From the Blog" so both columns' headings line up. The "Currently" heading itself lives directly in `app/page.tsx` (not in either component below) — this is intentional, so its spacing matches "From the Blog"'s heading exactly.
+
+**Memory of the Day** — **File:** `content/memory.json` — GitHub web editor ✓
 
 ```json
 {
@@ -149,13 +151,7 @@ No edits needed. Unlike an earlier version of this doc claimed, blog posts do **
 | `caption`  | The description shown below the date                                                                  |
 | `imageUrl` | Any public image URL. For a real photo, upload it to `public/images/` and use `/images/your-file.jpg` |
 
-Lives in the sidebar, alongside the Currently widget, next to the blog teaser.
-
----
-
-### 6. Currently widget (sidebar)
-
-**File:** `content/now.json` → the `"currently"` block — GitHub web editor ✓
+**Currently widget** — **File:** `content/now.json` → the `"currently"` block — GitHub web editor ✓
 
 ```json
 "currently": {
@@ -166,7 +162,7 @@ Lives in the sidebar, alongside the Currently widget, next to the blog teaser.
 }
 ```
 
-These are the four one-liners in the sidebar. Keep each under ~40 characters — they truncate if too long.
+These are the four one-liners shown below Memory of the Day. Keep each under ~40 characters — they truncate if too long.
 
 ---
 

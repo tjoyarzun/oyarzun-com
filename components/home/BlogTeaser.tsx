@@ -1,14 +1,34 @@
 import Link from "next/link";
-import { getAllPosts } from "@/lib/posts";
-import FeaturedPost from "@/components/blog/FeaturedPost";
-import BlogCard from "@/components/blog/BlogCard";
+import { getAllPosts, type PostMeta } from "@/lib/posts";
+
+function BlogThumbRow({ post }: { post: PostMeta }) {
+  return (
+    <Link href={`/blog/${post.slug}`} className="flex gap-4 items-start group">
+      <div className="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden">
+        <img
+          src={post.coverImage}
+          alt={post.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          loading="lazy"
+        />
+      </div>
+      <div className="min-w-0">
+        <h3 className="font-semibold text-sm text-navy dark:text-white leading-snug line-clamp-2 group-hover:text-teal transition-colors">
+          {post.title}
+        </h3>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2 leading-relaxed">
+          {post.excerpt}
+        </p>
+      </div>
+    </Link>
+  );
+}
 
 export default function BlogTeaser() {
-  const posts = getAllPosts().filter((p) => !p.draft);
+  const posts = getAllPosts()
+    .filter((p) => !p.draft)
+    .slice(0, 3);
   if (posts.length === 0) return null;
-
-  const [latest, ...rest] = posts;
-  const secondary = rest.slice(0, 2);
 
   return (
     <section>
@@ -19,20 +39,10 @@ export default function BlogTeaser() {
         Tech, AI, trip stories, and whatever else we&apos;re into.
       </p>
 
-      <div className="space-y-6">
-        <FeaturedPost post={latest} />
-
-        {secondary.length > 0 && (
-          <div
-            className={`grid grid-cols-1 ${
-              secondary.length > 1 ? "sm:grid-cols-2" : ""
-            } gap-4`}
-          >
-            {secondary.map((post) => (
-              <BlogCard key={post.slug} post={post} />
-            ))}
-          </div>
-        )}
+      <div className="space-y-5">
+        {posts.map((post) => (
+          <BlogThumbRow key={post.slug} post={post} />
+        ))}
       </div>
 
       <div className="mt-6 text-center">

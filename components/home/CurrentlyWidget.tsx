@@ -13,9 +13,6 @@ const items = [
 export default function CurrentlyWidget() {
   return (
     <div className="bg-white dark:bg-[#1C1A18] rounded-2xl p-6 border-l-4 border-teal shadow-sm">
-      <h2 className="font-display font-semibold text-xl text-navy dark:text-white mb-5">
-        Currently
-      </h2>
       <div className="space-y-4">
         {items.map((item) => {
           const Icon = item.icon;
