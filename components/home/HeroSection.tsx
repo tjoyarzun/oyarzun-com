@@ -27,7 +27,7 @@ const childVariants = {
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-gradient-to-br from-navy via-[#1a2a1a] to-[#1C1917]">
+    <section className="relative min-h-[75vh] flex flex-col justify-center overflow-hidden bg-gradient-to-br from-navy via-[#1a2a1a] to-[#1C1917]">
       {/* Subtle warm glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/3 left-1/4 w-[500px] h-[400px] bg-teal/5 rounded-full blur-3xl" />
@@ -35,7 +35,7 @@ export default function HeroSection() {
 
       {/* Main content: text left, photo right */}
       <motion.div
-        className="relative z-10 max-w-6xl mx-auto w-full px-6 md:px-12 pb-24 pt-12 flex flex-col md:flex-row items-center gap-12 md:gap-16"
+        className="relative z-10 max-w-6xl mx-auto w-full px-6 md:px-12 pb-16 pt-16 flex flex-col md:flex-row items-center gap-12 md:gap-16"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -74,9 +74,9 @@ export default function HeroSection() {
             variants={childVariants}
             className="text-white/70 text-base md:text-lg max-w-md mb-10 leading-relaxed"
           >
-            We build data platforms by day and write about all of it here —
-            code, mountains, and everything in between. Married, based in Sandy,
-            Utah, when we aren't dragging our kids on the next trip.
+            Skater. Tech and data nerd. Married to a Brazilian engineer who
+            smokes me on the slopes. We call Sandy, Utah home, when we aren't
+            dragging our kids on the next trip.
           </motion.p>
 
           <motion.div
@@ -108,7 +108,7 @@ export default function HeroSection() {
             className="bg-white p-2 pb-8 shadow-2xl shadow-black/40"
             style={{ rotate: "2deg" }}
           >
-            <div className="relative w-[260px] h-[340px] overflow-hidden">
+            <div className="relative w-[320px] h-[420px] overflow-hidden">
               <Image
                 src="/images/switzerland-dock.jpg"
                 alt="Julia, her kids, and her mom on a dock in Switzerland at sunset"
@@ -117,7 +117,7 @@ export default function HeroSection() {
                 priority
               />
             </div>
-            <p className="text-center text-[10px] text-gray-400 mt-3 font-sans tracking-wide">
+            <p className="text-center text-xs text-gray-400 mt-3 font-sans tracking-wide">
               Switzerland, 2023
             </p>
           </div>

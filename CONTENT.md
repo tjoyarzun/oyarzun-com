@@ -53,12 +53,12 @@ The two small pills under the names (e.g. "Manager, Analytics · Domo" and "Data
 #### Tagline paragraph
 
 ```tsx
-We build data platforms by day and write about all of it here —
-code, mountains, and everything in between. Married, based in
-Sandy, Utah, when we aren't dragging our kids on the next trip.
+Skater. Tech and data nerd. Married to a Brazilian engineer who
+smokes me on the slopes. We call Sandy, Utah home, when we aren't
+dragging our kids on the next trip.
 ```
 
-Replace with any text. Keep it to 1–2 sentences — it sits below the role badges and above the buttons. Since job titles now live in the badges above, this line is a good place for personality/site framing rather than job descriptions.
+Replace with any text. Keep it to 1–2 sentences — it sits below the role badges and above the buttons. Since job titles now live in the badges above, this is the spot for personality, not job descriptions.
 
 #### Buttons
 
