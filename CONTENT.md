@@ -146,13 +146,13 @@ Edit `label` (the bold card title) and `description` (the small subtitle) for an
 
 **File:** `components/home/BlogTeaser.tsx` — no edits needed here.
 
-The right-hand column of the final homepage row. Blog posts do **not** come from `lib/data.ts` — they're read live from `content/posts/*.mdx` via `getAllPosts()`. Shows the most recent post with the large `FeaturedPost` treatment (same component used on the `/blog` page), plus up to 2 more posts as small thumbnail + short-summary rows, and shrinks gracefully if there are fewer than 3 posts total (down to just the featured post if there's only 1). No subhead line under the heading — the breadth of topics is already established by the hero/About Us copy above. Add or edit posts in `content/posts/` — see [Blog](#blog) for details.
+The right-hand column of the final homepage row. Blog posts do **not** come from `lib/data.ts` — they're read live from `content/posts/*.mdx` via `getAllPosts()`. Shows the most recent post with the normal-size `BlogCard` treatment (same component used on the `/blog` listing page — cover image, title, excerpt, date/tags), plus up to 2 more posts as small thumbnail + short-summary rows, and shrinks gracefully if there are fewer than 3 posts total (down to just the one card if there's only 1). No subhead line under the heading — the breadth of topics is already established by the hero/About Us copy above. Add or edit posts in `content/posts/` — see [Blog](#blog) for details.
 
 ---
 
-### 6. Currently column — Memory of the Day + Currently widget
+### 6. Currently column — About Us + Memory of the Day + Currently widget
 
-The left-hand column of the final homepage row, paired with "From the Blog" so both columns' headings line up. The "Currently" heading itself lives directly in `app/page.tsx` (not in either component below) — this is intentional, so its spacing matches "From the Blog"'s heading exactly.
+The left-hand column of the final homepage row, paired with "From the Blog" on the right. Two labeled mini-sections stacked in one column: [About Us](#2-about-us) first, then a "Currently" heading followed by Memory of the Day and the Currently widget. The "Currently" heading itself lives directly in `app/page.tsx` (not in either component below) — giving that pair of widgets their own clear label again, rather than trailing off under the About Us paragraph unlabeled.
 
 **Memory of the Day** — **File:** `content/memory.json` — GitHub web editor ✓
 

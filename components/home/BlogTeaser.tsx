@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getAllPosts, type PostMeta } from "@/lib/posts";
-import FeaturedPost from "@/components/blog/FeaturedPost";
+import BlogCard from "@/components/blog/BlogCard";
 
 function BlogThumbRow({ post }: { post: PostMeta }) {
   return (
@@ -40,7 +40,7 @@ export default function BlogTeaser() {
       </h2>
 
       <div className="space-y-6">
-        <FeaturedPost post={latest} />
+        <BlogCard post={latest} />
 
         {rest.length > 0 && (
           <div className="space-y-5">

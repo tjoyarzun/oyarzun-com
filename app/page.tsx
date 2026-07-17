@@ -21,7 +21,10 @@ export default function HomePage() {
             {/* About Us + Currently column */}
             <div>
               <AboutUs />
-              <div className="space-y-6 mt-8">
+              <h2 className="font-display font-bold text-2xl text-navy dark:text-white mt-10 mb-6">
+                Currently
+              </h2>
+              <div className="space-y-6">
                 <MemoryOfDay />
                 <CurrentlyWidget />
               </div>
