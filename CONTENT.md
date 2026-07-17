@@ -18,7 +18,7 @@ A quick reference for updating every section of the site. Most updates require e
 
 ## Home
 
-The home page has six content areas, top to bottom: Hero, Profiles preview, a full-width navigation row, then a final two-column row — "Currently" (Memory of the Day + Currently widget) beside "From the Blog" — of equal width, so the two column headings line up. Profiles preview comes right after the hero so a new visitor meets Tommy and Julia before anything else. There's no separate stats/metrics section on the homepage — the real numbers live on the [Dashboard](#dashboard), which the navigation row links to directly. Some areas are edited via simple JSON files (no code needed), some auto-pull from `lib/data.ts` (edit once, updates in two places), and a couple require editing a component file directly.
+The home page has seven content areas, top to bottom: Hero, About Us, Profiles preview, a full-width navigation row, then a final two-column row — "Currently" (Memory of the Day + Currently widget) beside "From the Blog" — of equal width, so the two column headings line up. About Us and Profiles preview both come right after the hero so a new visitor understands the site and meets Tommy and Julia before anything else. There's no separate stats/metrics section on the homepage — the real numbers live on the [Dashboard](#dashboard), which the navigation row links to directly. Some areas are edited via simple JSON files (no code needed), some auto-pull from `lib/data.ts` (edit once, updates in two places), and a couple require editing a component file directly.
 
 ---
 
@@ -49,8 +49,8 @@ Update the names on each line.
 #### Site descriptor
 
 ```tsx
-Our corner of the internet — data & tech work, family
-adventures, and whatever we're writing about.
+Our corner of the internet. Data, tech, travel, and life with
+kids.
 ```
 
 One sentence stating what the site actually is, sitting right under the names — this is meant to be the first thing that orients a new visitor regardless of whether they came for the professional side, the family side, or the blog. Keep it to one sentence.
@@ -62,9 +62,9 @@ The two small pills under the names (e.g. "Manager, Analytics · Domo" and "Data
 #### Tagline paragraph
 
 ```tsx
-Skater. Tech and data nerd. Married to a Brazilian engineer who
-smokes me on the slopes. We call Sandy, Utah home, when we aren't
-dragging our kids on the next trip.
+Skater and tech nerd in Sandy, Utah. Married to a Brazilian data
+engineer. We ski, travel with our kids, and talk data over
+dinner.
 ```
 
 Replace with any text. Keep it to 1–2 sentences — it sits below the role badges and above the buttons. Since job titles now live in the badges above, this is the spot for personality, not job descriptions.
@@ -97,7 +97,22 @@ And the `alt` text on the `<Image>` tag for accessibility.
 
 ---
 
-### 2. Profiles preview
+### 2. About Us
+
+**File:** `components/home/AboutUs.tsx` — requires a code editor or GitHub web editor
+
+```tsx
+This site is part travel log, part professional portfolio, and part
+record of everything in between. Behind it are Tommy and Julia, a
+data and tech duo who never really stopped talking shop. We built
+this place to have somewhere to put it all.
+```
+
+A short mission-statement paragraph right after the hero, expanding on the hero's one-line descriptor before the page moves into profiles/nav/content. Plain static text — no data source, just edit the paragraph directly.
+
+---
+
+### 3. Profiles preview
 
 **File:** `components/home/ProfilesPreview.tsx` — no edits needed here.
 
@@ -105,7 +120,7 @@ The two condensed cards ("Who We Are") show each person's name, title/company, a
 
 ---
 
-### 3. Navigation row ("Explore")
+### 4. Navigation row ("Explore")
 
 **File:** `components/home/NavGrid.tsx` — requires a code editor or GitHub web editor
 
@@ -127,7 +142,7 @@ Edit `label` (the bold card title) and `description` (the small subtitle) for an
 
 ---
 
-### 4. From the Blog
+### 5. From the Blog
 
 **File:** `components/home/BlogTeaser.tsx` — no edits needed here.
 
@@ -135,7 +150,7 @@ The right-hand column of the final homepage row. Blog posts do **not** come from
 
 ---
 
-### 5. Currently column — Memory of the Day + Currently widget
+### 6. Currently column — Memory of the Day + Currently widget
 
 The left-hand column of the final homepage row, paired with "From the Blog" so both columns' headings line up. The "Currently" heading itself lives directly in `app/page.tsx` (not in either component below) — this is intentional, so its spacing matches "From the Blog"'s heading exactly.
 

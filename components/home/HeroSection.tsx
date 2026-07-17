@@ -62,8 +62,7 @@ export default function HeroSection() {
             variants={childVariants}
             className="text-white/90 text-lg md:text-xl font-medium max-w-md mb-6 leading-snug"
           >
-            Our corner of the internet — data &amp; tech work, family
-            adventures, and whatever we&apos;re writing about.
+            Our corner of the internet. Data, tech, travel, and life with kids.
           </motion.p>
 
           <motion.div
@@ -82,9 +81,8 @@ export default function HeroSection() {
             variants={childVariants}
             className="text-white/70 text-base md:text-lg max-w-md mb-10 leading-relaxed"
           >
-            Skater. Tech and data nerd. Married to a Brazilian engineer who
-            smokes me on the slopes. We call Sandy, Utah home, when we aren't
-            dragging our kids on the next trip.
+            Skater and tech nerd in Sandy, Utah. Married to a Brazilian data
+            engineer. We ski, travel with our kids, and talk data over dinner.
           </motion.p>
 
           <motion.div

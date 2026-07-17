@@ -1,4 +1,5 @@
 import HeroSection from "@/components/home/HeroSection";
+import AboutUs from "@/components/home/AboutUs";
 import ProfilesPreview from "@/components/home/ProfilesPreview";
 import MemoryOfDay from "@/components/home/MemoryOfDay";
 import NavGrid from "@/components/home/NavGrid";
@@ -9,6 +10,8 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
+
+      <AboutUs />
 
       <ProfilesPreview />
 
