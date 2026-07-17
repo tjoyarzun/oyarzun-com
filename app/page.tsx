@@ -11,8 +11,6 @@ export default function HomePage() {
     <>
       <HeroSection />
 
-      <AboutUs />
-
       <ProfilesPreview />
 
       <div className="bg-slate dark:bg-[#121110]">
@@ -20,15 +18,10 @@ export default function HomePage() {
           <NavGrid />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12">
-            {/* Currently column */}
+            {/* About Us + Currently column */}
             <div>
-              <h2 className="font-display font-bold text-2xl text-navy dark:text-white mb-1">
-                Currently
-              </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                A snapshot of right now.
-              </p>
-              <div className="space-y-6">
+              <AboutUs />
+              <div className="space-y-6 mt-8">
                 <MemoryOfDay />
                 <CurrentlyWidget />
               </div>

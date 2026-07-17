@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllPosts, type PostMeta } from "@/lib/posts";
+import FeaturedPost from "@/components/blog/FeaturedPost";
 
 function BlogThumbRow({ post }: { post: PostMeta }) {
   return (
@@ -30,19 +31,24 @@ export default function BlogTeaser() {
     .slice(0, 3);
   if (posts.length === 0) return null;
 
+  const [latest, ...rest] = posts;
+
   return (
     <section>
-      <h2 className="font-display font-bold text-2xl text-navy dark:text-white mb-1">
+      <h2 className="font-display font-bold text-2xl text-navy dark:text-white mb-6">
         From the Blog
       </h2>
-      <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-        Tech, AI, trip stories, and whatever else we&apos;re into.
-      </p>
 
-      <div className="space-y-5">
-        {posts.map((post) => (
-          <BlogThumbRow key={post.slug} post={post} />
-        ))}
+      <div className="space-y-6">
+        <FeaturedPost post={latest} />
+
+        {rest.length > 0 && (
+          <div className="space-y-5">
+            {rest.map((post) => (
+              <BlogThumbRow key={post.slug} post={post} />
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="mt-6 text-center">

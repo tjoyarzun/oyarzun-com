@@ -19,7 +19,7 @@ export default function MemoryOfDay() {
       </div>
 
       {/* Photo */}
-      <div className="relative w-full aspect-[4/3] overflow-hidden">
+      <div className="relative w-full aspect-video overflow-hidden">
         <img
           src={IMAGE_URL}
           alt={MOCK_CAPTION}

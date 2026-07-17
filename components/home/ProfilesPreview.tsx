@@ -76,7 +76,7 @@ function PreviewCard({
 
 export default function ProfilesPreview() {
   return (
-    <section className="max-w-7xl mx-auto px-4 py-16">
+    <section className="max-w-7xl mx-auto px-4 pt-16">
       <h2 className="font-display font-bold text-2xl text-navy dark:text-white mb-6">
         Who We Are
       </h2>
