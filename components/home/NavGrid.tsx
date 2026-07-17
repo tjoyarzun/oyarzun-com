@@ -2,25 +2,17 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { User, Mountain, BarChart2, Home } from "lucide-react";
-import { travelStats } from "@/lib/data";
+import { Mountain, BarChart2 } from "lucide-react";
 
 interface NavCard {
   icon: React.ElementType;
   label: string;
   description: string;
   href: string;
-  color: "teal" | "orange" | "navy";
+  color: "teal" | "orange";
 }
 
 const cards: NavCard[] = [
-  {
-    icon: User,
-    label: "Our Profiles",
-    description: "Career and projects we are proud of",
-    href: "/profiles",
-    color: "teal",
-  },
   {
     icon: Mountain,
     label: "Travels",
@@ -35,19 +27,11 @@ const cards: NavCard[] = [
     href: "/dashboard",
     color: "teal",
   },
-  {
-    icon: Home,
-    label: "Family Hub",
-    description: "Private family space",
-    href: "/family",
-    color: "navy",
-  },
 ];
 
 const iconBg: Record<NavCard["color"], string> = {
   teal: "bg-teal/10 text-teal dark:bg-teal/20",
   orange: "bg-orange/10 text-orange dark:bg-orange/20",
-  navy: "bg-navy/10 text-navy dark:bg-white/10 dark:text-white",
 };
 
 const containerVariants = {
@@ -70,7 +54,7 @@ const cardVariants = {
 export default function NavGrid() {
   return (
     <motion.div
-      className="grid grid-cols-2 lg:grid-cols-4 gap-4"
+      className="grid grid-cols-1 sm:grid-cols-2 gap-4"
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"

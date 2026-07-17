@@ -18,7 +18,7 @@ A quick reference for updating every section of the site. Most updates require e
 
 ## Home
 
-The home page has four content areas. Two are edited via simple JSON files (no code needed), and two require editing a component file directly.
+The home page has seven content areas, top to bottom: Hero, Fun Metrics, Profiles preview, a navigation row, the blog teaser, and a sidebar (Memory of the Day + Currently). Some are edited via simple JSON files (no code needed), some auto-pull from `lib/data.ts` (edit once, updates in two places), and a couple require editing a component file directly.
 
 ---
 
@@ -46,15 +46,19 @@ Tommy Oyarzun
 
 Update the names on each line.
 
+#### Role/company badges (new — auto-generated, no edit here)
+
+The two small pills under the names (e.g. "Manager, Analytics · Domo" and "Data Engineer III · SeekWell") are **not hand-typed** — they're pulled automatically from `lib/data.ts` → `profiles.him.title`/`profiles.him.company` and `profiles.her.title`/`profiles.her.company`. To change what they say, edit those fields under [Profiles](#profiles); the hero updates automatically.
+
 #### Tagline paragraph
 
 ```tsx
-Skateboarder-turned-data nerd. Brazilian engineer who runs circles
-around him on the mountain. Based in Sandy, Utah with our kids and
-wherever the next trip takes us.
+We build data platforms by day and write about all of it here —
+code, mountains, and everything in between. Married, based in
+Sandy, Utah, when we aren't dragging our kids on the next trip.
 ```
 
-Replace with any text. Keep it to 2–3 sentences — it sits below the names and above the buttons.
+Replace with any text. Keep it to 1–2 sentences — it sits below the role badges and above the buttons. Since job titles now live in the badges above, this line is a good place for personality/site framing rather than job descriptions.
 
 #### Buttons
 
@@ -83,7 +87,67 @@ And the `alt` text on the `<Image>` tag for accessibility.
 
 ---
 
-### 2. Memory of the Day
+### 2. Fun Metrics
+
+**File:** `components/home/FunMetrics.tsx` — requires a code editor or GitHub web editor
+
+A row of 4 stat cards just below the hero, mirroring the same 4 headline numbers shown on the [Dashboard](#dashboard) (see `### KPI Cards` under that section for the full breakdown of how each number is sourced):
+
+| Card | Source | Live? |
+| --- | --- | --- |
+| GitHub Commits | `/api/github-activity` (Tommy's GitHub) | Yes — fetched client-side on page load |
+| Blog Posts | Count of non-draft files in `content/posts/*.mdx` | Yes — computed server-side per request |
+| Books Read | `lib/data.ts` → `dashboardStats.booksReadThisYear` | Manual — update the number yourself |
+| Countries Visited | `lib/data.ts` → `travelStats.countriesVisited` (derived from the `adventures` array) | Yes — recalculates whenever you add/edit an adventure |
+
+Each card also shows a small trend line underneath (e.g. "62% to this year's goal", "3 new adventures this year") — these pull from `lib/data.ts` → `goals` (Blog Posts, Books Read) or from counting this year's entries in `adventures` (Countries Visited). No fabricated trend data — if a real number isn't available, the card just doesn't show one.
+
+---
+
+### 3. Profiles preview
+
+**File:** `components/home/ProfilesPreview.tsx` — no edits needed here.
+
+The two condensed cards ("Who We Are") show each person's name, title/company, and a truncated first line of their bio. These read directly from `lib/data.ts` → `profiles.him`/`profiles.her` — the exact same fields documented under [Profiles](#profiles). Edit there once; it updates the hero badges, this preview, and the full `/profiles` page all together.
+
+---
+
+### 4. Navigation cards
+
+**File:** `components/home/NavGrid.tsx` — requires a code editor or GitHub web editor
+
+Two clickable cards (`Travels`, `Data Dashboard`). `Our Profiles` and `Family Hub` are intentionally **not** in this grid anymore — Profiles now has its own dedicated homepage section (above), and Family Hub is reachable via the "Family Hub" button in the top navigation bar (`components/layout/Navbar.tsx`) instead of being featured on the public homepage. Find the `cards` array:
+
+```ts
+const cards: NavCard[] = [
+  {
+    label: "Travels",
+    description: "Brazil and Utah and everywhere in between",
+    href: "/travels",
+    ...
+  },
+  {
+    label: "Data Dashboard",
+    description: "Because data...",
+    href: "/dashboard",
+    ...
+  },
+];
+```
+
+Edit `label` (the bold card title) and `description` (the small subtitle) for any card. Don't change `href` — that's the link destination.
+
+---
+
+### 5. From the Blog
+
+**File:** `components/home/BlogTeaser.tsx` — no edits needed here.
+
+No edits needed. Unlike an earlier version of this doc claimed, blog posts do **not** come from `lib/data.ts` — they're read live from `content/posts/*.mdx` via `getAllPosts()`. This section shows the most recent post large, plus up to 2 more compact cards, and gracefully shrinks if there are fewer than 3 posts (down to just the single featured post if there's only 1). Add or edit posts in `content/posts/` — see [Blog](#blog) for details.
+
+---
+
+### 6. Memory of the Day (sidebar)
 
 **File:** `content/memory.json` — GitHub web editor ✓
 
@@ -101,37 +165,11 @@ And the `alt` text on the `<Image>` tag for accessibility.
 | `caption`  | The description shown below the date                                                                  |
 | `imageUrl` | Any public image URL. For a real photo, upload it to `public/images/` and use `/images/your-file.jpg` |
 
----
-
-### 3. Navigation cards
-
-**File:** `components/home/NavGrid.tsx` — requires a code editor or GitHub web editor
-
-The four clickable cards in the main column (`Our Profiles`, `Travels`, `Data Dashboard`, `Family Hub`). Find the `cards` array:
-
-```ts
-const cards: NavCard[] = [
-  {
-    label: "Our Profiles",
-    description: "Career and projects we are proud of",
-    href: "/profiles",
-    ...
-  },
-  {
-    label: "Travels",
-    description: "Brazil and Utah and everywhere in between",
-    href: "/travels",
-    ...
-  },
-  ...
-];
-```
-
-Edit `label` (the bold card title) and `description` (the small subtitle) for any card. Don't change `href` — that's the link destination.
+Now lives in the sidebar, alongside the Currently widget, rather than the main column.
 
 ---
 
-### 4. Currently widget (sidebar)
+### 7. Currently widget (sidebar)
 
 **File:** `content/now.json` → the `"currently"` block — GitHub web editor ✓
 
@@ -145,12 +183,6 @@ Edit `label` (the bold card title) and `description` (the small subtitle) for an
 ```
 
 These are the four one-liners in the sidebar. Keep each under ~40 characters — they truncate if too long.
-
----
-
-### 5. From the Blog (auto-generated)
-
-No edits needed. The three blog previews are pulled automatically from the three most recent entries in `lib/data.ts` → `blogPosts`. Add or edit posts in `content/posts/` and `lib/data.ts` — see [Blog](#blog) for details.
 
 ---
 

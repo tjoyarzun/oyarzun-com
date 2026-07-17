@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { profiles } from "@/lib/data";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -57,11 +58,25 @@ export default function HeroSection() {
             <span className="text-white/60">&</span> Julia Velicev
           </motion.h1>
 
+          <motion.div
+            variants={childVariants}
+            className="flex flex-wrap gap-3 mb-6"
+          >
+            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-teal/15 text-teal">
+              {profiles.him.title} · {profiles.him.company}
+            </span>
+            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-orange/20 text-orange">
+              {profiles.her.title} · {profiles.her.company}
+            </span>
+          </motion.div>
+
           <motion.p
             variants={childVariants}
             className="text-white/70 text-base md:text-lg max-w-md mb-10 leading-relaxed"
           >
-            Skater. Tech and data nerd. Married to a Brazilian engineer who smokes me on the slopes. We call Sandy, Utah home, when we aren't dragging our kids on the next trip.
+            We build data platforms by day and write about all of it here —
+            code, mountains, and everything in between. Married, based in Sandy,
+            Utah, when we aren't dragging our kids on the next trip.
           </motion.p>
 
           <motion.div
