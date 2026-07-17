@@ -146,7 +146,7 @@ Edit `label` (the bold card title) and `description` (the small subtitle) for an
 
 **File:** `components/home/BlogTeaser.tsx` — no edits needed here.
 
-The right-hand column of the final homepage row. Blog posts do **not** come from `lib/data.ts` — they're read live from `content/posts/*.mdx` via `getAllPosts()`. Shows the most recent post with the normal-size `BlogCard` treatment (same component used on the `/blog` listing page — cover image, title, excerpt, date/tags), plus up to 2 more posts as small thumbnail + short-summary rows, and shrinks gracefully if there are fewer than 3 posts total (down to just the one card if there's only 1). No subhead line under the heading — the breadth of topics is already established by the hero/About Us copy above. Add or edit posts in `content/posts/` — see [Blog](#blog) for details.
+The right-hand column of the final homepage row. Blog posts do **not** come from `lib/data.ts` — they're read live from `content/posts/*.mdx` via `getAllPosts()`. Shows the most recent post with the normal-size `BlogCard` treatment (same component used on the `/blog` listing page — cover image, title, excerpt, date/tags), plus up to 2 more posts as a smaller version of the same tile shape (cover image on top, title, excerpt — just more compact, no date/tags row), and shrinks gracefully if there are fewer than 3 posts total (down to just the one card if there's only 1). No subhead line under the heading — the breadth of topics is already established by the hero/About Us copy above. Add or edit posts in `content/posts/` — see [Blog](#blog) for details.
 
 ---
 
