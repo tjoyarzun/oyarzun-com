@@ -123,7 +123,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="https://thehousekeeper.biz"
+                  href="https://www.thehousekeeper.biz"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-300 hover:text-teal text-sm transition-colors flex items-center gap-1.5"
