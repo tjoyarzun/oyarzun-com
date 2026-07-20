@@ -430,33 +430,40 @@ SRV Records:
 ## File Structure Reference
 
 /home/zo81zqz6hc1h/
-└── public_html/ ← tomas.oyarzun.com (old site)
-├── index.php ← main PHP app with GET params
-├── .htaccess ← tomas.oyarzun.com rules
-├── en/
-│ └── resources/
-│ ├── filetostring.php
-│ ├── filetostring-menu.php
-│ ├── filetostring-rightbox.php
-│ └── rightbox-torres.inc
-├── myjfmp3/ ← mp3 player
-├── JUDO Explained [720p].mp4 ← video file (referenced by judo site)
-├── blog/ ← saltlakecityjudo.org WordPress
-│ ├── index.php
-│ ├── .htaccess ← fixed RewriteBase /
-│ ├── wp-admin/
-│ ├── wp-content/
-│ ├── wp-includes/
-│ └── wp-config.php ← DB: oya1328511301039
-├── thehousekeeper/ ← OLD BACKUP (can delete when confident)
-│ ├── index.php
-│ ├── resources/
-│ └── sections/
-└── thehousekeeper.biz/ ← thehousekeeper.biz ACTIVE
-├── index.php
-├── .htaccess
-├── resources/
-└── sections/
+|
+└── public_html/                          (tomas.oyarzun.com old site)
+    |
+    ├── index.php                         (main PHP app with GET params)
+    ├── .htaccess                         (tomas.oyarzun.com rules)
+    ├── JUDO Explained [720p].mp4         (video referenced by judo site)
+    |
+    ├── en/
+    |   └── resources/
+    |       ├── filetostring.php
+    |       ├── filetostring-menu.php
+    |       ├── filetostring-rightbox.php
+    |       └── rightbox-torres.inc
+    |
+    ├── myjfmp3/                          (mp3 player)
+    |
+    ├── blog/                             (saltlakecityjudo.org WordPress)
+    |   ├── index.php
+    |   ├── .htaccess                     (fixed RewriteBase from /blog/ to /)
+    |   ├── wp-admin/
+    |   ├── wp-content/
+    |   ├── wp-includes/
+    |   └── wp-config.php                (DB: oya1328511301039)
+    |
+    ├── thehousekeeper/                   (OLD BACKUP can delete when confident)
+    |   ├── index.php
+    |   ├── resources/
+    |   └── sections/
+    |
+    └── thehousekeeper.biz/              (thehousekeeper.biz ACTIVE)
+        ├── index.php
+        ├── .htaccess
+        ├── resources/
+        └── sections/
 
 
 ---
@@ -514,17 +521,17 @@ SRV Records:
 
 | Date | Change | Reason |
 |------|--------|--------|
-| 2025 | Moved oyarzun.com DNS to Cloudflare nameservers | GoDaddy AutoSSL not available, needed SSL for subdomains |
-| 2025 | Pointed oyarzun.com to Vercel | New Next.js site deployed |
-| 2025 | Added tomas.oyarzun.com subdomain | Preserve old oyarzun.com site |
-| 2025 | Fixed tomas.oyarzun.com PHP iframes | iframes referenced www.oyarzun.com which moved to Vercel |
-| 2025 | Made thehousekeeper.biz independent addon domain | Was masked forward, broke when oyarzun.com moved to Vercel |
-| 2025 | Added thehousekeeper.biz to Cloudflare | Free SSL, replaces broken GoDaddy self-signed cert |
-| 2025 | Fixed saltlakecityjudo.org WordPress | Was masked forward, broke when oyarzun.com moved to Vercel |
-| 2025 | Updated 1800+ WordPress database URLs | All URLs hardcoded to oyarzun.com/blog, needed updating |
-| 2025 | Fixed WordPress .htaccess RewriteBase | Was /blog/ subfolder, now root domain |
-| 2025 | Fixed WordPress Primary Menu | Was NULL causing theme fallback duplicate navigation |
-| 2025 | Updated SPF record to Microsoft 365 | Was pointing to GoDaddy servers, broke outgoing email |
-| 2025 | Set all email CNAMEs to DNS only | Proxied email records break email routing |
-| 2025 | Deleted duplicate A record 192.124.249.20 | Conflicting record blocking Vercel validation |
-| 2025 | Moved JUDO video file to public_html/blog/ | Video referenced from WordPress, needed to be on same domain |
+| 2026 | Moved oyarzun.com DNS to Cloudflare nameservers | GoDaddy AutoSSL not available, needed SSL for subdomains |
+| 2026 | Pointed oyarzun.com to Vercel | New Next.js site deployed |
+| 2026 | Added tomas.oyarzun.com subdomain | Preserve old oyarzun.com site |
+| 2026 | Fixed tomas.oyarzun.com PHP iframes | iframes referenced www.oyarzun.com which moved to Vercel |
+| 2026 | Made thehousekeeper.biz independent addon domain | Was masked forward, broke when oyarzun.com moved to Vercel |
+| 2026 | Added thehousekeeper.biz to Cloudflare | Free SSL, replaces broken GoDaddy self-signed cert |
+| 2026 | Fixed saltlakecityjudo.org WordPress | Was masked forward, broke when oyarzun.com moved to Vercel |
+| 2026 | Updated 1800+ WordPress database URLs | All URLs hardcoded to oyarzun.com/blog, needed updating |
+| 2026 | Fixed WordPress .htaccess RewriteBase | Was /blog/ subfolder, now root domain |
+| 2026 | Fixed WordPress Primary Menu | Was NULL causing theme fallback duplicate navigation |
+| 2026 | Updated SPF record to Microsoft 365 | Was pointing to GoDaddy servers, broke outgoing email |
+| 2026 | Set all email CNAMEs to DNS only | Proxied email records break email routing |
+| 2026 | Deleted duplicate A record 192.124.249.20 | Conflicting record blocking Vercel validation |
+| 2026 | Moved JUDO video file to public_html/blog/ | Video referenced from WordPress, needed to be on same domain |
