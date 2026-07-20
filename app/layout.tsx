@@ -19,8 +19,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Oyarzun.com — Data. Mountains. Family.",
-  description: "Tommy & Julia Oyarzun — data engineers living in Utah.",
+  title: "Oyarzun.com — Data. Travel. Family.",
+  description: "Tommy Oyarzun & Julia Velicev — data professionals home in Utah.",
 };
 
 export default function RootLayout({
