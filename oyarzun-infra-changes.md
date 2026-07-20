@@ -436,7 +436,6 @@ SRV Records:
     |
     +-- index.php                        (main PHP app with GET params)
     +-- .htaccess                        (tomas.oyarzun.com rules)
-    +-- JUDO Explained 720p.mp4          (video referenced by judo site)
     |
     +-- en/
     |   +-- resources/
@@ -454,6 +453,7 @@ SRV Records:
     |   +-- wp-content/
     |   +-- wp-includes/
     |   +-- wp-config.php               (DB: oya1328511301039)
+    |   +-- JUDO Explained 720p.mp4     (moved from public_html/ root)
     |
     +-- thehousekeeper/                  (OLD BACKUP can delete when confident)
     |   +-- index.php
