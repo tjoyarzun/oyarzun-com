@@ -17,7 +17,7 @@ export default function DashboardClient({ postCount }: { postCount: number }) {
 
   useEffect(() => {
     fetch(
-      `/api/github-activity?username=${encodeURIComponent(profiles.him.github)}`,
+      `/api/github-activity?username=${encodeURIComponent(profiles.him.github ?? "")}`,
     )
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {

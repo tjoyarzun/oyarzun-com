@@ -52,7 +52,7 @@ export default function ProfilesPage() {
             </div>
 
             <div>
-              <GitHubHeatmap username={profiles.him.github} />
+              <GitHubHeatmap username={profiles.him.github ?? ""} />
             </div>
 
             <div>

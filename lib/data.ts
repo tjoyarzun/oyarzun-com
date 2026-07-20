@@ -30,7 +30,7 @@ export interface Profile {
   skills: Skill[];
   career: CareerEntry[];
   projects: Project[];
-  github: string;
+  github?: string;
   linkedin: string;
   resume?: string;
 }
@@ -258,8 +258,8 @@ export const profiles: { him: Profile; her: Profile } = {
         githubUrl: "https://www.linkedin.com/in/julia-velicev",
       },
     ],
-    github: "jvelicev",
     linkedin: "julia-velicev",
+    resume: "/documents/julia_velicev_resume_2026.pdf",
   },
 };
 

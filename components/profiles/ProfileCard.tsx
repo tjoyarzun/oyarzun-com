@@ -78,15 +78,17 @@ export default function ProfileCard({ profile, color }: ProfileCardProps) {
           <ExternalLink size={14} />
           LinkedIn
         </a>
-        <a
-          href={`https://github.com/${profile.github}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border ${c.border} ${c.text} ${c.hover} text-sm font-medium transition-colors`}
-        >
-          <Github size={14} />
-          GitHub
-        </a>
+        {profile.github && (
+          <a
+            href={`https://github.com/${profile.github}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border ${c.border} ${c.text} ${c.hover} text-sm font-medium transition-colors`}
+          >
+            <Github size={14} />
+            GitHub
+          </a>
+        )}
         {profile.resume ? (
           <a
             href={profile.resume}

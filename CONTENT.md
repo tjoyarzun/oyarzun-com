@@ -221,8 +221,14 @@ The heatmap refreshes every 24 hours via Next.js caching — no manual update ne
 
 ### Updating the resume PDF
 
-1. Add the new PDF to `public/documents/` (e.g. `tommy_oyarzun_resume_2027.pdf`).
-2. In `lib/data.ts`, update the `resume` field to match the new filename.
+1. Add the new PDF to `public/documents/` (e.g. `tommy_oyarzun_resume_2027.pdf` or `julia_velicev_resume_2027.pdf`).
+2. In `lib/data.ts`, update the `resume` field on the matching profile (`profiles.him` or `profiles.her`) to match the new filename.
+
+Both Tommy's and Julia's profile cards show a Resume download button whenever `resume` is set on their profile object; it's a disabled placeholder button if `resume` is missing.
+
+### GitHub button (optional per person)
+
+The `github` field on a `Profile` is optional. Tommy's profile has one, so his card shows a GitHub button (and the [GitHub Activity Heatmap](#github-activity-heatmap) above uses it). Julia's profile has no `github` field, so her card simply doesn't show a GitHub button — there's no placeholder, it's omitted entirely. To add a GitHub button for someone, add a `github: "username"` field to their profile object in `lib/data.ts`.
 
 ### Adding or editing a career entry
 
