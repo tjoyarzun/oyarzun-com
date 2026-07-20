@@ -120,7 +120,7 @@ export default function HeroSection() {
             className="bg-white p-2 pb-8 shadow-2xl shadow-black/40"
             style={{ rotate: "2deg" }}
           >
-            <div className="relative w-[320px] h-[420px] overflow-hidden">
+            <div className="relative w-[380px] h-[285px] overflow-hidden">
               <Image
                 src="/images/summit-selfie.jpg"
                 alt="Summit selfie on Bald Mountain in Hanna, Utah"
