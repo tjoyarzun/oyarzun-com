@@ -240,8 +240,9 @@ wp_options table additional:
 ### WordPress Admin
 - URL: http://saltlakecityjudo.org/wp-admin
 - Username: taoz50
+- Password: M2H3HP!hzU)GoCVP 
 
-### Handover Plan
+### Handover Plan (Not Completed)
 - Update WordPress core and all plugins before handover
 - Create new admin account for judo sensei
 - Brief sensei on WordPress management
