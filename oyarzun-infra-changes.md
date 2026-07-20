@@ -240,7 +240,6 @@ wp_options table additional:
 ### WordPress Admin
 - URL: http://saltlakecityjudo.org/wp-admin
 - Username: taoz50
-- Password: M2H3HP!hzU)GoCVP 
 
 ### Handover Plan (Not Completed)
 - Update WordPress core and all plugins before handover
@@ -505,17 +504,6 @@ SRV Records:
 | All DNS (thehousekeeper.biz) | Tommy | Cloudflare dashboard |
 | All DNS (saltlakecityjudo.org) | Tommy | GoDaddy DNS |
 | Email (oyarzun.com) | Tommy | Microsoft 365 admin.microsoft.com |
-
----
-
-## Credentials Reference (store securely — do not commit to public repo)
-
-- GoDaddy Account: [store in password manager]
-- Cloudflare Account: [store in password manager]
-- Vercel Account: [store in password manager]
-- Microsoft 365 Admin: admin.microsoft.com [store in password manager]
-- WordPress Admin saltlakecityjudo.org: [store in password manager]
-- GoDaddy cPanel Username: zo81zqz6hc1h (partial — verify full username)
 
 ---
 
