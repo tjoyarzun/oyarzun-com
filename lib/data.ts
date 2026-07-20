@@ -209,7 +209,7 @@ export const profiles: { him: Profile; her: Profile } = {
     name: "Julia Velicev",
     title: "Data Engineer III",
     company: "SeekWell",
-    bio: "Staff-level Data Engineer with 10+ years of experience designing scalable data products, cloud data warehouses, ETL/ELT pipelines, and analytics solutions. Strong hands-on background with GCP, BigQuery, Cloud Storage, Cloud Functions, Pub/Sub, Databricks, AWS/S3, PostgreSQL, Python, SQL, and Tableau. Proven success modernizing legacy data assets, optimizing high-volume SQL, improving production reliability through standards and testing, and partnering across business, product, engineering, and analytics teams to deliver reusable, high-fidelity data solutions in ambiguous environments.",
+    bio: "Staff Data Engineer with 10+ years of experience building scalable data pipelines, cloud warehouses, and analytics solutions. Hands-on expertise across GCP, BigQuery, Databricks, AWS, PostgreSQL, Python, SQL, and Tableau. Track record of modernizing legacy systems, optimizing high-volume SQL, and delivering reliable, reusable data products in close partnership with business, product, and engineering teams.",
     skills: [
       { skill: "SQL", value: 95 },
       { skill: "Python", value: 90 },
