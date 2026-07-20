@@ -429,41 +429,43 @@ SRV Records:
 
 ## File Structure Reference
 
+```
 /home/zo81zqz6hc1h/
 |
-└── public_html/                          (tomas.oyarzun.com old site)
++-- public_html/                         (tomas.oyarzun.com old site)
     |
-    ├── index.php                         (main PHP app with GET params)
-    ├── .htaccess                         (tomas.oyarzun.com rules)
-    ├── JUDO Explained [720p].mp4         (video referenced by judo site)
+    +-- index.php                        (main PHP app with GET params)
+    +-- .htaccess                        (tomas.oyarzun.com rules)
+    +-- JUDO Explained 720p.mp4          (video referenced by judo site)
     |
-    ├── en/
-    |   └── resources/
-    |       ├── filetostring.php
-    |       ├── filetostring-menu.php
-    |       ├── filetostring-rightbox.php
-    |       └── rightbox-torres.inc
+    +-- en/
+    |   +-- resources/
+    |       +-- filetostring.php
+    |       +-- filetostring-menu.php
+    |       +-- filetostring-rightbox.php
+    |       +-- rightbox-torres.inc
     |
-    ├── myjfmp3/                          (mp3 player)
+    +-- myjfmp3/                         (mp3 player)
     |
-    ├── blog/                             (saltlakecityjudo.org WordPress)
-    |   ├── index.php
-    |   ├── .htaccess                     (fixed RewriteBase from /blog/ to /)
-    |   ├── wp-admin/
-    |   ├── wp-content/
-    |   ├── wp-includes/
-    |   └── wp-config.php                (DB: oya1328511301039)
+    +-- blog/                            (saltlakecityjudo.org WordPress)
+    |   +-- index.php
+    |   +-- .htaccess                    (fixed RewriteBase from /blog/ to /)
+    |   +-- wp-admin/
+    |   +-- wp-content/
+    |   +-- wp-includes/
+    |   +-- wp-config.php               (DB: oya1328511301039)
     |
-    ├── thehousekeeper/                   (OLD BACKUP can delete when confident)
-    |   ├── index.php
-    |   ├── resources/
-    |   └── sections/
+    +-- thehousekeeper/                  (OLD BACKUP can delete when confident)
+    |   +-- index.php
+    |   +-- resources/
+    |   +-- sections/
     |
-    └── thehousekeeper.biz/              (thehousekeeper.biz ACTIVE)
-        ├── index.php
-        ├── .htaccess
-        ├── resources/
-        └── sections/
+    +-- thehousekeeper.biz/              (thehousekeeper.biz ACTIVE)
+        +-- index.php
+        +-- .htaccess
+        +-- resources/
+        +-- sections/
+```
 
 
 ---
