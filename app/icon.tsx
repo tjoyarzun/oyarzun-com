@@ -14,8 +14,14 @@ export default function Icon() {
       }}
     >
       <svg width="32" height="32" viewBox="0 0 32 32">
-        <circle cx="23" cy="10" r="3.5" fill="#D4614A" />
-        <polygon points="0,32 16,10 32,32" fill="#C8973E" />
+        <circle
+          cx="16"
+          cy="16"
+          r="9"
+          fill="none"
+          stroke="#C8973E"
+          strokeWidth="6"
+        />
       </svg>
     </div>,
     { ...size },
