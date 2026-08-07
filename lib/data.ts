@@ -497,8 +497,7 @@ export const bucketListItems: BucketListItem[] = [
     name: "Tahiti",
     state: "French Polynesia",
     description: "We do love beaches.",
-    imageUrl:
-      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFqGv3nPOT8Yf94pbS8BLo8C-2wCmjapIKitsiV0HNDgEF9NTPngQT9eVvwU-OiTXygr-9P7n2xZTuZNDBOACMnFVlcGe9kAzR0eQEILqUGZRFpmFutuV2p3eff5kSGxqUUA0L6mg=w426-h240-k-no",
+    imageUrl: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmf1TxV0qVIdSl9gDC4jqB_1ToUKiKYyzKfViU0bbI0lnnKFqB6iwoNWlCPmQGLBGG8x-kqQiE0wrLftPV-6CPfV7_KTKalZnhOjz5sj4XtgRf5ECW9YbrHEj16uEpmIsYFknHuQw=w426-h240-k-no",
     type: "beach",
   },
 ];
