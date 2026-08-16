@@ -388,7 +388,7 @@ export const dashboardStats = {
   milesHiked: 847,
   skiDays: 34,
   statesVisited: 28,
-  booksReadThisYear: 7,
+  booksReadThisYear: 8,
   countriesVisited: 12,
 };
 
@@ -641,5 +641,5 @@ export const booksPerQuarter = [
   { quarter: "Q4 25", books: 0 },
   { quarter: "Q1 26", books: 0 },
   { quarter: "Q2 26", books: 4 },
-  { quarter: "Q3 26", books: 3 },
+  { quarter: "Q3 26", books: 4 },
 ];
