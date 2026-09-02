@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { type PostMeta } from "@/lib/posts";
 
 interface BlogCardProps {
@@ -32,11 +33,13 @@ export default function BlogCard({ post }: BlogCardProps) {
       className="block bg-white dark:bg-[#1C1A18] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-200 cursor-pointer"
     >
       {/* Cover image */}
-      <div className="overflow-hidden h-48">
-        <img
+      <div className="relative overflow-hidden h-48">
+        <Image
           src={post.coverImage}
           alt={post.title}
-          className="w-full h-full object-cover"
+          fill
+          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+          className="object-cover"
         />
       </div>
 

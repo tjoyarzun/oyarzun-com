@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface FamilyPost {
   id: number;
@@ -74,12 +75,15 @@ function PostCard({ post }: { post: FamilyPost }) {
       className="bg-white dark:bg-[#1C1A18] rounded-2xl shadow-sm overflow-hidden transition-shadow"
     >
       {/* Post image */}
-      <img
-        src={post.imageUrl}
-        alt={post.caption}
-        className="h-48 w-full object-cover"
-        loading="lazy"
-      />
+      <div className="relative h-48 w-full">
+        <Image
+          src={post.imageUrl}
+          alt={post.caption}
+          fill
+          sizes="(min-width: 768px) 60vw, 100vw"
+          className="object-cover"
+        />
+      </div>
 
       {/* Content */}
       <div className="p-4">

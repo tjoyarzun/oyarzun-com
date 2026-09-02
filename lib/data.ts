@@ -420,19 +420,36 @@ export const blogPosts: BlogPost[] = [
   },
 ];
 
+/**
+ * Figures behind the dashboard's headline tiles.
+ *
+ * Every value here is a pre-render fallback. DashboardClient replaces all four
+ * with live or derived figures, following the pattern already used for the
+ * commit count.
+ *
+ * Only the four keys StatsGrid actually renders remain. Eight others —
+ * photosInLibrary, totalHikes, skiResortsVisited, utahNationalParks,
+ * elevationRecord, milesHiked, skiDays and statesVisited — were never
+ * referenced anywhere. They were removed rather than left sitting here,
+ * because a stale figure that looks authoritative is the thing most likely to
+ * get wired into a card later and contradict a derived number on the same
+ * page: skiResortsVisited said 8 while the skiResorts table below totals 5
+ * resorts and 37 days.
+ *
+ * `countriesVisited` here is a pre-render fallback only. DashboardClient
+ * overrides it with travelStats.countriesVisited, which is derived from the
+ * adventures array, so the dashboard and /travels can never disagree. It used
+ * to read 12 against a derived 2.
+ */
 export const dashboardStats = {
-  blogPosts: 23,
-  photosInLibrary: 3847,
-  totalHikes: 53,
-  skiResortsVisited: 8,
-  utahNationalParks: 5,
-  elevationRecord: 11752,
+  /** Always overridden by DashboardClient with the real post count. */
+  blogPosts: 0,
+  /** Seed value shown until the live GitHub figure resolves. */
   githubCommits: 1203,
-  milesHiked: 847,
-  skiDays: 34,
-  statesVisited: 28,
-  booksReadThisYear: 8,
-  countriesVisited: 12,
+  /** Fallback only — overridden with `booksReadThisYear`, derived below. */
+  booksReadThisYear: 0,
+  /** Fallback only — overridden with the value derived from `adventures`. */
+  countriesVisited: 2,
 };
 
 export const familyPhotos: Photo[] = Array.from({ length: 20 }, (_, i) => ({
@@ -686,3 +703,17 @@ export const booksPerQuarter = [
   { quarter: "Q2 26", books: 4 },
   { quarter: "Q3 26", books: 4 },
 ];
+
+/**
+ * Books finished in the current calendar year, summed from booksPerQuarter.
+ *
+ * Derived rather than hand-kept so the dashboard's "Books Read" tile and the
+ * quarterly chart on the same page cannot disagree. Both read 8 before this
+ * change, which was correct but coincidental.
+ */
+export const booksReadThisYear: number = (() => {
+  const yy = String(new Date().getFullYear()).slice(-2);
+  return booksPerQuarter
+    .filter((q) => q.quarter.trim().endsWith(yy))
+    .reduce((sum, q) => sum + q.books, 0);
+})();

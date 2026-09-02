@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import { getAllPosts, getPost } from "@/lib/posts";
@@ -36,10 +37,13 @@ export default function PostPage({ params }: Props) {
     <div className="min-h-screen bg-slate dark:bg-[#121110]">
       {/* Hero */}
       <div className="w-full h-72 md:h-96 relative overflow-hidden">
-        <img
+        <Image
           src={post.coverImage}
           alt={post.title}
-          className="w-full h-full object-cover"
+          fill
+          sizes="100vw"
+          priority
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 max-w-4xl mx-auto">

@@ -1,6 +1,7 @@
 "use client";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import Image from "next/image";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -61,11 +62,15 @@ export default function AdventureMap({ adventures }: AdventureMapProps) {
                 <p className="text-xs text-gray-700 leading-snug">
                   {adventure.description}
                 </p>
-                <img
-                  src={adventure.imageUrl}
-                  alt={adventure.name}
-                  className="w-full h-20 object-cover rounded mt-1"
-                />
+                <div className="relative mt-1 h-20 w-full overflow-hidden rounded">
+                  <Image
+                    src={adventure.imageUrl}
+                    alt={adventure.name}
+                    fill
+                    sizes="220px"
+                    className="object-cover"
+                  />
+                </div>
               </div>
             </Popup>
           </Marker>

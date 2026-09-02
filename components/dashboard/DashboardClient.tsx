@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { dashboardStats, skiResorts, profiles, travelStats } from "@/lib/data";
+import {
+  dashboardStats,
+  skiResorts,
+  profiles,
+  travelStats,
+  booksReadThisYear,
+} from "@/lib/data";
 import StatsGrid from "@/components/dashboard/StatsGrid";
 import TravelChart from "@/components/dashboard/TravelChart";
 import SkiChart from "@/components/dashboard/SkiChart";
@@ -45,6 +51,7 @@ export default function DashboardClient({ postCount }: { postCount: number }) {
             ...dashboardStats,
             githubCommits: githubTotal,
             blogPosts: postCount,
+            booksReadThisYear,
             countriesVisited: travelStats.countriesVisited,
           }}
         />

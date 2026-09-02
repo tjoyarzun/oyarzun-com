@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { type PostMeta } from "@/lib/posts";
 
 interface FeaturedPostProps {
@@ -33,12 +34,13 @@ export default function FeaturedPost({ post }: FeaturedPostProps) {
     >
       <div className="flex flex-col md:flex-row min-h-80">
         {/* Cover Image — full width on mobile, 60% on md+ */}
-        <div className="w-full md:w-[60%] relative overflow-hidden min-h-64 md:min-h-0">
-          <img
+        <div className="w-full md:w-[60%] relative overflow-hidden min-h-[260px] md:min-h-0">
+          <Image
             src={post.coverImage}
             alt={post.title}
-            className="w-full h-full object-cover"
-            style={{ minHeight: "260px" }}
+            fill
+            sizes="(min-width: 768px) 60vw, 100vw"
+            className="object-cover"
           />
         </div>
 

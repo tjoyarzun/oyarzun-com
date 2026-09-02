@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { X } from "lucide-react";
 
 interface Photo {
@@ -34,11 +35,13 @@ export default function PhotoGallery({ photos }: PhotoGalleryProps) {
             className="mb-3 rounded-lg overflow-hidden cursor-pointer break-inside-avoid"
             onClick={() => setLightbox(photo)}
           >
-            <img
+            <Image
               src={photo.url}
               alt={photo.caption}
+              width={photo.width}
+              height={photo.height}
+              sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
               className="w-full h-auto block"
-              loading="lazy"
             />
           </motion.div>
         ))}
@@ -73,10 +76,13 @@ export default function PhotoGallery({ photos }: PhotoGalleryProps) {
                 <X size={28} />
               </button>
 
-              <img
+              <Image
                 src={lightbox.url}
                 alt={lightbox.caption}
-                className="max-h-[80vh] max-w-full rounded-xl object-contain shadow-2xl"
+                width={lightbox.width}
+                height={lightbox.height}
+                sizes="90vw"
+                className="max-h-[80vh] w-auto rounded-xl object-contain shadow-2xl"
               />
 
               {lightbox.caption && (

@@ -2,6 +2,7 @@
 
 import { Heart } from "lucide-react";
 import memory from "@/content/memory.json";
+import Image from "next/image";
 
 const IMAGE_URL = memory.imageUrl;
 const MOCK_DATE = memory.date;
@@ -20,11 +21,12 @@ export default function MemoryOfDay() {
 
       {/* Photo */}
       <div className="relative w-full aspect-[3/4] overflow-hidden">
-        <img
+        <Image
           src={IMAGE_URL}
           alt={MOCK_CAPTION}
-          className="w-full h-full object-cover object-center"
-          loading="lazy"
+          fill
+          sizes="(min-width: 768px) 42vw, 100vw"
+          className="object-cover object-center"
         />
       </div>
 

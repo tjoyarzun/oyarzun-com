@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getAllPosts, type PostMeta } from "@/lib/posts";
 import BlogCard from "@/components/blog/BlogCard";
 
@@ -8,12 +9,13 @@ function CompactBlogCard({ post }: { post: PostMeta }) {
       href={`/blog/${post.slug}`}
       className="block bg-white dark:bg-[#1C1A18] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-200 group"
     >
-      <div className="overflow-hidden h-28">
-        <img
+      <div className="relative overflow-hidden h-28">
+        <Image
           src={post.coverImage}
           alt={post.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          loading="lazy"
+          fill
+          sizes="(min-width: 768px) 45vw, 100vw"
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
       </div>
       <div className="p-4 flex flex-col gap-1.5">

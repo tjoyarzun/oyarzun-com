@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface FamilyGateProps {
   onLogin?: () => void;
@@ -26,12 +27,13 @@ export default function FamilyGate({ onLogin }: FamilyGateProps) {
       {/* Blurred photo grid background */}
       <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
         {bgImages.map(({ id, seed }) => (
-          <div key={id} className="overflow-hidden">
-            <img
+          <div key={id} className="relative overflow-hidden">
+            <Image
               src={`https://picsum.photos/seed/${seed}/400/400`}
               alt=""
-              className="w-full h-full object-cover filter blur-sm opacity-40"
-              loading="lazy"
+              fill
+              sizes="34vw"
+              className="object-cover blur-sm opacity-40"
             />
           </div>
         ))}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface Album {
   name: string;
@@ -26,13 +27,14 @@ function AlbumCard({ album }: { album: Album }) {
       onMouseLeave={() => setHovered(false)}
     >
       {/* Cover image */}
-      <div className="h-40 overflow-hidden">
-        <img
+      <div className="relative h-40 overflow-hidden">
+        <Image
           src={album.coverUrl}
           alt={album.name}
-          className="w-full h-full object-cover transition-transform duration-300"
+          fill
+          sizes="(min-width: 1024px) 25vw, 50vw"
+          className="object-cover transition-transform duration-300"
           style={{ transform: hovered ? "scale(1.05)" : "scale(1)" }}
-          loading="lazy"
         />
       </div>
 
