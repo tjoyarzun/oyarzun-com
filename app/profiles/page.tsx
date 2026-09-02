@@ -7,6 +7,7 @@ import SkillRadar from "@/components/profiles/SkillRadar";
 import CareerTimeline from "@/components/profiles/CareerTimeline";
 import GitHubHeatmap from "@/components/profiles/GitHubHeatmap";
 import ProjectCard from "@/components/profiles/ProjectCard";
+import RecognitionCard from "@/components/profiles/RecognitionCard";
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
@@ -74,6 +75,10 @@ export default function ProfilesPage() {
           {/* ── HER ── */}
           <div className="space-y-8">
             <ProfileCard profile={profiles.her} color="orange" />
+
+            {profiles.her.recognition && (
+              <RecognitionCard recognition={profiles.her.recognition} />
+            )}
 
             <div>
               <SkillRadar skills={profiles.her.skills} color="#D4614A" />

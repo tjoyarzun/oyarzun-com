@@ -22,6 +22,27 @@ interface Project {
   liveUrl?: string;
 }
 
+/** An external award or recognition, rendered by RecognitionCard. */
+export interface Recognition {
+  /** Awarding body, e.g. "Influential Women". */
+  org: string;
+  orgUrl?: string;
+  /** What the recognition is called, e.g. the word on the badge. */
+  award: string;
+  /** Awarding body's own tagline, quoted from their asset. */
+  tagline?: string;
+  /** Award year. Left unset until confirmed — do not guess it. */
+  year?: string;
+  badgeUrl: string;
+  certificateUrl: string;
+  certificateAlt: string;
+  blurb: string;
+  /** Vimeo numeric id plus the unlisted hash, kept separate from any
+   *  campaign tracking parameters the share URL arrived with. */
+  videoId?: string;
+  videoHash?: string;
+}
+
 export interface Profile {
   name: string;
   title: string;
@@ -33,6 +54,7 @@ export interface Profile {
   github?: string;
   linkedin: string;
   resume?: string;
+  recognition?: Recognition;
 }
 
 interface Adventure {
@@ -209,6 +231,23 @@ export const profiles: { him: Profile; her: Profile } = {
     name: "Julia Velicev",
     title: "Data Engineer III",
     company: "SeekWell",
+    recognition: {
+      org: "Influential Women",
+      orgUrl: "https://influentialwomen.com/",
+      award: "Verified",
+      // Influential Women's own tagline, quoted from the certificate.
+      tagline:
+        "Amplifying the achievements and influence of women who lead, innovate, and inspire.",
+      year: "2026",
+      badgeUrl: "/images/badge.png",
+      certificateUrl: "/images/Julia_Velicev.png",
+      certificateAlt:
+        "Influential Women recognition certificate for Julia Velicev, Data Engineer III at SeekWell.",
+      blurb:
+        "She advanced from Analyst to Data Engineer III through determination and hands-on learning. Julia holds MicroStrategy and Google Cloud Platform certifications, earned a Women in Leadership Certificate, and supports women in tech through Tech Moms. She volunteers with Wasatch Community Gardens and mentors others in professional growth.",
+      videoId: "1221262818",
+      videoHash: "e2e2ed707e",
+    },
     bio: "Staff Data Engineer with 10+ years of experience building scalable data pipelines, cloud warehouses, and analytics solutions. Hands-on expertise across GCP, BigQuery, Databricks, AWS, Python, SQL, and Tableau. Track record of modernizing legacy systems, optimizing high-volume SQL, and delivering reliable, reusable data products in close partnership with business, product, and engineering teams.",
     skills: [
       { skill: "SQL", value: 95 },
