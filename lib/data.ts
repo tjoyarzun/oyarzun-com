@@ -267,7 +267,8 @@ export const adventures: Adventure[] = [
   {
     id: 1,
     name: "Databricks Data+AI Conference",
-    location: "San Franciso, CA",
+    location: "San Francisco, CA",
+    country: "USA",
     lat: 37.784590467519806,
     lng: -122.40062026495632,
     date: "2026-06-15",
@@ -281,8 +282,9 @@ export const adventures: Adventure[] = [
   },
   {
     id: 2,
-    name: "Summar in Italy",
+    name: "Summer in Italy",
     location: "Sicily, Italy",
+    country: "Italy",
     lat: 37.984094193765635,
     lng: 13.695563710328907,
     date: "2026-05-26",
@@ -298,6 +300,7 @@ export const adventures: Adventure[] = [
     id: 3,
     name: "Roman Holiday",
     location: "Rome, Italy",
+    country: "Italy",
     lat: 41.88814586569183,
     lng: 12.479167464654216,
     date: "2026-05-23",
@@ -312,7 +315,8 @@ export const adventures: Adventure[] = [
   {
     id: 4,
     name: "July 4th in Vegas",
-    location: "Las Vegas",
+    location: "Las Vegas, NV",
+    country: "USA",
     lat: 36.169798592946364,
     lng: -115.1674570783433,
     date: "2026-07-03",
