@@ -1,10 +1,6 @@
 "use client";
 
-import { useMemo, useEffect, useState } from "react";
-
-interface GitHubHeatmapProps {
-  username: string;
-}
+import { useEffect, useMemo, useState } from "react";
 
 const MONTHS = [
   "Jan",
@@ -20,78 +16,20 @@ const MONTHS = [
   "Nov",
   "Dec",
 ];
-const WEEKS = 43;
+
 const DAYS_PER_WEEK = 7;
-
-function seededRng(seed: number) {
-  let s = seed;
-  return () => {
-    s = (Math.imul(1664525, s) + 1013904223) | 0;
-    return (s >>> 0) / 0x100000000;
-  };
-}
-
-function strToSeed(str: string): number {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (Math.imul(31, hash) + str.charCodeAt(i)) | 0;
-  }
-  return Math.abs(hash);
-}
-
-function generateMockContributions(username: string): number[] {
-  const rng = seededRng(strToSeed(username));
-  const data: number[] = [];
-  for (let week = 0; week < WEEKS; week++) {
-    for (let day = 0; day < DAYS_PER_WEEK; day++) {
-      const isWeekend = day === 0 || day === 6;
-      const isBurstWeek = week % 8 === 3 || week % 13 === 5;
-      const base = isWeekend ? 0.15 : 0.55;
-      const burst = isBurstWeek ? 0.3 : 0;
-      const rand = rng();
-      const prob = base + burst;
-      let level = 0;
-      if (rand < prob * 0.3) level = 1;
-      else if (rand < prob * 0.55) level = 2;
-      else if (rand < prob * 0.75) level = 3;
-      else if (rand < prob) level = 4;
-      data.push(level);
-    }
-  }
-  return data;
-}
-
-// Build month labels from an array of ISO date strings (one per cell).
-// Each month label appears at the week column where that month first starts.
-function labelsFromDates(
-  dates: string[],
-): { month: string; weekIndex: number }[] {
-  const labels: { month: string; weekIndex: number }[] = [];
-  let currentMonth = -1;
-  for (let i = 0; i < dates.length; i++) {
-    const m = new Date(dates[i] + "T12:00:00").getMonth();
-    if (m !== currentMonth) {
-      currentMonth = m;
-      labels.push({
-        month: MONTHS[m],
-        weekIndex: Math.floor(i / DAYS_PER_WEEK),
-      });
-    }
-  }
-  return labels;
-}
-
-// Fallback: derive dates client-side when using mock data
-function mockDates(): string[] {
-  const today = new Date();
-  const result: string[] = [];
-  for (let i = WEEKS * DAYS_PER_WEEK - 1; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(today.getDate() - i);
-    result.push(d.toISOString().slice(0, 10));
-  }
-  return result;
-}
+/** Columns drawn before any data arrives, so the card doesn't jump on load. */
+const PLACEHOLDER_WEEKS = 53;
+/**
+ * Horizontal distance between week columns, in px: cell width + gap.
+ * Single source of truth — this was hardcoded as 12 in both the container's
+ * minWidth and the month labels' `left`, so any change to the cell size would
+ * have silently drifted the labels out of alignment with the columns.
+ *
+ * 10px keeps a full 53-week year inside the ~552px column without scrolling;
+ * at the previous 12px it overflowed once the grid stopped being trimmed.
+ */
+const CELL_PITCH = 10;
 
 const cellColors = [
   "bg-gray-100 dark:bg-[#1C1A18]",
@@ -103,55 +41,128 @@ const cellColors = [
 
 const levelLabels = ["No contributions", "1–3", "4–6", "7–9", "10+"];
 
-export default function GitHubHeatmap({ username }: GitHubHeatmapProps) {
-  const mock = useMemo(() => generateMockContributions(username), [username]);
-  const mockTotal =
-    mock.filter((v) => v > 0).length * 2 + (strToSeed(username) % 50);
+type Status = "loading" | "ready" | "error";
 
-  const [contributions, setContributions] = useState<number[]>(mock);
-  const [dates, setDates] = useState<string[]>(() => mockDates());
-  const [total, setTotal] = useState<number>(mockTotal);
-  const [isReal, setIsReal] = useState(false);
+interface Activity {
+  contributions: number[];
+  dates: string[];
+  total: number;
+}
+
+/**
+ * Month labels, placed at the week column where each month first appears.
+ */
+function labelsFromDates(
+  dates: string[],
+): { month: string; weekIndex: number }[] {
+  const labels: { month: string; weekIndex: number }[] = [];
+  let current = -1;
+  for (let i = 0; i < dates.length; i++) {
+    if (!dates[i]) continue;
+    const m = new Date(dates[i] + "T12:00:00").getMonth();
+    if (m !== current) {
+      current = m;
+      labels.push({ month: MONTHS[m], weekIndex: Math.floor(i / DAYS_PER_WEEK) });
+    }
+  }
+  return labels;
+}
+
+/** "Sep 2025 – Sep 2026", derived from the data rather than hard-coded. */
+function rangeLabel(dates: string[]): string {
+  const real = dates.filter(Boolean);
+  if (real.length === 0) return "";
+  const fmt = (iso: string) => {
+    const d = new Date(iso + "T12:00:00");
+    return `${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+  };
+  const from = fmt(real[0]);
+  const to = fmt(real[real.length - 1]);
+  return from === to ? from : `${from} – ${to}`;
+}
+
+/**
+ * GitHub contribution calendar for one account.
+ *
+ * This component used to seed its state with `generateMockContributions()` — a
+ * seeded RNG that produced a dense, plausible-looking graph. For this account
+ * that mock claimed 366 contributions across 171 active days, against a real
+ * 37 across 10. Because the seed came from the username it was stable, so it
+ * looked like settled truth rather than a placeholder, and the only disclosure
+ * was a small "(preview)" note.
+ *
+ * That data was also in the server-rendered HTML, so anyone with JS disabled,
+ * a slow connection, or a crawler read invented statistics as real. The mock is
+ * gone: the grid is empty until real data arrives, and a failure says so.
+ *
+ * The old code also swallowed every failure (`r.ok ? r.json() : null` plus an
+ * empty `.catch`), which meant an expired token would leave fabricated numbers
+ * on the page indefinitely with no signal.
+ */
+export default function GitHubHeatmap({ username }: { username: string }) {
+  const [status, setStatus] = useState<Status>("loading");
+  const [activity, setActivity] = useState<Activity | null>(null);
 
   useEffect(() => {
-    fetch(`/api/github-activity?username=${encodeURIComponent(username)}`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data?.contributions?.length) {
-          setContributions(data.contributions);
-          setDates(data.dates);
-          setTotal(data.total);
-          setIsReal(true);
+    if (!username) {
+      setStatus("error");
+      return;
+    }
+
+    const controller = new AbortController();
+    setStatus("loading");
+
+    fetch(`/api/github-activity?username=${encodeURIComponent(username)}`, {
+      signal: controller.signal,
+    })
+      .then(async (r) => {
+        if (!r.ok) throw new Error(`activity request failed: ${r.status}`);
+        const data = await r.json();
+        if (!Array.isArray(data?.contributions) || !data.contributions.length) {
+          throw new Error("activity response had no contributions");
         }
+        return data as Activity;
       })
-      .catch(() => {});
+      .then((data) => {
+        setActivity(data);
+        setStatus("ready");
+      })
+      .catch((err: unknown) => {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        // Surfaced in the UI as well — logged so a broken token is diagnosable.
+        console.error("[GitHubHeatmap]", err);
+        setStatus("error");
+      });
+
+    return () => controller.abort();
   }, [username]);
 
-  // Trim/pad to exactly 52 weeks, keeping dates and contributions aligned
-  const { cells, cellDates } = useMemo(() => {
-    const target = WEEKS * DAYS_PER_WEEK;
-    if (contributions.length >= target) {
-      return {
-        cells: contributions.slice(-target),
-        cellDates: dates.slice(-target),
-      };
-    }
-    const pad = target - contributions.length;
-    return {
-      cells: [...Array(pad).fill(0), ...contributions],
-      cellDates: [...Array(pad).fill(""), ...dates],
-    };
-  }, [contributions, dates]);
+  /**
+   * The grid draws every day the API returned, padded at the front to a whole
+   * number of weeks. It used to be pinned at 43 weeks while the API returned
+   * 366 days, so ~9 weeks were silently dropped — yet the heading printed
+   * GitHub's 12-month total, meaning the stated number covered a wider window
+   * than the squares beneath it.
+   */
+  const { weeks, cellDates, monthLabels } = useMemo(() => {
+    const source = activity?.contributions ?? [];
+    const srcDates = activity?.dates ?? [];
 
-  const weeks = useMemo(() => {
-    const result: number[][] = [];
-    for (let w = 0; w < WEEKS; w++) {
-      result.push(cells.slice(w * DAYS_PER_WEEK, (w + 1) * DAYS_PER_WEEK));
-    }
-    return result;
-  }, [cells]);
+    const weekCount = source.length
+      ? Math.ceil(source.length / DAYS_PER_WEEK)
+      : PLACEHOLDER_WEEKS;
+    const target = weekCount * DAYS_PER_WEEK;
+    const pad = Math.max(0, target - source.length);
 
-  const monthLabels = useMemo(() => labelsFromDates(cellDates), [cellDates]);
+    const cells = [...Array(pad).fill(0), ...source];
+    const dates = [...Array(pad).fill(""), ...srcDates];
+
+    const grid: number[][] = [];
+    for (let w = 0; w < weekCount; w++) {
+      grid.push(cells.slice(w * DAYS_PER_WEEK, (w + 1) * DAYS_PER_WEEK));
+    }
+    return { weeks: grid, cellDates: dates, monthLabels: labelsFromDates(dates) };
+  }, [activity]);
 
   return (
     <div className="bg-white dark:bg-[#1C1A18] rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
@@ -164,62 +175,66 @@ export default function GitHubHeatmap({ username }: GitHubHeatmapProps) {
         </span>
       </div>
 
-      <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-        {total} contributions in the last 10 months
-        {!isReal && (
-          <span className="ml-1 text-gray-300 dark:text-gray-600">
-            (preview)
+      <p className="text-xs mb-3" aria-live="polite">
+        {status === "ready" && activity ? (
+          <span className="text-gray-500 dark:text-gray-400">
+            {activity.total.toLocaleString()} contribution
+            {activity.total === 1 ? "" : "s"} &middot;{" "}
+            {rangeLabel(cellDates)}
+          </span>
+        ) : status === "error" ? (
+          <span className="text-orange">
+            Couldn&apos;t load GitHub activity right now.
+          </span>
+        ) : (
+          <span className="text-gray-400 dark:text-gray-500">
+            Loading activity&hellip;
           </span>
         )}
       </p>
 
       <div className="overflow-x-auto">
-        <div style={{ minWidth: `${WEEKS * 12}px` }}>
-          {/* Month labels — relative container, each label absolutely placed */}
+        <div style={{ minWidth: `${weeks.length * CELL_PITCH}px` }}>
           <div className="relative h-4 mb-1">
             {monthLabels.map(({ month, weekIndex }) => (
               <span
                 key={`${month}-${weekIndex}`}
-                className="absolute text-[10px] text-gray-400 dark:text-gray-500 whitespace-nowrap"
-                style={{ left: `${weekIndex * 12}px` }}
+                className="absolute text-[10px] text-gray-400 whitespace-nowrap"
+                style={{ left: `${weekIndex * CELL_PITCH}px` }}
               >
                 {month}
               </span>
             ))}
           </div>
 
-          {/* Grid */}
-          <div className="flex gap-0.5 mt-4">
+          <div
+            className={`flex gap-0.5 mt-4 transition-opacity duration-300 ${
+              status === "ready" ? "opacity-100" : "opacity-60"
+            }`}
+          >
             {weeks.map((week, wi) => (
               <div key={wi} className="flex flex-col gap-0.5">
                 {week.map((level, di) => (
                   <div
                     key={di}
-                    title={
-                      cellDates[wi * DAYS_PER_WEEK + di] || `Level ${level}`
-                    }
-                    className={`w-2.5 h-2.5 rounded-sm ${cellColors[level]} transition-opacity hover:opacity-80`}
+                    title={cellDates[wi * DAYS_PER_WEEK + di] || undefined}
+                    className={`h-2 w-2 rounded-sm ${cellColors[level]}`}
                   />
                 ))}
               </div>
             ))}
           </div>
 
-          {/* Legend */}
           <div className="flex items-center gap-1.5 mt-3 justify-end">
-            <span className="text-[10px] text-gray-400 dark:text-gray-500">
-              Less
-            </span>
+            <span className="text-[10px] text-gray-400">Less</span>
             {cellColors.map((cls, i) => (
               <div
                 key={i}
                 title={levelLabels[i]}
-                className={`w-2.5 h-2.5 rounded-sm ${cls}`}
+                className={`h-2 w-2 rounded-sm ${cls}`}
               />
             ))}
-            <span className="text-[10px] text-gray-400 dark:text-gray-500">
-              More
-            </span>
+            <span className="text-[10px] text-gray-400">More</span>
           </div>
         </div>
       </div>
