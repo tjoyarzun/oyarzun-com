@@ -76,10 +76,6 @@ export default function ProfilesPage() {
           <div className="space-y-8">
             <ProfileCard profile={profiles.her} color="orange" />
 
-            {profiles.her.recognition && (
-              <RecognitionCard recognition={profiles.her.recognition} />
-            )}
-
             <div>
               <SkillRadar skills={profiles.her.skills} color="#D4614A" />
             </div>
@@ -102,6 +98,10 @@ export default function ProfilesPage() {
                 </div>
               </div>
             </div>
+
+            {profiles.her.recognition && (
+              <RecognitionCard recognition={profiles.her.recognition} />
+            )}
           </div>
         </div>
       </div>
