@@ -193,7 +193,9 @@ Search for `export const profiles` (around line 123). There are two profile obje
 
 ### GitHub Activity Heatmap
 
-The heatmap on Tommy's profile pulls **real contribution data** from the GitHub API when a token is configured. Without a token it shows a placeholder grid marked "(preview)".
+The heatmap on Tommy's profile pulls **real contribution data** from the GitHub API. A token is required — there is no placeholder any more.
+
+Until 2 Sep 2026 the component filled itself with invented data when the fetch failed: a seeded random grid that claimed ~366 contributions across 171 days, against a real 37 across 10, marked only with a small "(preview)". That was removed, because a plausible-looking fake number is worse than an empty grid. Now the card shows an empty grid while loading, and **"Couldn't load GitHub activity right now."** if the request fails — so a missing or expired token is visible instead of silently papered over.
 
 **One-time setup:**
 
@@ -203,7 +205,11 @@ The heatmap on Tommy's profile pulls **real contribution data** from the GitHub 
 4. **Locally:** paste it into `.env.local` as `GITHUB_TOKEN=ghp_...`
 5. **On Vercel:** Settings → Environment Variables → add `GITHUB_TOKEN` with the same value
 
-The heatmap refreshes every 24 hours via Next.js caching — no manual update needed. Julia's side shows the placeholder since she doesn't have a public GitHub profile linked.
+The heatmap refreshes every 24 hours via Next.js caching — no manual update needed.
+
+Only Tommy's column has a heatmap. Julia's profile has no `github` field, so the component isn't rendered on her side at all.
+
+**If the graph looks emptier than expected,** the usual cause is commit attribution rather than a bug. A commit only counts toward `tjoyarzun` if its author email is registered to that GitHub account. Commits authored with a work address land on the work account — or on no account at all — and never appear here. `~/.gitconfig` now picks the identity from the directory, so anything under `~/personal/` commits as the personal address.
 
 ### Fields you'll update most often
 
@@ -259,6 +265,53 @@ Find the `projects` array inside the profile:
 },
 ```
 
+### Recognition card (awards)
+
+**File:** `lib/data.ts` — search for `recognition:` inside a profile object
+
+An optional block on a profile that renders a card at the **bottom of that
+person's column**, below Featured Projects. Julia has one (Influential Women);
+Tommy has none, so nothing is rendered on his side. Add the block to a profile
+and the card appears; delete it and it disappears.
+
+```ts
+recognition: {
+  org: "Influential Women",                       // awarding body
+  orgUrl: "https://influentialwomen.com/",        // optional — makes the name a link
+  award: "Verified",                              // short label, e.g. the word on the badge
+  tagline:                                        // optional — the org's own words
+    "Amplifying the achievements and influence of women who lead, innovate, and inspire.",
+  year: "2026",                                   // optional
+  badgeUrl: "/images/badge.png",                  // small mark, shown at 56px
+  certificateUrl: "/images/Julia_Velicev.png",    // the main image
+  certificateAlt:
+    "Influential Women recognition certificate for Julia Velicev, Data Engineer III at SeekWell.",
+  blurb: "One short paragraph about the recognition.",
+  videoId: "1221262818",                          // optional — Vimeo numeric id
+  videoHash: "e2e2ed707e",                        // optional — for an unlisted Vimeo video
+},
+```
+
+| Field | Notes |
+| --- | --- |
+| `badgeUrl` / `certificateUrl` | Upload to `public/images/` — see [Uploading Photos](#uploading-photos) |
+| `certificateAlt` | Describes the certificate for screen readers. `tagline` is appended to it automatically, because words printed inside an image are otherwise unreadable |
+| `tagline` | Rendered **only** in the alt text, not on screen — the supplied certificate already prints it, and showing it twice duplicated the sentence |
+| `year` | Omit it and the card just shows the org name |
+| `videoId` + `videoHash` | Both come from the share link. `vimeo.com/1221262818/e2e2ed707e` → id `1221262818`, hash `e2e2ed707e`. Strip any `?utm_*`, `_hsenc` or `_hsmi` parameters — those are email-campaign trackers and don't belong in the repo |
+
+**The video only loads when someone presses play.** Nothing is requested from
+Vimeo until then, so visitors who don't watch get no third-party requests or
+cookies. Leave `videoId` out entirely and the player is omitted.
+
+Note that embedding publishes the unlisted-video hash in the page source, so
+treat the video as shareable rather than private.
+
+**Colour.** The card is the one place the Influential Women magenta appears
+(`iw-pink*` in `tailwind.config.ts`). It belongs to the awarding body, not to
+this site, so it stops at the card's edge. A different award with different
+brand colours would want its own tokens.
+
 ### Updating skills (radar chart)
 
 Find the `skills` array. Each entry has a `skill` name and a `value` from 0–100:
@@ -285,7 +338,8 @@ Search for `export const adventures`. Adventures can be anywhere in the world �
   lat: 40.5765,                        // latitude for the map pin
   lng: -111.8010,                      // longitude for the map pin
   date: "2025-08-15",
-  type: "hike",                        // "hike" | "ski" | "camp" | "bike" | "sightseeing"
+  country: "USA",                      // see the note below — always set this
+  type: "hike",                        // "hike" | "ski" | "camp" | "bike" | "sightseeing" | "beach"
   who: "Family",                       // "Family" | "Just Us" | "Solo"
   nights: 0,                           // 0 = day trip; 1+ = overnight stays
   emoji: "🥾",
@@ -294,11 +348,22 @@ Search for `export const adventures`. Adventures can be anywhere in the world �
 },
 ```
 
+**Always set `country`.** It is optional in the type, but anything left blank
+silently counts as `"USA"` — and the "Countries" figures on both /travels and
+the dashboard are the count of distinct `country` values. No record had this
+field until 1 Sep 2026, so the site reported 1 country while two of the four
+trips were to Italy.
+
+`imageUrl` may point at a file in `public/images/` or a remote URL, but a
+remote host has to be allowlisted first — see [Uploading Photos](#uploading-photos).
+
 To find lat/lng for a location: search the place in Google Maps, right-click the pin, and copy the coordinates.
 
 ### Adding a new trip type
 
-If you want to use a type not in the list above (e.g. a new category beyond hike/ski/camp/bike/sightseeing), you must update **three files** or the Vercel build will fail:
+If you want to use a type not in the list above (e.g. a new category beyond
+hike/ski/camp/bike/sightseeing/beach), you must update **three files** or the
+Vercel build will fail:
 
 1. **`lib/data.ts`** — find `type AdventureType =` near the top and add the new value to the union.
 2. **`components/travels/AdventureLog.tsx`** — find `type AdventureType =` and add the same value. Also add it to `TYPE_ICON` (the emoji map) and `TYPE_FILTERS` (the filter chip list).
@@ -308,7 +373,7 @@ All three files keep their own copy of the type — they must stay in sync.
 
 ### Bucket List
 
-Search for `export const bucketList`. Same structure — add items you haven't done yet:
+Search for `export const bucketListItems`. Same structure — add items you haven't done yet:
 
 ```ts
 {
@@ -341,7 +406,12 @@ Update `days`, `vertical` (total feet skied), and `runs` at the end of each ski 
 
 No edits needed — this chart reads directly from the `adventures` array in the Travels section. Every time you add a new adventure entry with a `date`, this chart updates automatically.
 
-### Books read (`books`)
+### Currently reading (`currentlyReading`)
+
+**File:** `lib/data.ts` — search for `export const currentlyReading`
+
+This feeds the "Currently Reading" card, not the Books Read count. (The count
+comes from [`booksPerQuarter`](#books-read-per-quarter-booksperquarter).)
 
 ```ts
 {
@@ -352,6 +422,9 @@ No edits needed — this chart reads directly from the `adventures` array in the
   genre: "Technical",
 },
 ```
+
+The section was previously documented as `books`, which is not an export that
+exists.
 
 ### Goals (`goals` + `goalsYear`)
 
@@ -435,12 +508,25 @@ Each entry is one movie card on the dashboard. Keep the list to 3–5 movies; re
 
 The 4 stat cards pull from `dashboardStats` in `lib/data.ts`:
 
-| Card              | Source                         | How to update                                                      |
+**All four are derived. None of them is edited directly any more.**
+
+| Card              | Source                                   | How to update                                                        |
 |---|---|---|
-| GitHub Commits    | Live GitHub API on page load   | Automatic — no edit needed. Fallback value is `githubCommits` in `dashboardStats` |
-| Blog Posts        | Auto-counted from `content/posts/*.mdx` | Automatic — just publish or delete MDX files         |
-| Books Read        | `booksReadThisYear` in `dashboardStats` | Update manually in `lib/data.ts` as you finish books |
-| Countries Visited | `countriesVisited` in `dashboardStats`  | Update manually after each new country               |
+| GitHub Commits    | Live GitHub API on page load             | Automatic. `githubCommits` in `dashboardStats` is only the value shown before the request resolves |
+| Blog Posts        | Counted from `content/posts/*.mdx`       | Automatic — publish or delete an MDX file                            |
+| Books Read        | Summed from `booksPerQuarter`            | Add or edit a quarter in [`booksPerQuarter`](#books-read-per-quarter-booksperquarter). Editing `dashboardStats.booksReadThisYear` does nothing |
+| Countries Visited | Distinct `country` values in `adventures` | Add a trip with a new `country`. Editing `dashboardStats.countriesVisited` does nothing |
+
+`dashboardStats` used to hold twelve hand-kept numbers. Eight of them
+(`photosInLibrary`, `totalHikes`, `skiResortsVisited`, `utahNationalParks`,
+`elevationRecord`, `milesHiked`, `skiDays`, `statesVisited`) were never
+rendered anywhere and were deleted on 2 Sep 2026. They were removed rather than
+left in place because they read as authoritative while disagreeing with the
+derived figures beside them: `skiResortsVisited` said 8 against a `skiResorts`
+table totalling 5 resorts, and `countriesVisited` said 12 against a derived 2.
+
+The four that remain are pre-render fallbacks only — every one is replaced with
+a live or derived value before it reaches the screen.
 
 ---
 
@@ -463,7 +549,8 @@ date: "2025-07-04"
 readTime: 5
 tags: ["Data Engineering", "Utah"]
 excerpt: "One or two sentences that appear in the blog card preview."
-coverImage: "https://picsum.photos/seed/yourpost/800/450"
+coverImage: "/images/your-photo.jpg"
+draft: false
 ---
 
 Your post content goes here in regular Markdown.
@@ -479,7 +566,8 @@ Write normally — bold, italic, code blocks, lists all work.
 | `date`       | `YYYY-MM-DD` format                                                                           |
 | `readTime`   | Estimated minutes — count ~200 words/min                                                      |
 | `tags`       | Must be in the `["Tag One", "Tag Two"]` format. Tags appear as filter chips on the blog page. |
-| `coverImage` | Any public image URL, or `/photos/your-image.jpg` from `public/photos/`                       |
+| `draft`      | `true` keeps the post out of the blog index, the home-page teaser and the post count. Omit it or set `false` to publish. **This only started working on 1 Sep 2026** — before that the index ignored the flag and published drafts anyway |
+| `coverImage` | A file in `public/images/` (e.g. `/images/your-photo.jpg`), or a remote URL from an allowlisted host — see [Uploading Photos](#uploading-photos). **Not** just any public URL |
 
 ### Adding a real cover image to a post
 
@@ -490,7 +578,11 @@ By default posts use placeholder images. To use a real photo:
    ```
    coverImage: "/images/your-photo.jpg"
    ```
-3. In `lib/data.ts`, find the matching entry in `export const blogPosts` (search by slug) and update its `coverImage` field to the same path. Both need to match or the home page preview and the post page will show different images.
+
+That's the whole job — one place, not two. The old step 3 told you to mirror
+the value into `export const blogPosts` in `lib/data.ts`; that array is dead
+code and nothing reads it. Every blog surface (index, home-page teaser, post
+page) reads the MDX frontmatter through `lib/posts.ts`.
 
 ### Editing an existing post
 
@@ -659,6 +751,29 @@ For any section where you want to use a real photo instead of a placeholder:
 1. In GitHub, navigate to `public/images/` in the repo.
 2. Click **Add file → Upload files** and drop your image in.
 3. Reference it as `/images/your-filename.jpg` in any `imageUrl` or `coverImage` field.
+
+### Using a remote image URL
+
+Every image on the site now renders through Next.js's image optimiser, which
+**refuses any host not on an allowlist**. Point a field at an unlisted host and
+you get a broken image — the build still passes, so nothing warns you.
+
+Currently allowed, in `next.config.mjs`:
+
+| Host | Used by |
+|---|---|
+| `picsum.photos` | family photos, feed, albums, gate background, adventures |
+| `images.unsplash.com` | a blog cover |
+| `img-v3.deepdreamgenerator.com` | a blog cover |
+| `lh3.googleusercontent.com` | the Tahiti bucket-list photo |
+
+To use a new host, add it to `remotePatterns` in `next.config.mjs`:
+
+```js
+{ protocol: "https", hostname: "your-host.com" },
+```
+
+Uploading into `public/images/` avoids this entirely and is the simpler path.
 
 **Tips:**
 
