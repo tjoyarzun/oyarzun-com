@@ -1,6 +1,5 @@
 // Types
 type AdventureType = "hike" | "ski" | "camp" | "bike" | "sightseeing" | "beach";
-type Author = "him" | "her" | "both";
 
 interface Skill {
   skill: string;
@@ -71,19 +70,6 @@ interface Adventure {
   emoji: string;
   description: string;
   imageUrl: string;
-}
-
-interface BlogPost {
-  id: number;
-  title: string;
-  author: Author;
-  date: string;
-  readTime: number;
-  tags: string[];
-  excerpt: string;
-  coverImage: string;
-  slug: string;
-  draft?: boolean;
 }
 
 interface SkiResort {
@@ -377,48 +363,6 @@ export const travelStats = {
   nightsAway: adventures.reduce((sum, a) => sum + a.nights, 0),
   countriesVisited: new Set(adventures.map((a) => a.country ?? "USA")).size,
 };
-
-export const blogPosts: BlogPost[] = [
-  {
-    id: 1,
-    title: "Our Utah Ski Resort Tier List — Fully Quantified",
-    author: "both",
-    date: "2024-03-15",
-    readTime: 7,
-    tags: ["Utah", "Analytics", "Winter"],
-    excerpt:
-      "After 34 ski days across 8 Utah resorts, we built a scoring model weighing terrain variety, snow quality, lift lines, and vibes. The rankings might surprise you.",
-    coverImage: "https://picsum.photos/seed/blog5/800/450",
-    slug: "utah-ski-resort-tier-list",
-    draft: true,
-  },
-  {
-    id: 2,
-    title: "From Analyst to Data Engineer: My Career Pivot",
-    author: "her",
-    date: "2024-02-08",
-    readTime: 10,
-    tags: ["Career", "Data Engineering"],
-    excerpt:
-      "Three years ago I was writing SQL reports in Tableau. Now I architect Spark streaming pipelines processing billions of events. Here is exactly what the transition looked like, honestly.",
-    coverImage: "https://picsum.photos/seed/blog6/800/450",
-    slug: "analyst-to-data-engineer",
-    draft: true,
-  },
-  {
-    id: 3,
-    title: "The Best Hikes Near Salt Lake City (Data-Ranked)",
-    author: "both",
-    date: "2024-09-20",
-    readTime: 9,
-    tags: ["Utah", "Analytics", "Outdoors"],
-    excerpt:
-      "We ranked 47 hikes within 90 minutes of Salt Lake City using a weighted scoring model: scenery, difficulty curve, crowd levels, trail conditions, and elevation payoff.",
-    coverImage: "https://picsum.photos/seed/blog3/800/450",
-    slug: "best-slc-hikes-data-ranked",
-    draft: true,
-  },
-];
 
 /**
  * Figures behind the dashboard's headline tiles.

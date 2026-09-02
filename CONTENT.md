@@ -534,6 +534,9 @@ a live or derived value before it reaches the screen.
 
 **File:** `content/posts/*.mdx` — GitHub web editor ✓
 
+Blog content lives entirely in these MDX files. Nothing in `lib/data.ts`
+duplicates it.
+
 ### Publishing a new post
 
 1. Go to `content/posts/` in your GitHub repo.
@@ -579,10 +582,16 @@ By default posts use placeholder images. To use a real photo:
    coverImage: "/images/your-photo.jpg"
    ```
 
-That's the whole job — one place, not two. The old step 3 told you to mirror
-the value into `export const blogPosts` in `lib/data.ts`; that array is dead
-code and nothing reads it. Every blog surface (index, home-page teaser, post
-page) reads the MDX frontmatter through `lib/posts.ts`.
+That's the whole job — one place, not two. An older version of this guide had
+a step 3 telling you to mirror the value into `export const blogPosts` in
+`lib/data.ts`. That array was never read by anything and was deleted on
+2 Sep 2026, along with the `BlogPost` interface it used and a duplicate
+`Author` type — 56 lines in total.
+
+**`content/posts/*.mdx` is the single source of truth for blog content.** Every
+blog surface — the index, the home-page teaser, the post page and the dashboard
+post count — reads the MDX frontmatter through `lib/posts.ts`. There is nothing
+in `lib/data.ts` to keep in step.
 
 ### Editing an existing post
 
