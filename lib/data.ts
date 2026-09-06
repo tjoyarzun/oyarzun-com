@@ -13,12 +13,34 @@ interface CareerEntry {
   description: string;
 }
 
+/**
+ * An interactive app embedded in an iframe from a project card.
+ *
+ * The embedded origin must allow this site in its own
+ * `Content-Security-Policy: frame-ancestors`, or the browser silently refuses
+ * to render the frame.
+ */
+export interface ProjectEmbed {
+  /** Origin to frame. Must be https and must allow oyarzun.com as an ancestor. */
+  url: string;
+  /** Poster shown before the frame is mounted. Path under public/. */
+  poster: string;
+  posterAlt: string;
+  /** Button label, e.g. "Launch the walkthrough". */
+  cta: string;
+  /** One line under the button — controls, or a device caveat. */
+  note?: string;
+}
+
 interface Project {
   title: string;
   description: string;
   tags: string[];
-  githubUrl: string;
+  /** Optional — the Dimple Dell repo is private, and a link to it 404s. */
+  githubUrl?: string;
   liveUrl?: string;
+  /** Optional. Renders a poster + launch button on the card. */
+  embed?: ProjectEmbed;
 }
 
 /** An external award or recognition, rendered by RecognitionCard. */
@@ -194,6 +216,23 @@ export const profiles: { him: Profile; her: Profile } = {
       },
     ],
     projects: [
+      {
+        title: "Dimple Dell Residence — interactive 3D",
+        description:
+          "A walkable 3D model of the house we're building in Sandy, generated from the architect's CAD drawings rather than modelled by hand. Orbit the massing, peel the roof off, isolate a level, drag the sun across the sky — or drop into first person and walk the interior.",
+        tags: ["React Three Fiber", "three.js", "TypeScript", "Vite", "CAD"],
+        // No githubUrl: the repo is private (it derives from a permit set),
+        // so a link would 404 for every visitor.
+        liveUrl: "https://dimple-dell-3d.vercel.app",
+        embed: {
+          url: "https://dimple-dell-3d.vercel.app",
+          poster: "/images/dimple-dell-3d.jpg",
+          posterAlt:
+            "Isometric render of the Dimple Dell Residence — an L-shaped single-storey house with a flat roof and a long deck.",
+          cta: "Launch the walkthrough",
+          note: "Orbit with drag. Click to enter first person, then WASD to move, Shift to run, Esc to exit.",
+        },
+      },
       {
         title: "Oyarzun.com",
         description:

@@ -1,13 +1,17 @@
 "use client";
 
 import { ExternalLink, Globe } from "lucide-react";
+import ProjectEmbed from "./ProjectEmbed";
+
+import type { ProjectEmbed as Embed } from "@/lib/data";
 
 interface Project {
   title: string;
   description: string;
   tags: string[];
-  githubUrl: string;
+  githubUrl?: string;
   liveUrl?: string;
+  embed?: Embed;
 }
 
 interface ProjectCardProps {
@@ -50,17 +54,22 @@ export default function ProjectCard({ project, color }: ProjectCardProps) {
         ))}
       </div>
 
+      {/* Optional interactive embed — see components/profiles/ProjectEmbed.tsx */}
+      {project.embed && <ProjectEmbed embed={project.embed} />}
+
       {/* Links */}
       <div className="mt-4 flex items-center gap-4">
-        <a
-          href={project.githubUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`inline-flex items-center gap-1 text-xs font-medium transition-colors ${c.link}`}
-        >
-          <ExternalLink size={12} />
-          {project.githubUrl.includes("github.com") ? "GitHub" : "View"}
-        </a>
+        {project.githubUrl && (
+          <a
+            href={project.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`inline-flex items-center gap-1 text-xs font-medium transition-colors ${c.link}`}
+          >
+            <ExternalLink size={12} />
+            {project.githubUrl.includes("github.com") ? "GitHub" : "View"}
+          </a>
+        )}
         {project.liveUrl && (
           <a
             href={project.liveUrl}
