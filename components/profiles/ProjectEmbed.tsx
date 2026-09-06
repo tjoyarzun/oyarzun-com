@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { Maximize2, X, ExternalLink } from "lucide-react";
 import type { ProjectEmbed as Embed } from "@/lib/data";
@@ -16,6 +17,16 @@ import type { ProjectEmbed as Embed } from "@/lib/data";
  * It opens in a full-screen overlay rather than inline: the profile columns are
  * roughly 550px wide, which is not enough room to orbit a building or read a
  * first-person view.
+ *
+ * The overlay is portalled to <body> rather than rendered in place. ProjectCard
+ * applies `hover:scale-[1.02]`, and a CSS transform makes an element the
+ * containing block for any `position: fixed` descendant — so in place, the
+ * overlay resolved against the card instead of the viewport. Worse, because the
+ * overlay was a DOM child of the card, hovering the overlay also hovered the
+ * card: transform applied, overlay collapsed to card size, pointer fell
+ * outside it, card unhovered, overlay expanded again — a loop that flipped
+ * between the frame and the page several times a second. The portal removes
+ * both the containing block and the hover propagation.
  *
  * REMOVAL: this file, the `embed` field on the project in lib/data.ts, the
  * two-line conditional in ProjectCard, and public/images/dimple-dell-3d.jpg.
@@ -88,45 +99,47 @@ export default function ProjectEmbed({ embed }: { embed: Embed }) {
         )}
       </div>
 
-      {open && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={embed.cta}
-          className="fixed inset-0 z-[100] flex flex-col bg-[#1C1917]"
-        >
-          <div className="flex items-center justify-between gap-4 px-4 py-2.5">
-            <a
-              href={embed.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-white/70 transition-colors hover:text-white"
-            >
-              <ExternalLink size={12} />
-              Open in a new tab
-            </a>
-            <button
-              ref={closeRef}
-              onClick={close}
-              className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-            >
-              <X size={16} />
-              Close
-            </button>
-          </div>
+      {open &&
+        createPortal(
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={embed.cta}
+            className="fixed inset-0 z-[100] flex flex-col bg-[#1C1917]"
+          >
+            <div className="flex items-center justify-between gap-4 px-4 py-2.5">
+              <a
+                href={embed.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-white/70 transition-colors hover:text-white"
+              >
+                <ExternalLink size={12} />
+                Open in a new tab
+              </a>
+              <button
+                ref={closeRef}
+                onClick={close}
+                className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                <X size={16} />
+                Close
+              </button>
+            </div>
 
-          <iframe
-            src={embed.url}
-            title={embed.posterAlt}
-            className="w-full flex-1 border-0 bg-[#1C1917]"
-            /* Only what the walkthrough needs. No top-level navigation, no
-               popups, no downloads, no form submission. */
-            sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-fullscreen"
-            allow="fullscreen; xr-spatial-tracking"
-            loading="eager"
-          />
-        </div>
-      )}
+            <iframe
+              src={embed.url}
+              title={embed.posterAlt}
+              className="w-full flex-1 border-0 bg-[#1C1917]"
+              /* Only what the walkthrough needs. No top-level navigation, no
+                 popups, no downloads, no form submission. */
+              sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-fullscreen"
+              allow="fullscreen; xr-spatial-tracking"
+              loading="eager"
+            />
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
