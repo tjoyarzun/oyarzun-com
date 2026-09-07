@@ -260,10 +260,58 @@ Find the `projects` array inside the profile:
   title: "Project Name",
   description: "What it does in one sentence.",
   tags: ["Python", "dbt", "BigQuery"],
-  githubUrl: "https://github.com/tjoyarzun/repo-name",
-  liveUrl: "https://yoursite.com",   // optional — remove if no live URL
+  githubUrl: "https://github.com/tjoyarzun/repo-name",  // optional
+  liveUrl: "https://yoursite.com",                      // optional
 },
 ```
+
+**`githubUrl` is optional.** Omit it for a private repo — a link to one returns
+404 for every visitor, and the card simply doesn't render the GitHub link when
+the field is absent. That's why the Dimple Dell entry has no `githubUrl`.
+
+### Interactive project embed
+
+**File:** `lib/data.ts` — add an `embed` block to a project
+
+Optional. Adds a poster image to the project card with a button that opens a
+live app full-screen in an iframe. Tommy's Dimple Dell Residence project uses
+it; delete the block and the card goes back to being text and links.
+
+```ts
+embed: {
+  url: "https://dimple-dell-3d.vercel.app",   // origin to frame — see below
+  poster: "/images/dimple-dell-3d.jpg",       // shown before anything loads
+  posterAlt: "Isometric render of the house.",
+  cta: "Launch the walkthrough",              // button label
+  note: "Orbit with drag. WASD to move.",     // optional line under the button
+},
+```
+
+**The embedded site must allow this one to frame it.** It has to send a
+`Content-Security-Policy` header naming oyarzun.com as an allowed ancestor:
+
+```
+Content-Security-Policy: frame-ancestors 'self' https://oyarzun.com https://www.oyarzun.com
+```
+
+Without it the browser silently refuses to render the frame — you get an empty
+black panel, no error on the page, and nothing in the build output. If you're
+embedding something you don't control and it doesn't send that header, an
+iframe is not an option; use `liveUrl` and let it open in a new tab instead.
+
+Note this also means embeds **cannot be tested on `localhost`** unless the
+embedded app adds `http://localhost:3000` to its own `frame-ancestors`. On the
+Dimple Dell app it deliberately doesn't, so that card only works in production.
+
+**The frame is only mounted when the button is pressed.** Nothing is requested
+from the embedded origin before that — no scripts, no cookies, no WebGL
+context — so the page costs the same for visitors who never open it.
+
+**Poster image:** upload to `public/images/` — see
+[Uploading Photos](#uploading-photos). Landscape works best; the card renders it
+at 16:9. If you're screenshotting the app itself, check the capture for
+anything you don't want public: the Dimple Dell app prints its own title and
+location in the top-left corner, so the shipped poster is cropped above it.
 
 ### Recognition card (awards)
 
