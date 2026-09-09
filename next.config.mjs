@@ -25,6 +25,32 @@ const nextConfig = {
   },
 
   /**
+   * The Issue 04 redesign folded five routes into the one scroll. Every one of
+   * them has been live and linkable, so they redirect rather than 404.
+   *
+   * `permanent: true` sends a 308, which tells Google to transfer the old
+   * URL's ranking to the target and tells browsers to cache the hop. That is
+   * the right answer for a fold that is not coming back — but it is also
+   * sticky in a browser cache, so if any of these turns out to be wrong it
+   * has to be fixed rather than reverted.
+   *
+   * The two post URLs matter most: they are the only ones plausibly linked
+   * from outside this site, and an anchor could not replace them anyway
+   * (a post needs its own address, its own OG image, and its own title).
+   * /blog/:slug is listed before /blog so the more specific rule wins.
+   */
+  async redirects() {
+    return [
+      { source: "/blog/:slug", destination: "/written/:slug", permanent: true },
+      { source: "/blog", destination: "/#written", permanent: true },
+      { source: "/dashboard", destination: "/#counted", permanent: true },
+      { source: "/travels", destination: "/#away", permanent: true },
+      { source: "/now", destination: "/#now", permanent: true },
+      { source: "/profiles", destination: "/#two", permanent: true },
+    ];
+  },
+
+  /**
    * Security response headers.
    *
    * The site previously sent only `strict-transport-security`, which Vercel

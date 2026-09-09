@@ -1,60 +1,455 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   OYARZUN.COM — Issue 04 · the design system
+   ═══════════════════════════════════════════════════════════════════════
+
+   Ported from the design exploration at
+   scratchpad/design/SITE/site.css. Two deliberate substitutions were made
+   during the port and nothing else changed:
+
+     1. `html[data-neg]`  →  `html.dark`
+        The design hand-rolled Negative on a `data-neg` attribute plus
+        localStorage. The app already ships next-themes with Tailwind's
+        `darkMode: "class"`, so the mechanism is dark mode and only the
+        *name* is Negative. One selector rename replaces ~20 lines of
+        persistence code, and the toggle then survives navigation for free.
+
+     2. Font stacks are indirected through next/font variables.
+        `--disp`/`--body`/`--cred` keep their names so every rule below is
+        untouched; only their values now point at the self-hosted faces
+        declared in app/layout.tsx. All three are SIL Open Font License.
+
+   Tailwind's preflight loads first so the design system wins every
+   collision. Utility classes still work on top for anything new.
+   ═══════════════════════════════════════════════════════════════════════ */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --navy: #1c1917;
-  --teal: #c8973e;
-  --teal-dark: #8b6b2a;
-  --orange: #d4614a;
-  --sand: #f0e9da;
-  --slate: #f7f2eb;
+/* ════ OYARZUN.COM — Issue 04 · the design system ════════════════════ */
+
+/* Real routes, but they move. One rule, no framework, no SPA.
+   The nav and the running head are named, so they stay put across the
+   navigation while the page body cross-fades under them. */
+@view-transition{ navigation:auto }
+@media (prefers-reduced-motion:no-preference){
+  ::view-transition-group(root){ animation-duration:.28s }
+  ::view-transition-old(root){ animation:vt-out .22s ease both }
+  ::view-transition-new(root){ animation:vt-in .28s ease both }
 }
-
-html {
-  scroll-behavior: smooth;
+@keyframes vt-out{ to{ opacity:0; transform:translateY(-6px) } }
+@keyframes vt-in{ from{ opacity:0; transform:translateY(8px) } }
+:root{
+  --paper:#dcd9d0; --ink:#141414; --red:#dd2f1c;
+  --ink70:#141414b3; --ink45:#14141473; --ink22:#14141438; --ink12:#1414141f;
+  --disp:var(--font-display),Impact,sans-serif;
+  --body:var(--font-body),'Arial Narrow',sans-serif;
+  --cred:var(--font-cred),ui-monospace,monospace;
+  --m:clamp(20px,3.4vw,52px);
+  --measure:68ch;
 }
+html.dark{--paper:#141414;--ink:#dcd9d0;
+  --ink70:#dcd9d0b3;--ink45:#dcd9d073;--ink22:#dcd9d038;--ink12:#dcd9d01f}
+*{box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased;background:var(--paper);scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:15px;line-height:1.52}
+/* newsprint tooth */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;z-index:100;background:var(--ink);color:var(--paper);
+  padding:9px 13px;font-family:var(--cred);font-size:11px;letter-spacing:.13em;text-transform:uppercase}
 
-body {
-  font-family: var(--font-dm-sans), sans-serif;
+/* ── NAVBAR — the real site header ─────────────────────────────────── */
+.nav{view-transition-name:sitenav;position:sticky;top:0;z-index:70;display:flex;align-items:stretch;background:var(--ink);
+  color:var(--paper);height:36px;font-family:var(--cred);font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase}
+.nav .wm{display:flex;align-items:center;padding:0 15px;background:var(--red);color:#fff;
+  font-weight:700;white-space:nowrap;text-decoration:none}
+.nav ul{display:flex;align-items:center;gap:0;margin:0;padding:0;list-style:none;flex:1;
+  overflow-x:auto;scrollbar-width:none}
+.nav ul::-webkit-scrollbar{display:none}
+.nav ul a{display:flex;align-items:center;height:36px;padding:0 13px;color:var(--paper);
+  text-decoration:none;opacity:.58;white-space:nowrap}
+.nav ul a:hover{opacity:1}
+.nav ul a[aria-current="page"]{opacity:1;background:#ffffff26}
+/* jumps move you down this page; goes take you somewhere else. */
+.nav ul a.jump[aria-current="true"]{opacity:1;color:#fff;background:var(--red)}
+.nav ul li.split{width:1px;align-self:stretch;margin:0 9px;background:#ffffff40;flex:0 0 1px}
+.nav ul a.go{opacity:.72}
+.nav ul a.go::after{content:"›";margin-left:6px;opacity:.75;font-size:12px;line-height:1}
+.nav ul a.go:hover{opacity:1}
+.nav .neg{background:none;border:none;border-left:1px solid #ffffff2e;color:var(--paper);
+  font-family:inherit;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  padding:0 15px;cursor:pointer;white-space:nowrap}
+.nav .neg:hover{background:var(--red);color:#fff}
+
+/* ── RUNNING HEAD — the magazine department bar ────────────────────── */
+.run{view-transition-name:runhead;display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:baseline;
+  padding:12px var(--m) 9px;border-bottom:1px solid var(--ink22)}
+.run .dept{font-family:var(--cred);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--red);font-weight:700;white-space:nowrap}
+.run .mid{font-family:var(--cred);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink45);text-align:center}
+.run .iss{font-family:var(--cred);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink45);white-space:nowrap}
+
+/* ── PAGE MASTHEAD ─────────────────────────────────────────────────── */
+.mast{padding:30px var(--m) 0}
+.mast .kick{font-family:var(--cred);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink45)}
+.mast h1{font-family:var(--disp);font-weight:900;margin:8px 0 0;line-height:.82;
+  letter-spacing:-.04em;text-transform:uppercase;font-size:clamp(42px,8.4vw,116px)}
+.mast h1 span{display:block;width:max-content;white-space:nowrap}
+.mast .dek{display:grid;grid-template-columns:1.6fr 1fr;gap:0 26px;align-items:end;
+  border-top:5px solid var(--ink);margin-top:14px;padding-top:12px}
+.mast .dek p{margin:0;font-size:17px;line-height:1.4;max-width:52ch}
+.mono{font-family:var(--cred);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink45);line-height:1.95}
+
+.contents{position:sticky;top:36px;z-index:65;display:flex;align-items:center;gap:0;
+  background:var(--paper);border-bottom:1px solid var(--ink22);padding:0 var(--m);
+  overflow-x:auto;scrollbar-width:none}
+.contents::-webkit-scrollbar{display:none}
+.contents .lbl{font-family:var(--cred);font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink45);padding:9px 14px 8px 0;white-space:nowrap}
+.contents a{font-family:var(--cred);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink70);text-decoration:none;padding:9px 13px 8px;white-space:nowrap;
+  border-left:1px solid var(--ink12)}
+.contents a:hover{background:var(--ink);color:var(--paper)}
+.contents a[aria-current="true"]{background:var(--red);color:#fff;border-left-color:var(--red)}
+[id]{scroll-margin-top:84px}
+
+.dept{scroll-margin-top:38px}
+.dept + .dept{margin-top:64px}
+.deptbar{position:sticky;top:36px;z-index:64;display:grid;grid-template-columns:auto 1fr auto;
+  gap:16px;align-items:center;background:var(--ink);color:var(--paper);
+  padding:8px var(--m) 7px;margin-bottom:0}
+.deptbar .dn{font-family:var(--disp);font-weight:900;font-size:16px;color:var(--red);letter-spacing:-.02em}
+.deptbar h2{font-family:var(--disp);font-weight:900;font-size:17px;margin:0;text-transform:uppercase;
+  letter-spacing:-.008em;line-height:1}
+.deptbar .dk{font-family:var(--cred);font-size:9px;letter-spacing:.15em;text-transform:uppercase;
+  color:#dcd9d08c;white-space:nowrap}
+.mast.tight{padding-top:26px}
+.mast.tight h1{font-size:clamp(34px,7vw,92px)}
+
+/* ── SECTIONS ──────────────────────────────────────────────────────── */
+.sec{padding:0 var(--m);margin-top:46px}
+.sh{display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:end;
+  border-top:4px solid var(--ink);padding-top:11px;margin-bottom:20px}
+.sh .no{font-family:var(--disp);font-weight:900;font-size:clamp(24px,3vw,38px);line-height:.8;
+  color:var(--red);letter-spacing:-.03em}
+.sh h2{font-family:var(--disp);font-weight:900;font-size:clamp(23px,3vw,36px);margin:0;
+  line-height:.86;letter-spacing:-.024em;text-transform:uppercase}
+.sh .r{text-align:right;white-space:nowrap}
+.sh.lite{border-top-width:1px}
+.sh.lite h2{font-size:clamp(18px,2.1vw,25px)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.four{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+
+/* ── PRIMITIVES ────────────────────────────────────────────────────── */
+.kick{font-family:var(--cred);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink45)}
+.btn{display:inline-block;font-family:var(--cred);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;padding:9px 15px 8px;background:var(--ink);color:var(--paper);
+  text-decoration:none;border:none;cursor:pointer}
+.btn:hover{background:var(--red);color:#fff}
+.btn.alt{background:var(--red);color:#fff}
+.btn.alt:hover{background:var(--ink);color:var(--paper)}
+.btn.gho{background:none;color:var(--ink);border:2px solid var(--ink)}
+.btn.gho:hover{background:var(--ink);color:var(--paper)}
+.tag{font-family:var(--cred);font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  padding:5px 9px 4px;border:1px solid var(--ink22);color:var(--ink70);cursor:pointer;
+  background:none;text-decoration:none;display:inline-block}
+.tag:hover{border-color:var(--ink);color:var(--ink)}
+.tag[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* halftone plate — click reveals the colour */
+.plate{position:relative;display:block;width:100%;padding:0;border:none;background:none;
+  cursor:zoom-in;line-height:0}
+.plate canvas{width:100%;height:auto;display:block}
+.plate .cta{position:absolute;right:0;bottom:0;font-family:var(--cred);font-size:8.5px;
+  letter-spacing:.13em;text-transform:uppercase;background:var(--ink);color:var(--paper);
+  padding:4px 7px 3px;opacity:0;transition:opacity .14s}
+.plate:hover .cta,.plate:focus-visible .cta{opacity:1}
+.cap{font-family:var(--cred);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink45);margin-top:6px;display:flex;justify-content:space-between;gap:14px;line-height:1.7}
+
+/* ── HOME ──────────────────────────────────────────────────────────── */
+.cover{position:relative;overflow:hidden;background:var(--ink);margin-top:18px}
+.cover canvas{width:100%;height:auto;display:block;opacity:.92}
+/* The scrim is measured in px from the bottom, not as a percentage of the
+   plate. A percentage scrim is only correct at one reproduction size: this
+   plate is 2.35:1, so it stands 571px tall at 1440 and 162px at 420 — and the
+   overlay, whose height is set by its type rather than by the plate, started
+   at 26% of the small plate, above the 34% where the old gradient began. The
+   headline sat on bare photograph on every phone. Anchoring the stops in px
+   makes the scrim cover the type at any width while leaving most of a large
+   plate untouched. */
+.cover::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,#141414f2 0,#141414cc 84px,#14141400 210px)}
+.cover .ov{position:absolute;left:24px;right:24px;bottom:22px;pointer-events:none;z-index:2}
+/* Fixed polarity, like the route chart: this type sits on a scrim that is
+   always dark, so it is always light. Reading it from --paper made it invert
+   with the theme and go near-black on near-black under Negative. */
+.cover .ov h2{font-family:var(--disp);font-weight:900;color:#f2f0ea;margin:0;
+  font-size:clamp(26px,4.2vw,54px);line-height:.86;letter-spacing:-.028em;text-transform:uppercase}
+.cover .ov p{margin:10px 0 0;color:#f2f0ea;font-size:15px;max-width:46ch;line-height:1.42}
+.grid6{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--ink)}
+.grid6 a{background:var(--paper);padding:16px 15px 14px;text-decoration:none;color:var(--ink);
+  display:flex;flex-direction:column;justify-content:space-between;min-height:96px}
+.grid6 a:hover{background:var(--red);color:#fff}
+.grid6 a:hover .n,.grid6 a:hover .k{color:#fff}
+.grid6 .n{font-family:var(--disp);font-weight:900;font-size:22px;text-transform:uppercase;
+  letter-spacing:-.012em;line-height:.94}
+.grid6 .k{font-family:var(--cred);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ink45);margin-bottom:9px}
+.widget{border-top:2px solid var(--ink)}
+.widget .wr{display:grid;grid-template-columns:1fr auto;gap:12px;padding:7px 0;
+  border-bottom:1px solid var(--ink12);align-items:baseline}
+.widget .wr dt{font-family:var(--cred);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink45)}
+.widget .wr dd{margin:0;font-size:13px;font-weight:600;text-align:right}
+.widget .wr dd.hl{color:var(--red);font-weight:700}
+.figstrip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:4px solid var(--ink)}
+.figstrip .f{padding:12px 20px 14px 0;border-right:1px solid var(--ink12)}
+.figstrip .f:last-child{border-right:none}
+.figstrip .v{font-family:var(--disp);font-weight:900;font-size:clamp(30px,3.6vw,48px);line-height:.84;
+  letter-spacing:-.028em;font-variant-numeric:tabular-nums}
+.figstrip .f.hl .v{color:var(--red)}
+.figstrip .k{font-family:var(--cred);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink45);margin-top:7px}
+
+/* ── PROFILES ──────────────────────────────────────────────────────── */
+.pair{display:grid;grid-template-columns:1fr 1px 1fr;gap:0 34px}
+.pair .div{background:var(--ink22)}
+.who .pn{font-family:var(--disp);font-weight:900;font-size:clamp(34px,4.8vw,68px);line-height:.82;
+  letter-spacing:-.032em;text-transform:uppercase;margin-top:14px}
+.who .pr{font-family:var(--cred);font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--red);margin-top:10px}
+.who .pb{font-size:14.5px;line-height:1.5;margin:13px 0 0;color:var(--ink70)}
+.fld{margin-top:17px;border-top:2px solid var(--ink)}
+.fld .fr2{display:grid;grid-template-columns:1fr auto;gap:12px;padding:7px 0;
+  border-bottom:1px solid var(--ink12);align-items:baseline}
+.fld dt{font-family:var(--cred);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink45)}
+.fld dd{margin:0;font-family:var(--disp);font-weight:800;font-size:16px;letter-spacing:-.008em;text-align:right}
+.fld dd.w{font-family:var(--body);font-weight:600;font-size:13px;letter-spacing:0}
+h4.blk{font-family:var(--cred);font-size:9px;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--ink);margin:22px 0 9px;padding-bottom:5px;border-bottom:2px solid var(--ink)}
+.job{display:grid;grid-template-columns:74px 1fr;gap:13px;padding:9px 0;border-bottom:1px solid var(--ink12)}
+.job .yr{font-family:var(--cred);font-size:9.5px;letter-spacing:.06em;color:var(--ink45);padding-top:2px}
+.job .co{font-family:var(--disp);font-weight:800;font-size:15px;text-transform:uppercase;line-height:1}
+.job .ti{font-size:12.5px;color:var(--ink70);margin-top:2px}
+.job .de{font-size:12px;color:var(--ink45);margin-top:4px;line-height:1.4}
+.job.ov{background:var(--red);color:#fff;padding:9px 11px;margin:0 -11px;border-bottom:none}
+.job.ov .yr,.job.ov .ti,.job.ov .de{color:#ffffffd9}
+.job.ov .co{color:#fff}
+.pj{border-top:1px solid var(--ink12);padding:10px 0 0;margin-top:4px}
+.pj .pt{font-family:var(--disp);font-weight:800;font-size:16px;text-transform:uppercase;line-height:1.02}
+.pj p{margin:6px 0 0;font-size:12.5px;line-height:1.44;color:var(--ink70)}
+.overlap{grid-column:1 / -1;margin-top:24px;border-top:4px solid var(--ink);border-bottom:4px solid var(--ink);
+  padding:14px 0;display:grid;grid-template-columns:auto 1fr auto;gap:26px;align-items:center}
+.overlap .big{font-family:var(--disp);font-weight:900;font-size:clamp(28px,3.4vw,48px);line-height:.84;
+  letter-spacing:-.028em;text-transform:uppercase;color:var(--red)}
+.overlap p{margin:0;font-size:15px;line-height:1.42;max-width:56ch}
+.rec{margin-top:28px;display:grid;grid-template-columns:1fr 1.3fr;gap:26px;align-items:start;
+  border-top:4px solid var(--ink);padding-top:14px}
+.rec .rt{font-family:var(--disp);font-weight:900;font-size:clamp(24px,3vw,40px);line-height:.86;
+  letter-spacing:-.024em;text-transform:uppercase}
+.rec .tl{font-style:italic;font-size:15px;line-height:1.42;color:var(--ink70);margin:11px 0 0}
+.rec p{margin:11px 0 0;font-size:13.5px;line-height:1.48;color:var(--ink70)}
+.heat{display:grid;grid-template-columns:repeat(26,1fr);gap:2px;margin-top:2px}
+.heat i{aspect-ratio:1;background:var(--ink12);display:block}
+.heat i.l1{background:var(--ink22)}.heat i.l2{background:var(--ink45)}
+.heat i.l3{background:var(--ink70)}.heat i.l4{background:var(--red)}
+.radar svg{width:100%;height:auto;display:block}
+
+/* ── DASHBOARD ─────────────────────────────────────────────────────── */
+.stat{border-top:3px solid var(--ink);padding-top:9px}
+.stat .v{font-family:var(--disp);font-weight:900;font-size:clamp(34px,4.2vw,56px);line-height:.84;
+  letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.stat .k{font-family:var(--cred);font-size:9px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink45);margin-top:8px}
+.stat.hl .v{color:var(--red)}
+.chart svg{width:100%;height:auto;display:block}
+.bars{display:grid;gap:5px}
+.bars .b{display:grid;grid-template-columns:60px 1fr 44px;gap:9px;align-items:center}
+.bars .lb{font-family:var(--cred);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink45)}
+.bars .tr{height:13px;background:var(--ink12);position:relative}
+.bars .tr i{position:absolute;inset:0 auto 0 0;background:var(--ink);display:block}
+.bars .tr i.r{background:var(--red)}
+.bars .vv{font-family:var(--cred);font-size:11px;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.book{display:grid;grid-template-columns:40px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid var(--ink12)}
+.book .sp{background:var(--ink);aspect-ratio:2/3}
+.book .bt{font-family:var(--disp);font-weight:800;font-size:14px;text-transform:uppercase;line-height:1.06}
+.book .ba{font-size:11.5px;color:var(--ink45)}
+.book .bp{height:4px;background:var(--ink12);margin-top:7px;position:relative}
+.book .bp i{position:absolute;inset:0 auto 0 0;background:var(--red)}
+
+/* ── BLOG ──────────────────────────────────────────────────────────── */
+.feat{display:grid;grid-template-columns:1.3fr 1fr;gap:26px;align-items:start}
+.feat .ft{font-family:var(--disp);font-weight:900;font-size:clamp(26px,3.4vw,46px);text-transform:uppercase;
+  line-height:.88;letter-spacing:-.024em;margin:8px 0 0}
+.feat .ft a{text-decoration:none}
+.feat .ft a:hover{color:var(--red)}
+.feat p{margin:12px 0 0;font-size:14.5px;line-height:1.48;color:var(--ink70);max-width:46ch}
+.bcard{border-top:1px solid var(--ink);padding-top:10px}
+.bcard .bh{font-family:var(--disp);font-weight:800;font-size:17px;text-transform:uppercase;
+  line-height:1.02;margin:8px 0 0}
+.bcard .bh a{text-decoration:none}
+.bcard .bh a:hover{color:var(--red)}
+.bcard p{margin:7px 0 0;font-size:12px;line-height:1.42;color:var(--ink70)}
+
+/* ── POST ──────────────────────────────────────────────────────────── */
+.article{padding:0 var(--m);margin-top:34px}
+/* Three columns, not two: the text is set to its measure on the left, the
+   marginal rail is pinned to the right, and the slack is an explicit middle
+   column rather than an accident.
+
+   The original `1fr 232px` gave column one ~1066px while `.body` inside it
+   was capped at 66ch (~450px in a condensed face) — so 600px of dead space
+   opened between the prose and the rail, with both edges floating. Setting
+   the measure and pinning the rail puts the left and right edges back on the
+   full-width masthead rule above them, which is how a magazine sets a text
+   page with a marginal column. */
+.artgrid{display:grid;grid-template-columns:minmax(0,66ch) 1fr 232px;gap:44px;
+  align-items:start;margin-top:26px}
+.artgrid > .marg{grid-column:3}
+.marg{position:sticky;top:56px}
+.marg .mb{border-top:2px solid var(--ink);padding-top:9px;margin-bottom:20px}
+.marg h5{font-family:var(--cred);font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink45);margin:0 0 8px;font-weight:400}
+.marg .mv{font-size:13.5px;line-height:1.45}
+.marg .mv b{font-family:var(--disp);font-weight:800;font-size:16px;text-transform:uppercase;
+  display:block;line-height:1.04;letter-spacing:-.008em}
+.marg .tl2{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.article .hd{border-bottom:4px solid var(--ink);padding-bottom:14px}
+.article h1{font-family:var(--disp);font-weight:900;font-size:clamp(32px,5.4vw,74px);margin:10px 0 0;
+  line-height:.84;letter-spacing:-.03em;text-transform:uppercase;max-width:26ch}
+.article .byl{display:flex;flex-wrap:wrap;gap:0 22px;margin-top:14px}
+.article .body{max-width:66ch;margin:0;font-size:17px;line-height:1.62}
+.article .body > p:first-of-type{font-size:20px;line-height:1.46}
+/* ::first-letter takes exactly one letter, so a paragraph opening on an
+   acronym gets it split: "AI will not eliminate work" sets as a boxed A
+   followed by "I will not eliminate work". `.no-initial` is applied by the
+   post route when the opening word is all-caps, and suppresses the standing
+   initial rather than shipping a headline that reads wrong. */
+.article .body.no-initial > p:first-of-type{font-size:20px;line-height:1.46}
+.article .body.no-initial > p:first-of-type::first-letter{font-family:inherit;
+  font-weight:inherit;font-size:inherit;float:none;margin:0;padding:0;
+  background:none;color:inherit}
+.article .body > p:first-of-type::first-letter{font-family:var(--disp);font-weight:900;
+  font-size:44px;line-height:1;float:left;margin:5px 11px 0 0;padding:9px 13px 7px;
+  background:var(--red);color:#fff}
+/* The mock article used h3 for its subheads; the real posts in
+   content/posts/*.mdx use `##`, which is an h2. Both are styled, and so is
+   h4, because Tailwind's preflight resets every heading to inherit its
+   size — an unstyled subhead does not look wrong, it looks like a bold
+   paragraph, which is the failure that is easy to ship. */
+.article .body h2,
+.article .body h3{font-family:var(--disp);font-weight:800;font-size:24px;text-transform:uppercase;
+  letter-spacing:-.014em;margin:30px 0 10px;line-height:1}
+.article .body h2{font-size:28px;margin-top:34px}
+.article .body h4{font-family:var(--cred);font-weight:700;font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--red);margin:26px 0 8px}
+.article .body ul,.article .body ol{margin:0 0 16px;padding-left:22px}
+.article .body li{margin:0 0 7px}
+.article .body a{text-decoration:underline;text-decoration-thickness:1px;
+  text-underline-offset:2px}
+.article .body strong{font-weight:700}
+.article .body hr{border:none;border-top:1px solid var(--ink22);margin:28px 0}
+.article .body p{margin:0 0 16px}
+.article .body blockquote{margin:24px 0;padding:0;border-top:3px solid var(--ink);
+  border-bottom:3px solid var(--ink);padding:14px 0}
+.article .body blockquote p{font-family:var(--disp);font-weight:900;font-size:clamp(22px,2.8vw,34px);
+  line-height:.98;text-transform:uppercase;letter-spacing:-.018em;margin:0}
+.article .end{max-width:66ch;margin-top:26px;border-top:1px solid var(--ink);padding-top:12px}
+
+/* ── TRAVELS ───────────────────────────────────────────────────────── */
+.map{position:relative;background:var(--ink);overflow:hidden}
+.map svg{display:block;width:100%;height:auto}
+.alog{border-top:2px solid var(--ink)}
+.alog .ar{display:grid;grid-template-columns:92px 1fr auto auto;gap:14px;padding:9px 0;
+  border-bottom:1px solid var(--ink12);align-items:baseline}
+.alog .ad{font-family:var(--cred);font-size:9.5px;letter-spacing:.06em;color:var(--ink45)}
+.alog .an{font-family:var(--disp);font-weight:800;font-size:15px;text-transform:uppercase;line-height:1}
+.alog .al{font-size:11.5px;color:var(--ink70)}
+.alog .aw{font-family:var(--cred);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink45)}
+.alog .ann{font-family:var(--disp);font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+.alog .tot{border-bottom:none;border-top:2px solid var(--ink);margin-top:3px;padding-top:9px}
+.alog .tot .ad,.alog .tot .al,.alog .tot .ann{color:var(--red)}
+
+/* ── NOW ───────────────────────────────────────────────────────────── */
+.nowlist{border-top:2px solid var(--ink);max-width:var(--measure)}
+.nowlist .nr{display:grid;grid-template-columns:120px 1fr;gap:16px;padding:13px 0;
+  border-bottom:1px solid var(--ink12)}
+.nowlist .nk{font-family:var(--cred);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink45);padding-top:3px}
+.nowlist .nv{font-size:16px;line-height:1.45}
+.nowlist .nv b{font-family:var(--disp);font-weight:800;font-size:19px;text-transform:uppercase;
+  display:block;letter-spacing:-.01em;line-height:1.06}
+
+/* ── FAMILY ────────────────────────────────────────────────────────── */
+.gate{border:2px solid var(--ink);padding:22px;max-width:400px}
+.gate .gt{font-family:var(--disp);font-weight:900;font-size:24px;text-transform:uppercase;line-height:.94}
+.gate p{margin:9px 0 14px;font-size:12.5px;color:var(--ink70);line-height:1.46}
+.gate .fld2{display:flex;border:2px solid var(--ink)}
+.gate input{flex:1;border:none;background:none;padding:10px 11px;font-family:var(--cred);
+  font-size:11px;letter-spacing:.1em;color:var(--ink);outline:none;text-transform:uppercase}
+.gate input::placeholder{color:var(--ink45)}
+.gallery{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+
+/* ── COLOPHON ──────────────────────────────────────────────────────── */
+.colo{margin-top:54px;padding:18px var(--m) 52px;border-top:5px solid var(--ink);
+  display:grid;grid-template-columns:auto 1.6fr auto;gap:28px;align-items:start}
+.colo .lg{font-family:var(--disp);font-weight:900;font-size:25px;line-height:.86;
+  text-transform:uppercase;letter-spacing:-.026em}
+.colo p{margin:0;font-size:13px;line-height:1.52;color:var(--ink70)}
+.folio{padding:0 var(--m);display:flex;justify-content:flex-end}
+.folio span{font-family:var(--disp);font-weight:900;font-size:15px;color:var(--red)}
+
+/* ── LIGHTBOX ──────────────────────────────────────────────────────── */
+#lb{position:fixed;inset:0;z-index:95;background:#0d0c0bF7;display:grid;place-items:center;
+  padding:clamp(18px,4vw,58px);opacity:0;transition:opacity .3s ease}
+#lb[hidden]{display:none}
+#lb.in{opacity:1}
+#lb .stage{max-width:1120px;width:100%}
+#lb img{width:100%;height:auto;max-height:76vh;object-fit:contain;display:block;opacity:0;
+  transform:scale(.99);transition:opacity .36s ease,transform .36s ease}
+#lb img.in{opacity:1;transform:scale(1)}
+#lb .meta{display:flex;justify-content:space-between;gap:24px;margin-top:14px;font-family:var(--cred);
+  font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:#dcd9d08c;opacity:0;
+  transition:opacity .36s ease .1s}
+#lb .meta.in{opacity:1}
+#lb .meta b{color:#fff;font-weight:400}
+#lb .meta .sw{color:#f0563d}
+#lb button{position:absolute;right:clamp(16px,3vw,40px);top:clamp(16px,3vw,40px);background:none;
+  border:2px solid #ffffff59;color:#fff;font-family:var(--cred);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;padding:9px 14px;cursor:pointer}
+#lb button:hover{background:#dd2f1c;border-color:#dd2f1c}
+
+@media (max-width:1000px){
+  .artgrid{grid-template-columns:1fr;gap:26px}
+  .marg{position:static}
+  .pair{grid-template-columns:1fr;gap:32px}
+  .pair .div{display:none}
+  .two,.three,.four,.feat,.grid6,.figstrip{grid-template-columns:1fr 1fr}
+  .mast .dek,.colo,.overlap,.rec{grid-template-columns:1fr;gap:14px}
+  .figstrip .f{border-right:none;border-bottom:1px solid var(--ink12)}
+  .gallery{grid-template-columns:repeat(3,1fr)}
+  .heat{grid-template-columns:repeat(13,1fr)}
+  .run{grid-template-columns:auto auto}
+  .run .mid{display:none}
+  .sh{grid-template-columns:auto 1fr}
+  .sh .r{grid-column:1/-1;text-align:left}
 }
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
+@media (max-width:620px){
+  .three,.four,.grid6,.figstrip,.two,.feat{grid-template-columns:1fr}
+  .gallery{grid-template-columns:repeat(2,1fr)}
 }
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #c8973e;
-  border-radius: 3px;
-}
-
-/* Leaflet map styles */
-.leaflet-container {
-  height: 100%;
-  width: 100%;
-  border-radius: 0.75rem;
-}
-
-/* Typography utilities */
-@layer base {
-  h1,
-  h2,
-  h3 {
-    font-family: var(--font-playfair), serif;
-  }
-}
-
-@layer utilities {
-  .font-display {
-    font-family: var(--font-playfair), serif;
-  }
-
-  .text-balance {
-    text-wrap: balance;
-  }
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
 }
