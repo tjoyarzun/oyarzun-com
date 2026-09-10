@@ -95,3 +95,61 @@ export function plateSource(src: string): {
     ? { src: PLATE_STANDIN, placeholder: true }
     : { src, placeholder: false };
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   The shared skill axes.
+
+   His `skills` array has ten entries, hers nine, and they only partly
+   overlap. Plotting each against its own axes would give two radars that
+   look comparable and are not — the same shape would mean different things.
+   So the axis set is the union, in one fixed order, and a skill someone does
+   not list plots as zero on that axis.
+
+   Ordered by combined proficiency, so the axes both of them are strong on
+   lead and the polygon reads clockwise from its widest point.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+import { profiles } from "@/lib/data";
+
+export interface Axis {
+  skill: string;
+  value: number;
+}
+
+/** Corrects the typo that sits in both arrays in lib/data.ts. */
+function label(skill: string): string {
+  return skill.replace("Cluade", "Claude");
+}
+
+/** Shorter labels, so a ten-axis radar does not collide with itself. */
+const SHORTEN: Record<string, string> = {
+  "Cloud (Databricks/GCP)": "Cloud",
+  "Tableau/Looker": "Tableau",
+  "AI (Claude/Gemini)": "AI",
+  "Apache Spark": "Spark",
+  "Data Modeling": "Modeling",
+};
+
+export const SKILL_AXES: string[] = (() => {
+  const total = new Map<string, number>();
+  [profiles.him, profiles.her].forEach((p) =>
+    p.skills.forEach((s) => {
+      const k = label(s.skill);
+      total.set(k, (total.get(k) ?? 0) + s.value);
+    }),
+  );
+  return Array.from(total.entries())
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .map(([k]) => k);
+})();
+
+/** One person's values, in the shared axis order. Absent skill = 0. */
+export function axesFor(who: "him" | "her"): Axis[] {
+  const mine = new Map(
+    profiles[who].skills.map((s) => [label(s.skill), s.value]),
+  );
+  return SKILL_AXES.map((skill) => ({
+    skill: SHORTEN[skill] ?? skill,
+    value: mine.get(skill) ?? 0,
+  }));
+}

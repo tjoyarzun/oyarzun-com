@@ -46,7 +46,7 @@ const nextConfig = {
       { source: "/dashboard", destination: "/#counted", permanent: true },
       { source: "/travels", destination: "/#away", permanent: true },
       { source: "/now", destination: "/#now", permanent: true },
-      { source: "/profiles", destination: "/#two", permanent: true },
+      { source: "/profiles", destination: "/us", permanent: true },
     ];
   },
 

@@ -42,6 +42,21 @@
 :root{
   --paper:#dcd9d0; --ink:#141414; --red:#dd2f1c;
   --ink70:#141414b3; --ink45:#14141473; --ink22:#14141438; --ink12:#1414141f;
+  /* ── Caption ink and caption red ───────────────────────────────────────
+     The small monospace labels — kickers, field names, captions, bar labels,
+     datelines — used --ink45 throughout. That is 45% ink, which measures
+     2.80:1 against this paper. WCAG AA wants 4.5:1 for text at these sizes,
+     and about a hundred elements were failing it, which is what "the grey
+     small fonts are hard to read" actually was.
+
+     --cap is the same idea at a legible weight: 5.45:1 here, 5.07:1 under
+     Negative. --ink45 stays, but only for the washes and fills it is right
+     for (the level-2 heatmap cell), never for type.
+
+     --red-tx is the same correction for the vermilion. --red is 3.31:1 on
+     paper, fine for display sizes and solid fills, not for a 10px label. */
+  --cap:#545350;
+  --red-tx:#a62315;
   --disp:var(--font-display),Impact,sans-serif;
   --body:var(--font-body),'Arial Narrow',sans-serif;
   --cred:var(--font-cred),ui-monospace,monospace;
@@ -49,7 +64,8 @@
   --measure:68ch;
 }
 html.dark{--paper:#141414;--ink:#dcd9d0;
-  --ink70:#dcd9d0b3;--ink45:#dcd9d073;--ink22:#dcd9d038;--ink12:#dcd9d01f}
+  --ink70:#dcd9d0b3;--ink45:#dcd9d073;--ink22:#dcd9d038;--ink12:#dcd9d01f;
+  --cap:#888681;--red-tx:#e45949}
 *{box-sizing:border-box}
 html{-webkit-font-smoothing:antialiased;background:var(--paper);scroll-behavior:smooth}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
@@ -90,33 +106,33 @@ a{color:inherit}
 /* ── RUNNING HEAD — the magazine department bar ────────────────────── */
 .run{view-transition-name:runhead;display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:baseline;
   padding:12px var(--m) 9px;border-bottom:1px solid var(--ink22)}
-.run .dept{font-family:var(--cred);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--red);font-weight:700;white-space:nowrap}
-.run .mid{font-family:var(--cred);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--ink45);text-align:center}
-.run .iss{font-family:var(--cred);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--ink45);white-space:nowrap}
+.run .dept{font-family:var(--cred);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--red-tx);font-weight:700;white-space:nowrap}
+.run .mid{font-family:var(--cred);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--cap);text-align:center}
+.run .iss{font-family:var(--cred);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--cap);white-space:nowrap}
 
 /* ── PAGE MASTHEAD ─────────────────────────────────────────────────── */
 .mast{padding:30px var(--m) 0}
-.mast .kick{font-family:var(--cred);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--ink45)}
+.mast .kick{font-family:var(--cred);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--cap)}
 .mast h1{font-family:var(--disp);font-weight:900;margin:8px 0 0;line-height:.82;
   letter-spacing:-.04em;text-transform:uppercase;font-size:clamp(42px,8.4vw,116px)}
 .mast h1 span{display:block;width:max-content;white-space:nowrap}
 .mast .dek{display:grid;grid-template-columns:1.6fr 1fr;gap:0 26px;align-items:end;
   border-top:5px solid var(--ink);margin-top:14px;padding-top:12px}
 .mast .dek p{margin:0;font-size:17px;line-height:1.4;max-width:52ch}
-.mono{font-family:var(--cred);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--ink45);line-height:1.95}
+.mono{font-family:var(--cred);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cap);line-height:1.95}
 
 .contents{position:sticky;top:36px;z-index:65;display:flex;align-items:center;gap:0;
   background:var(--paper);border-bottom:1px solid var(--ink22);padding:0 var(--m);
   overflow-x:auto;scrollbar-width:none}
 .contents::-webkit-scrollbar{display:none}
-.contents .lbl{font-family:var(--cred);font-size:9px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--ink45);padding:9px 14px 8px 0;white-space:nowrap}
-.contents a{font-family:var(--cred);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+.contents .lbl{font-family:var(--cred);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--cap);padding:9px 14px 8px 0;white-space:nowrap}
+.contents a{font-family:var(--cred);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
   color:var(--ink70);text-decoration:none;padding:9px 13px 8px;white-space:nowrap;
   border-left:1px solid var(--ink12)}
 .contents a:hover{background:var(--ink);color:var(--paper)}
@@ -128,10 +144,10 @@ a{color:inherit}
 .deptbar{position:sticky;top:36px;z-index:64;display:grid;grid-template-columns:auto 1fr auto;
   gap:16px;align-items:center;background:var(--ink);color:var(--paper);
   padding:8px var(--m) 7px;margin-bottom:0}
-.deptbar .dn{font-family:var(--disp);font-weight:900;font-size:16px;color:var(--red);letter-spacing:-.02em}
+.deptbar .dn{font-family:var(--disp);font-weight:900;font-size:16px;color:var(--red-tx);letter-spacing:-.02em}
 .deptbar h2{font-family:var(--disp);font-weight:900;font-size:17px;margin:0;text-transform:uppercase;
   letter-spacing:-.008em;line-height:1}
-.deptbar .dk{font-family:var(--cred);font-size:9px;letter-spacing:.15em;text-transform:uppercase;
+.deptbar .dk{font-family:var(--cred);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
   color:#dcd9d08c;white-space:nowrap}
 .mast.tight{padding-top:26px}
 .mast.tight h1{font-size:clamp(34px,7vw,92px)}
@@ -153,7 +169,7 @@ a{color:inherit}
 .four{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 
 /* ── PRIMITIVES ────────────────────────────────────────────────────── */
-.kick{font-family:var(--cred);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink45)}
+.kick{font-family:var(--cred);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--cap)}
 .btn{display:inline-block;font-family:var(--cred);font-size:10px;letter-spacing:.14em;
   text-transform:uppercase;padding:9px 15px 8px;background:var(--ink);color:var(--paper);
   text-decoration:none;border:none;cursor:pointer}
@@ -162,7 +178,7 @@ a{color:inherit}
 .btn.alt:hover{background:var(--ink);color:var(--paper)}
 .btn.gho{background:none;color:var(--ink);border:2px solid var(--ink)}
 .btn.gho:hover{background:var(--ink);color:var(--paper)}
-.tag{font-family:var(--cred);font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+.tag{font-family:var(--cred);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
   padding:5px 9px 4px;border:1px solid var(--ink22);color:var(--ink70);cursor:pointer;
   background:none;text-decoration:none;display:inline-block}
 .tag:hover{border-color:var(--ink);color:var(--ink)}
@@ -172,12 +188,12 @@ a{color:inherit}
 .plate{position:relative;display:block;width:100%;padding:0;border:none;background:none;
   cursor:zoom-in;line-height:0}
 .plate canvas{width:100%;height:auto;display:block}
-.plate .cta{position:absolute;right:0;bottom:0;font-family:var(--cred);font-size:8.5px;
+.plate .cta{position:absolute;right:0;bottom:0;font-family:var(--cred);font-size:10px;
   letter-spacing:.13em;text-transform:uppercase;background:var(--ink);color:var(--paper);
   padding:4px 7px 3px;opacity:0;transition:opacity .14s}
 .plate:hover .cta,.plate:focus-visible .cta{opacity:1}
-.cap{font-family:var(--cred);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--ink45);margin-top:6px;display:flex;justify-content:space-between;gap:14px;line-height:1.7}
+.cap{font-family:var(--cred);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--cap);margin-top:6px;display:flex;justify-content:space-between;gap:14px;line-height:1.7}
 
 /* ── HOME ──────────────────────────────────────────────────────────── */
 .cover{position:relative;overflow:hidden;background:var(--ink);margin-top:18px}
@@ -206,12 +222,12 @@ a{color:inherit}
 .grid6 a:hover .n,.grid6 a:hover .k{color:#fff}
 .grid6 .n{font-family:var(--disp);font-weight:900;font-size:22px;text-transform:uppercase;
   letter-spacing:-.012em;line-height:.94}
-.grid6 .k{font-family:var(--cred);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--ink45);margin-bottom:9px}
+.grid6 .k{font-family:var(--cred);font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--cap);margin-bottom:9px}
 .widget{border-top:2px solid var(--ink)}
 .widget .wr{display:grid;grid-template-columns:1fr auto;gap:12px;padding:7px 0;
   border-bottom:1px solid var(--ink12);align-items:baseline}
-.widget .wr dt{font-family:var(--cred);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink45)}
+.widget .wr dt{font-family:var(--cred);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--cap)}
 .widget .wr dd{margin:0;font-size:13px;font-weight:600;text-align:right}
 .widget .wr dd.hl{color:var(--red);font-weight:700}
 .figstrip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:4px solid var(--ink)}
@@ -220,8 +236,8 @@ a{color:inherit}
 .figstrip .v{font-family:var(--disp);font-weight:900;font-size:clamp(30px,3.6vw,48px);line-height:.84;
   letter-spacing:-.028em;font-variant-numeric:tabular-nums}
 .figstrip .f.hl .v{color:var(--red)}
-.figstrip .k{font-family:var(--cred);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--ink45);margin-top:7px}
+.figstrip .k{font-family:var(--cred);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--cap);margin-top:7px}
 
 /* ── PROFILES ──────────────────────────────────────────────────────── */
 .pair{display:grid;grid-template-columns:1fr 1px 1fr;gap:0 34px}
@@ -229,27 +245,65 @@ a{color:inherit}
 .who .pn{font-family:var(--disp);font-weight:900;font-size:clamp(34px,4.8vw,68px);line-height:.82;
   letter-spacing:-.032em;text-transform:uppercase;margin-top:14px}
 .who .pr{font-family:var(--cred);font-size:11px;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--red);margin-top:10px}
+  color:var(--red-tx);margin-top:10px}
 .who .pb{font-size:14.5px;line-height:1.5;margin:13px 0 0;color:var(--ink70)}
 .fld{margin-top:17px;border-top:2px solid var(--ink)}
 .fld .fr2{display:grid;grid-template-columns:1fr auto;gap:12px;padding:7px 0;
   border-bottom:1px solid var(--ink12);align-items:baseline}
-.fld dt{font-family:var(--cred);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink45)}
+.fld dt{font-family:var(--cred);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--cap)}
 .fld dd{margin:0;font-family:var(--disp);font-weight:800;font-size:16px;letter-spacing:-.008em;text-align:right}
 .fld dd.w{font-family:var(--body);font-weight:600;font-size:13px;letter-spacing:0}
-h4.blk{font-family:var(--cred);font-size:9px;letter-spacing:.17em;text-transform:uppercase;
+h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transform:uppercase;
   color:var(--ink);margin:22px 0 9px;padding-bottom:5px;border-bottom:2px solid var(--ink)}
 .job{display:grid;grid-template-columns:74px 1fr;gap:13px;padding:9px 0;border-bottom:1px solid var(--ink12)}
-.job .yr{font-family:var(--cred);font-size:9.5px;letter-spacing:.06em;color:var(--ink45);padding-top:2px}
+.job .yr{font-family:var(--cred);font-size:11px;letter-spacing:.06em;color:var(--cap);padding-top:2px}
 .job .co{font-family:var(--disp);font-weight:800;font-size:15px;text-transform:uppercase;line-height:1}
 .job .ti{font-size:12.5px;color:var(--ink70);margin-top:2px}
-.job .de{font-size:12px;color:var(--ink45);margin-top:4px;line-height:1.4}
+.job .de{font-size:12px;color:var(--cap);margin-top:4px;line-height:1.4}
 .job.ov{background:var(--red);color:#fff;padding:9px 11px;margin:0 -11px;border-bottom:none}
-.job.ov .yr,.job.ov .ti,.job.ov .de{color:#ffffffd9}
+/* Full white, not 85%. On the vermilion band pure white measures 4.67:1;
+   at 85% it drops to about 3.8:1, which the 12px description line fails. */
+.job.ov .yr,.job.ov .ti,.job.ov .de{color:#fff}
 .job.ov .co{color:#fff}
 .pj{border-top:1px solid var(--ink12);padding:10px 0 0;margin-top:4px}
 .pj .pt{font-family:var(--disp);font-weight:800;font-size:16px;text-transform:uppercase;line-height:1.02}
 .pj p{margin:6px 0 0;font-size:12.5px;line-height:1.44;color:var(--ink70)}
+/* The teaser's way out. A band, not a card — it is the department handing
+   off to its own route, so it reads as a continuation rather than an aside. */
+.teaseout{margin-top:22px;border-top:4px solid var(--ink);border-bottom:1px solid var(--ink22);
+  padding:14px 0;display:grid;grid-template-columns:1fr auto;gap:26px;align-items:center}
+.teaseout p{margin:5px 0 0;font-size:14.5px;line-height:1.45;color:var(--ink70);max-width:62ch}
+
+/* ── THE SPREAD ────────────────────────────────────────────────────────
+   /us is a dedicated route, not a department inside the scroll, so it can
+   afford a larger reading size throughout. Same components, one step up —
+   the department teaser on the home page keeps the compact scale.
+
+   Scoped with `.spread` rather than by editing the base rules, so the two
+   contexts stay independently tunable. */
+.spread .who .pb{font-size:16px;line-height:1.54}
+.spread .job{padding:11px 0}
+.spread .job .co{font-size:17px}
+.spread .job .ti{font-size:13.5px}
+.spread .job .de{font-size:13px;line-height:1.46}
+.spread .job .yr{font-size:11.5px}
+.spread .fld .fr2{padding:9px 0}
+.spread .fld dd.w{font-size:14px}
+.spread .fld dt{font-size:11px}
+.spread .pj .pt{font-size:18px}
+.spread .pj p{font-size:13.5px;line-height:1.5}
+.spread .overlap p{font-size:16.5px;line-height:1.46}
+.spread h4.blk{font-size:11px;margin:26px 0 10px}
+
+/* The radar sits in its own framed plate so the axis labels have room to
+   breathe outside the rings — they are placed at 1.13R and would otherwise
+   collide with whatever follows. */
+.radar{margin-top:10px;border:1px solid var(--ink22);padding:8px 4px 4px}
+.radar svg{width:100%;height:auto;display:block;overflow:visible}
+.radarkey{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--cred);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--cap);padding:0 6px 4px}
+
 .overlap{grid-column:1 / -1;margin-top:24px;border-top:4px solid var(--ink);border-bottom:4px solid var(--ink);
   padding:14px 0;display:grid;grid-template-columns:auto 1fr auto;gap:26px;align-items:center}
 .overlap .big{font-family:var(--disp);font-weight:900;font-size:clamp(28px,3.4vw,48px);line-height:.84;
@@ -265,19 +319,119 @@ h4.blk{font-family:var(--cred);font-size:9px;letter-spacing:.17em;text-transform
 .heat i{aspect-ratio:1;background:var(--ink12);display:block}
 .heat i.l1{background:var(--ink22)}.heat i.l2{background:var(--ink45)}
 .heat i.l3{background:var(--ink70)}.heat i.l4{background:var(--red)}
-.radar svg{width:100%;height:auto;display:block}
+
+/* ── THE WRITTEN INDEX ─────────────────────────────────────────────────
+   Full-width numbered bands rather than a card grid. A three-column card
+   grid is sized for exactly the number of posts that exist — two posts leave
+   a hole, twenty wrap into a wall — whereas a band list reads correctly at
+   any length and gives the titles the width they deserve.
+
+   The index numeral is the structure doing real work: these are numbered
+   because they are a sequence, newest first, and the empty slots continue the
+   count so the gap to the 2026 goal is a visible part of the list. */
+.windex{border-top:4px solid var(--ink);margin-top:16px}
+.wrow{display:grid;grid-template-columns:76px minmax(0,1fr) 220px;gap:26px;
+  padding:20px 0 19px;border-bottom:1px solid var(--ink22);align-items:start}
+.wrow .wn{font-family:var(--disp);font-weight:900;font-size:44px;line-height:.8;
+  letter-spacing:-.03em;color:var(--ink22);font-variant-numeric:tabular-nums}
+.wrow .wt{font-family:var(--disp);font-weight:900;font-size:clamp(24px,2.7vw,38px);
+  line-height:.94;letter-spacing:-.024em;text-transform:uppercase;margin:0}
+.wrow .wt a{text-decoration:none}
+.wrow .wt a:hover{color:var(--red)}
+.wrow .wx{margin:9px 0 0;font-size:14.5px;line-height:1.46;color:var(--ink70);max-width:74ch}
+.wrow .wm2{font-family:var(--cred);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cap);display:flex;flex-direction:column;gap:5px;text-align:right}
+.wrow .wm2 .wa{color:var(--red-tx);font-weight:700}
+.wrow .wtags{display:flex;flex-wrap:wrap;gap:5px;margin-top:11px;justify-content:flex-end}
+.wrow:hover .wn{color:var(--red)}
+
+/* An unwritten slot. Dashed, unlinked, and it keeps its number, because the
+   point is that it is the next one — not that something is missing. */
+.wrow.empty{border-bottom-style:dashed}
+.wrow.empty .wn{color:var(--ink12)}
+.wrow.empty .wt{color:var(--ink22)}
+.wrow.empty:hover .wn{color:var(--ink12)}
+
+@media (max-width:860px){
+  .wrow{grid-template-columns:52px minmax(0,1fr);gap:16px}
+  .wrow .wn{font-size:32px}
+  .wrow .wm2{grid-column:2;flex-direction:row;flex-wrap:wrap;gap:10px;text-align:left;margin-top:9px}
+  .wrow .wtags{justify-content:flex-start}
+}
+
+/* ── THE INSTRUMENT PANEL ──────────────────────────────────────────────
+   Counted reads as a panel rather than a page of cards: one hairline grid,
+   monospace labels, tabular figures that line up in columns, and a sparkline
+   under every readout. The reference is a plate from a technical journal, not
+   a BI dashboard — no rounded corners, no drop shadows, no chart chrome.
+
+   `font-variant-numeric: tabular-nums` is load-bearing. These figures are
+   meant to be compared down a column, and proportional digits make a 1 narrow
+   enough that the columns visibly stagger. */
+.panel{border:2px solid var(--ink);margin-top:18px}
+.panel .prow{display:grid;border-bottom:1px solid var(--ink22)}
+.panel .prow:last-child{border-bottom:none}
+.panel .prow.r4{grid-template-columns:repeat(4,1fr)}
+.panel .prow.r3{grid-template-columns:repeat(3,1fr)}
+.panel .prow.r2{grid-template-columns:1fr 1fr}
+.panel .cell{padding:12px 14px 11px;border-right:1px solid var(--ink22);min-width:0}
+.panel .cell:last-child{border-right:none}
+.panel .cell.hl{background:var(--red);color:#fff}
+.panel .cell.hl .pl,.panel .cell.hl .pu,.panel .cell.hl .pn2{color:#fff}
+
+/* label / figure / unit */
+.panel .pl{font-family:var(--cred);font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--cap);display:flex;justify-content:space-between;gap:8px;white-space:nowrap}
+.panel .pl .pu{color:var(--cap);letter-spacing:.1em}
+.panel .pv{font-family:var(--disp);font-weight:900;font-size:clamp(34px,3.6vw,52px);
+  line-height:.9;letter-spacing:-.026em;margin-top:7px;font-variant-numeric:tabular-nums}
+.panel .cell.hl .pv{color:#fff}
+.panel .pn2{font-family:var(--cred);font-size:10px;letter-spacing:.08em;color:var(--cap);margin-top:5px}
+
+/* the sparkline strip under a readout */
+.panel .spark{margin-top:11px;margin-bottom:2px;height:26px}
+.panel .spark svg{width:100%;height:26px;display:block;overflow:visible}
+
+/* a full-width instrument: label rail on the left, bars on the right */
+.gauge{display:grid;grid-template-columns:142px 1fr auto;gap:12px;align-items:center;
+  padding:7px 0;border-bottom:1px solid var(--ink12)}
+.gauge:last-child{border-bottom:none}
+.gauge .gl{font-family:var(--cred);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--cap);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gauge .gt{height:13px;background:var(--ink12);position:relative}
+.gauge .gt i{position:absolute;inset:0 auto 0 0;background:var(--ink);display:block}
+.gauge .gt i.r{background:var(--red)}
+/* the target notch on a goal gauge — a rule, not a fill, so "where we are"
+   and "where we said we would be" are visually different kinds of thing */
+.gauge .gt b{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.gauge .gv{font-family:var(--disp);font-weight:800;font-size:15px;letter-spacing:-.01em;
+  font-variant-numeric:tabular-nums;white-space:nowrap;min-width:56px;text-align:right}
+
+/* the panel's own section head — flush, no numeral, reads as a rail label */
+.panel .phead{display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+  padding:9px 14px 8px;background:var(--ink);color:var(--paper);
+  font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transform:uppercase}
+.panel .phead .pr2{color:#dcd9d0a6;letter-spacing:.1em}
+.panel .pbody{padding:11px 14px 13px}
+
+@media (max-width:860px){
+  .panel .prow.r4{grid-template-columns:1fr 1fr}
+  .panel .prow.r3,.panel .prow.r2{grid-template-columns:1fr}
+  .panel .cell{border-right:none;border-bottom:1px solid var(--ink22)}
+  .gauge{grid-template-columns:96px 1fr auto;gap:9px}
+}
 
 /* ── DASHBOARD ─────────────────────────────────────────────────────── */
 .stat{border-top:3px solid var(--ink);padding-top:9px}
 .stat .v{font-family:var(--disp);font-weight:900;font-size:clamp(34px,4.2vw,56px);line-height:.84;
   letter-spacing:-.03em;font-variant-numeric:tabular-nums}
-.stat .k{font-family:var(--cred);font-size:9px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--ink45);margin-top:8px}
+.stat .k{font-family:var(--cred);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--cap);margin-top:8px}
 .stat.hl .v{color:var(--red)}
 .chart svg{width:100%;height:auto;display:block}
 .bars{display:grid;gap:5px}
 .bars .b{display:grid;grid-template-columns:60px 1fr 44px;gap:9px;align-items:center}
-.bars .lb{font-family:var(--cred);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink45)}
+.bars .lb{font-family:var(--cred);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--cap)}
 .bars .tr{height:13px;background:var(--ink12);position:relative}
 .bars .tr i{position:absolute;inset:0 auto 0 0;background:var(--ink);display:block}
 .bars .tr i.r{background:var(--red)}
@@ -285,7 +439,7 @@ h4.blk{font-family:var(--cred);font-size:9px;letter-spacing:.17em;text-transform
 .book{display:grid;grid-template-columns:40px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid var(--ink12)}
 .book .sp{background:var(--ink);aspect-ratio:2/3}
 .book .bt{font-family:var(--disp);font-weight:800;font-size:14px;text-transform:uppercase;line-height:1.06}
-.book .ba{font-size:11.5px;color:var(--ink45)}
+.book .ba{font-size:11.5px;color:var(--cap)}
 .book .bp{height:4px;background:var(--ink12);margin-top:7px;position:relative}
 .book .bp i{position:absolute;inset:0 auto 0 0;background:var(--red)}
 
@@ -320,8 +474,8 @@ h4.blk{font-family:var(--cred);font-size:9px;letter-spacing:.17em;text-transform
 .artgrid > .marg{grid-column:3}
 .marg{position:sticky;top:56px}
 .marg .mb{border-top:2px solid var(--ink);padding-top:9px;margin-bottom:20px}
-.marg h5{font-family:var(--cred);font-size:9px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--ink45);margin:0 0 8px;font-weight:400}
+.marg h5{font-family:var(--cred);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--cap);margin:0 0 8px;font-weight:400}
 .marg .mv{font-size:13.5px;line-height:1.45}
 .marg .mv b{font-family:var(--disp);font-weight:800;font-size:16px;text-transform:uppercase;
   display:block;line-height:1.04;letter-spacing:-.008em}
@@ -354,7 +508,7 @@ h4.blk{font-family:var(--cred);font-size:9px;letter-spacing:.17em;text-transform
   letter-spacing:-.014em;margin:30px 0 10px;line-height:1}
 .article .body h2{font-size:28px;margin-top:34px}
 .article .body h4{font-family:var(--cred);font-weight:700;font-size:11px;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--red);margin:26px 0 8px}
+  text-transform:uppercase;color:var(--red-tx);margin:26px 0 8px}
 .article .body ul,.article .body ol{margin:0 0 16px;padding-left:22px}
 .article .body li{margin:0 0 7px}
 .article .body a{text-decoration:underline;text-decoration-thickness:1px;
@@ -369,25 +523,32 @@ h4.blk{font-family:var(--cred);font-size:9px;letter-spacing:.17em;text-transform
 .article .end{max-width:66ch;margin-top:26px;border-top:1px solid var(--ink);padding-top:12px}
 
 /* ── TRAVELS ───────────────────────────────────────────────────────── */
-.map{position:relative;background:var(--ink);overflow:hidden}
+/* FIXED POLARITY. The route chart is printed as a reversed-out plate — light
+   marks on a dark ground — in both themes, exactly like the cover overlay.
+   `var(--ink)` inverts, so under Negative this ground went light while the
+   chart's marks stayed light, and the whole map disappeared: all 43 SVG
+   elements present, none of them visible. */
+.map{position:relative;background:#141414;overflow:hidden;
+  outline:1px solid var(--ink22);outline-offset:-1px}
 .map svg{display:block;width:100%;height:auto}
 .alog{border-top:2px solid var(--ink)}
-.alog .ar{display:grid;grid-template-columns:92px 1fr auto auto;gap:14px;padding:9px 0;
+.alog .ar{display:grid;grid-template-columns:112px 1fr auto auto;gap:14px;padding:9px 0;
   border-bottom:1px solid var(--ink12);align-items:baseline}
-.alog .ad{font-family:var(--cred);font-size:9.5px;letter-spacing:.06em;color:var(--ink45)}
+.alog .ad{font-family:var(--cred);font-size:11px;letter-spacing:.06em;color:var(--cap);
+  white-space:nowrap}
 .alog .an{font-family:var(--disp);font-weight:800;font-size:15px;text-transform:uppercase;line-height:1}
 .alog .al{font-size:11.5px;color:var(--ink70)}
-.alog .aw{font-family:var(--cred);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink45)}
+.alog .aw{font-family:var(--cred);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--cap)}
 .alog .ann{font-family:var(--disp);font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
 .alog .tot{border-bottom:none;border-top:2px solid var(--ink);margin-top:3px;padding-top:9px}
-.alog .tot .ad,.alog .tot .al,.alog .tot .ann{color:var(--red)}
+.alog .tot .ad,.alog .tot .al,.alog .tot .ann{color:var(--red-tx)}
 
 /* ── NOW ───────────────────────────────────────────────────────────── */
 .nowlist{border-top:2px solid var(--ink);max-width:var(--measure)}
 .nowlist .nr{display:grid;grid-template-columns:120px 1fr;gap:16px;padding:13px 0;
   border-bottom:1px solid var(--ink12)}
-.nowlist .nk{font-family:var(--cred);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--ink45);padding-top:3px}
+.nowlist .nk{font-family:var(--cred);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--cap);padding-top:3px}
 .nowlist .nv{font-size:16px;line-height:1.45}
 .nowlist .nv b{font-family:var(--disp);font-weight:800;font-size:19px;text-transform:uppercase;
   display:block;letter-spacing:-.01em;line-height:1.06}
@@ -399,7 +560,7 @@ h4.blk{font-family:var(--cred);font-size:9px;letter-spacing:.17em;text-transform
 .gate .fld2{display:flex;border:2px solid var(--ink)}
 .gate input{flex:1;border:none;background:none;padding:10px 11px;font-family:var(--cred);
   font-size:11px;letter-spacing:.1em;color:var(--ink);outline:none;text-transform:uppercase}
-.gate input::placeholder{color:var(--ink45)}
+.gate input::placeholder{color:var(--cap)}
 .gallery{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
 
 /* ── COLOPHON ──────────────────────────────────────────────────────── */
@@ -409,7 +570,7 @@ h4.blk{font-family:var(--cred);font-size:9px;letter-spacing:.17em;text-transform
   text-transform:uppercase;letter-spacing:-.026em}
 .colo p{margin:0;font-size:13px;line-height:1.52;color:var(--ink70)}
 .folio{padding:0 var(--m);display:flex;justify-content:flex-end}
-.folio span{font-family:var(--disp);font-weight:900;font-size:15px;color:var(--red)}
+.folio span{font-family:var(--disp);font-weight:900;font-size:15px;color:var(--red-tx)}
 
 /* ── LIGHTBOX ──────────────────────────────────────────────────────── */
 #lb{position:fixed;inset:0;z-index:95;background:#0d0c0bF7;display:grid;place-items:center;

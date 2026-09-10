@@ -1,6 +1,11 @@
 import Link from "next/link";
 import Plate from "@/components/thrasher/Plate";
-import { Caption, DeptBar, Mast, SectionHead } from "@/components/thrasher/editorial";
+import {
+  Caption,
+  DeptBar,
+  Mast,
+  SectionHead,
+} from "@/components/thrasher/editorial";
 import { getAllPosts } from "@/lib/posts";
 import { GOALS, dateline, plateSource } from "@/lib/thrasher/issue";
 
@@ -18,17 +23,9 @@ const AUTHOR = { him: "Him", her: "Her", both: "Both" } as const;
 
 export default function Written() {
   const posts = getAllPosts().filter((p) => !p.draft);
-  const [featured, ...rest] = posts;
+  const [featured] = posts;
   const goal = GOALS.find((g) => g.label === "Written");
   const remaining = Math.max(0, (goal?.goal ?? 5) - posts.length);
-
-  /* Tag counts, ordered by frequency then alphabetically, so the filter row
-     is stable across rebuilds. */
-  const counts = new Map<string, number>();
-  posts.forEach((p) => p.tags.forEach((t) => counts.set(t, (counts.get(t) ?? 0) + 1)));
-  const tags = Array.from(counts.entries()).sort(
-    (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]),
-  );
 
   const cover = featured ? plateSource(featured.coverImage) : null;
 
@@ -73,7 +70,12 @@ export default function Written() {
               </h3>
               <p>{featured.excerpt}</p>
               <div
-                style={{ display: "flex", gap: 9, marginTop: 16, flexWrap: "wrap" }}
+                style={{
+                  display: "flex",
+                  gap: 9,
+                  marginTop: 16,
+                  flexWrap: "wrap",
+                }}
               >
                 <Link className="btn" href={`/written/${featured.slug}`}>
                   Read the post
@@ -92,7 +94,11 @@ export default function Written() {
                 crop="0.5,0.36,0.7"
               />
               <Caption
-                left={cover.placeholder ? "Stand-in cover — real cover is remote" : "Cover image"}
+                left={
+                  cover.placeholder
+                    ? "Stand-in cover — real cover is remote"
+                    : "Cover image"
+                }
                 right="Screen 3.4px"
               />
             </div>
@@ -101,58 +107,70 @@ export default function Written() {
       ) : null}
 
       <div className="sec">
-        <SectionHead lite no="·" title="Everything written" right="Filter by tag" />
-        <div
-          style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 18 }}
-        >
-          {/* Phase 1 renders the filter row without behaviour: the counts are
-              real, the buttons are inert. Wiring it needs client state and
-              belongs with the rest of the interactive work. */}
-          <button className="tag" type="button" aria-pressed="true">
-            All · {posts.length}
-          </button>
-          {tags.map(([t, n]) => (
-            <button className="tag" type="button" key={t}>
-              {t} · {n}
-            </button>
-          ))}
-        </div>
+        <SectionHead
+          no="·"
+          title="Everything written"
+          right={
+            <>
+              {posts.length} of {goal?.goal ?? 5} for 2026
+              <br />
+              Newest first
+            </>
+          }
+        />
 
-        <div className="three">
-          {posts.map((p) => (
-            <div className="bcard" key={p.slug}>
-              <div className="kick">
-                {dateline(p.date)} · {p.readTime} min · {AUTHOR[p.author]}
+        <div className="windex">
+          {posts.map((p, i) => (
+            <div className="wrow" key={p.slug}>
+              <div className="wn">{String(i + 1).padStart(2, "0")}</div>
+              <div>
+                <h3 className="wt">
+                  <Link href={`/written/${p.slug}`}>{p.title}</Link>
+                </h3>
+                <p className="wx">{p.excerpt}</p>
               </div>
-              <div className="bh">
-                <Link href={`/written/${p.slug}`}>{p.title}</Link>
-              </div>
-              <p>{p.excerpt}</p>
-              <div style={{ display: "flex", gap: 6, marginTop: 11 }}>
-                {p.tags.map((t) => (
-                  <span className="tag" key={t}>
-                    {t}
-                  </span>
-                ))}
+              <div className="wm2">
+                <span className="wa">{AUTHOR[p.author]}</span>
+                <span>{dateline(p.date)}</span>
+                <span>{p.readTime} min read</span>
+                <div className="wtags">
+                  {p.tags.map((t) => (
+                    <span className="tag" key={t}>
+                      {t}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           ))}
 
-          {remaining > 0 ? (
-            <div className="bcard" style={{ borderTopStyle: "dashed" }}>
-              <div className="kick" style={{ color: "var(--red)" }}>
-                Empty slot
+          {/* One band per unwritten slot, numbered in sequence. Drawing the
+              gap is the point — three empty bands say more about the 2026
+              goal than a sentence claiming two of five. */}
+          {Array.from({ length: remaining }, (_, i) => (
+            <div className="wrow empty" key={`slot-${i}`} aria-hidden="true">
+              <div className="wn">
+                {String(posts.length + i + 1).padStart(2, "0")}
               </div>
-              <div className="bh" style={{ color: "var(--ink45)" }}>
-                {remaining} more to write
+              <div>
+                <h3 className="wt">Unwritten</h3>
+                <p className="wx">
+                  {i === 0
+                    ? "Next up. The slots are drawn so the gap to the 2026 goal is part of the list rather than a claim above it."
+                    : ""}
+                </p>
               </div>
-              <p>
-                {posts.length} of {goal?.goal ?? 5} against the 2026 goal. Drawn
-                so the gap is visible rather than hidden.
-              </p>
+              <div className="wm2">
+                <span>Slot open</span>
+              </div>
             </div>
-          ) : null}
+          ))}
         </div>
+
+        <Caption
+          left={`${posts.length} published · ${remaining} slots open against the 2026 goal`}
+          right="Newest first · numbered in sequence"
+        />
       </div>
     </section>
   );

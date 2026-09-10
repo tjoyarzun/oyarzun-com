@@ -25,6 +25,11 @@ function tokens() {
     red: v("--red", "#dd2f1c"),
     ink70: v("--ink70", "#141414b3"),
     ink45: v("--ink45", "#14141473"),
+    /* Caption ink and caption red — the AA-passing pair. SVG <text> is text
+       and needs them for the same reason the CSS labels do; ink45 measured
+       2.80:1 and every axis label in every drawing was using it. */
+    cap: v("--cap", "#545350"),
+    redTx: v("--red-tx", "#a62315"),
     ink22: v("--ink22", "#14141438"),
     ink12: v("--ink12", "#1414141f"),
   };
@@ -136,11 +141,20 @@ export function fitMast(): void {
    drew a seeded random wall and captioned it "live". If the request fails the
    grid says so instead. */
 async function drawHeat(): Promise<void> {
+  /* Two consumers, one request: the 52-week grid on /us and the commit
+     readout plus sparkline on the home panel. Either can be absent, so the
+     guard is on having something to fill and a username to ask about — not on
+     the grid specifically, which is what made the panel's sparkline never
+     fetch on the one page that shows it. */
   const el = document.getElementById("heat");
-  if (!el || el.dataset.loaded) return;
-  const user = el.dataset.user;
+  const spark = document.querySelector<HTMLElement>("[data-commit-spark]");
+  const host = document.querySelector<HTMLElement>("[data-gh-user]");
+  const user = el?.dataset.user || host?.dataset.ghUser;
   if (!user) return;
-  el.dataset.loaded = "1";
+  if (!el && !spark) return;
+  const flag = el ?? spark!;
+  if (flag.dataset.loaded) return;
+  flag.dataset.loaded = "1";
 
   try {
     const res = await fetch(
@@ -151,10 +165,12 @@ async function drawHeat(): Promise<void> {
 
     /* The API returns whole weeks ending today; the grid is 26 columns of 7,
        so take the most recent 182 days. */
-    const days = data.contributions.slice(-26 * 7);
-    el.innerHTML = days
-      .map((lvl) => `<i class="${lvl ? "l" + lvl : ""}"></i>`)
-      .join("");
+    if (el) {
+      const days = data.contributions.slice(-26 * 7);
+      el.innerHTML = days
+        .map((lvl) => `<i class="${lvl ? "l" + lvl : ""}"></i>`)
+        .join("");
+    }
 
     /* One live figure, written everywhere it is printed, so the cover tile and
        the profile field cannot drift apart or from the grid above them. */
@@ -163,54 +179,108 @@ async function drawHeat(): Promise<void> {
         .querySelectorAll<HTMLElement>("[data-commits]")
         .forEach((n) => (n.textContent = data.total.toLocaleString()));
     }
+
+    /* The panel's commit sparkline comes from this same response rather than a
+       second request, so the readout and the line beside it cannot describe
+       different windows. Daily levels are summed into 26 fortnightly buckets —
+       366 daily points in a 200-unit-wide sparkline is noise, not a series. */
+    const spark = document.querySelector<HTMLElement>("[data-commit-spark]");
+    if (spark) {
+      const raw = data.contributions.slice(-364);
+      const B = 26, per = Math.ceil(raw.length / B);
+      const buckets = Array.from({ length: B }, (_, i) =>
+        raw.slice(i * per, (i + 1) * per).reduce((a, b) => a + b, 0));
+      const max = Math.max(...buckets, 1), W = 200, H = 26, bw = W / B;
+      spark.innerHTML =
+        `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" ` +
+        `aria-label="Commit activity over 52 weeks in fortnightly buckets">` +
+        buckets.map((v, i) => {
+          const h = Math.max(0.8, (v / max) * (H - 2));
+          return `<rect x="${(i * bw + bw * 0.16).toFixed(1)}" y="${(H - h - 1).toFixed(1)}" ` +
+                 `width="${(bw * 0.68).toFixed(1)}" height="${h.toFixed(1)}" ` +
+                 `fill="currentColor" opacity="${v ? 0.85 : 0.18}"/>`;
+        }).join("") + `</svg>`;
+    }
   } catch {
-    el.dataset.error = "1";
-    el.innerHTML = "";
-    const note = el.parentElement?.querySelector(".cap span");
-    if (note) note.textContent = "GitHub API unavailable — no fallback drawn";
+    flag.dataset.error = "1";
+    if (el) {
+      el.innerHTML = "";
+      const note = el.parentElement?.querySelector(".cap span");
+      if (note) note.textContent = "GitHub API unavailable — no fallback drawn";
+    }
+    if (spark) spark.innerHTML = "";
   }
 }
 
-/* ── SkillRadar — Julia's real stack ─────────────────────────────────── */
+/* ── SkillRadar ────────────────────────────────────────────────────────
+   Both stacks, from lib/data.ts, on one shared axis set.
+
+   The design hard-coded six invented axes (BigQuery .9, GCP .88, Databricks
+   .75 …) that appear nowhere in the data. The real `skills` arrays carry ten
+   entries for him and nine for her, on partly different axes — so plotting
+   each against its own axes would produce two charts that cannot be compared,
+   which defeats the point of putting them side by side.
+
+   The axis set is therefore the UNION of both arrays, ordered by combined
+   proficiency so the strong axes lead. A skill one of them does not list
+   reads as zero on that axis, which is information rather than a gap.
+
+   Reads the radar's own `data-who` to know whose polygon to fill. */
 function drawRadar(): void {
-  const svg = document.getElementById("radar");
-  if (!svg) return;
+  const svgs = document.querySelectorAll<SVGElement>("svg[data-radar]");
+  if (!svgs.length) return;
   const t = tokens();
-  const S: [string, number][] = [
-    ["SQL", 0.95],
-    ["BigQuery", 0.9],
-    ["Python", 0.82],
-    ["GCP", 0.88],
-    ["Databricks", 0.75],
-    ["Tableau", 0.7],
-  ];
-  const cx = 160,
-    cy = 104,
-    R = 74;
-  const pt = (i: number, r: number) => {
-    const a = -Math.PI / 2 + (i / S.length) * Math.PI * 2;
-    return [cx + Math.cos(a) * R * r, cy + Math.sin(a) * R * r];
-  };
-  let g = "";
-  [0.25, 0.5, 0.75, 1].forEach((r) => {
+
+  svgs.forEach((svg) => {
+    let axes: { skill: string; value: number }[];
+    try {
+      axes = JSON.parse(svg.dataset.axes || "[]");
+    } catch {
+      return;
+    }
+    if (axes.length < 3) return;
+
+    const W = 340, H = 260, cx = W / 2, cy = 118, R = 84;
+    const pt = (i: number, r: number) => {
+      const a = -Math.PI / 2 + (i / axes.length) * Math.PI * 2;
+      return [cx + Math.cos(a) * R * r, cy + Math.sin(a) * R * r];
+    };
+    const poly = (r: number) =>
+      axes.map((_, i) => pt(i, r).map((n) => n.toFixed(1)).join(",")).join(" ");
+
+    let g = "";
+    /* Rings at 25/50/75/100, the outermost solid so the scale has an edge. */
+    [0.25, 0.5, 0.75, 1].forEach((r) => {
+      g += `<polygon points="${poly(r)}" fill="none" stroke="${r === 1 ? t.ink45 : t.ink22}" stroke-width="1"/>`;
+    });
+    axes.forEach((_, i) => {
+      const [x, y] = pt(i, 1);
+      g += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${t.ink22}" stroke-width="1"/>`;
+    });
+    /* No ring label. The first axis sits at -90° — straight up — which is
+       exactly where a "100" marker on the outer ring wants to go, and the two
+       collided: SQL rendered as "SOL" with the 1 across its Q. The scale is
+       stated in the key above the plate instead. */
+
     g +=
-      '<polygon points="' +
-      S.map((_, i) => pt(i, r).map((n) => n.toFixed(1)).join(",")).join(" ") +
-      `" fill="none" stroke="${t.ink22}" stroke-width="1"/>`;
+      `<polygon points="${axes.map((d, i) => pt(i, d.value / 100).map((n) => n.toFixed(1)).join(",")).join(" ")}" ` +
+      `fill="${t.red}" fill-opacity=".18" stroke="${t.red}" stroke-width="2"/>`;
+
+    axes.forEach((d, i) => {
+      const [px, py] = pt(i, d.value / 100);
+      if (d.value > 0)
+        g += `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="2.6" fill="${t.red}"/>`;
+      /* Labels are placed by quadrant so they never overrun the drawing:
+         anchored away from the centre, nudged clear of the vertex. */
+      const [lx, ly] = pt(i, 1.13);
+      const dx = lx - cx;
+      const anchor = Math.abs(dx) < 6 ? "middle" : dx > 0 ? "start" : "end";
+      const dy = ly < cy ? -1 : 9;
+      g += `<text x="${lx.toFixed(1)}" y="${(ly + dy).toFixed(1)}" text-anchor="${anchor}" font-family="var(--cred)" font-size="10" letter-spacing=".7" fill="${t.cap}">${d.skill.toUpperCase()}</text>`;
+      g += `<text x="${lx.toFixed(1)}" y="${(ly + dy + 11).toFixed(1)}" text-anchor="${anchor}" font-family="var(--disp)" font-weight="800" font-size="13" fill="${d.value >= 90 ? t.redTx : t.ink70}">${d.value}</text>`;
+    });
+    svg.innerHTML = g;
   });
-  S.forEach((_, i) => {
-    const [x, y] = pt(i, 1);
-    g += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${t.ink22}" stroke-width="1"/>`;
-  });
-  g +=
-    '<polygon points="' +
-    S.map((d, i) => pt(i, d[1]).map((n) => n.toFixed(1)).join(",")).join(" ") +
-    `" fill="${t.red}" fill-opacity=".2" stroke="${t.red}" stroke-width="2"/>`;
-  S.forEach((d, i) => {
-    const [x, y] = pt(i, 1.26);
-    g += `<text x="${x.toFixed(1)}" y="${(y + 3).toFixed(1)}" text-anchor="middle" font-family="var(--cred)" font-size="8.5" letter-spacing="1" fill="${t.ink45}">${d[0].toUpperCase()}</text>`;
-  });
-  svg.innerHTML = g;
 }
 
 /* ── BooksChart — a line, because it is a time series ────────────────── */
@@ -239,10 +309,10 @@ function drawBooks(): void {
   for (let v = 0; v <= max; v++) {
     const y = Y(v).toFixed(1);
     g += `<line x1="${L}" y1="${y}" x2="${W - R}" y2="${y}" stroke="${v === 0 ? t.ink : t.ink12}" stroke-width="1"/>`;
-    g += `<text x="${L - 6}" y="${(+y + 3).toFixed(1)}" text-anchor="end" font-family="var(--cred)" font-size="8.5" fill="${t.ink45}">${v}</text>`;
+    g += `<text x="${L - 6}" y="${(+y + 3).toFixed(1)}" text-anchor="end" font-family="var(--cred)" font-size="10" fill="${t.cap}">${v}</text>`;
   }
   D.forEach((d, i) => {
-    g += `<text x="${X(i).toFixed(1)}" y="${H - B + 15}" text-anchor="middle" font-family="var(--cred)" font-size="8.5" letter-spacing=".6" fill="${t.ink45}">${d[0].toUpperCase()}</text>`;
+    g += `<text x="${X(i).toFixed(1)}" y="${H - B + 15}" text-anchor="middle" font-family="var(--cred)" font-size="10" letter-spacing=".6" fill="${t.cap}">${d[0].toUpperCase()}</text>`;
   });
   const pts = D.map((d, i) => [X(i), Y(d[1])]);
   const fz = D.findIndex((d) => d[1] > 0);
@@ -292,12 +362,12 @@ function drawMap(): void {
   for (let l = LON0; l <= LON1; l += 20) {
     const x = X(l).toFixed(1);
     g += `<line x1="${x}" y1="0" x2="${x}" y2="${H}" stroke="${mark}1f" stroke-width="1"/>`;
-    g += `<text x="${x}" y="${H - 8}" text-anchor="middle" font-family="var(--cred)" font-size="9" letter-spacing="1" fill="${mark}40">${Math.abs(l)}°${l < 0 ? "W" : l > 0 ? "E" : ""}</text>`;
+    g += `<text x="${x}" y="${H - 8}" text-anchor="middle" font-family="var(--cred)" font-size="10.5" letter-spacing="1" fill="${mark}8c">${Math.abs(l)}°${l < 0 ? "W" : l > 0 ? "E" : ""}</text>`;
   }
   for (let a = LAT0; a >= LAT1; a -= 10) {
     const y = Y(a).toFixed(1);
     g += `<line x1="0" y1="${y}" x2="${W}" y2="${y}" stroke="${mark}1f" stroke-width="1"/>`;
-    g += `<text x="9" y="${(+y - 5).toFixed(1)}" font-family="var(--cred)" font-size="9" letter-spacing="1" fill="${mark}40">${a}°N</text>`;
+    g += `<text x="9" y="${(+y - 5).toFixed(1)}" font-family="var(--cred)" font-size="10.5" letter-spacing="1" fill="${mark}8c">${a}°N</text>`;
   }
   const hx = X(HOME.lng),
     hy = Y(HOME.lat);
@@ -315,7 +385,7 @@ function drawMap(): void {
       ly = y + d.dy;
     g += `<rect x="${(x - 4).toFixed(1)}" y="${(y - 4).toFixed(1)}" width="8" height="8" fill="${t.red}"/>`;
     g += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${d.a}" font-family="var(--disp)" font-weight="800" font-size="21" fill="${mark}" letter-spacing="-.2">${d.p.toUpperCase()}</text>`;
-    g += `<text x="${lx.toFixed(1)}" y="${(ly + 14).toFixed(1)}" text-anchor="${d.a}" font-family="var(--cred)" font-size="9.5" letter-spacing="1.1" fill="${mark}8c">${d.d} · ${d.n} NIGHTS</text>`;
+    g += `<text x="${lx.toFixed(1)}" y="${(ly + 14).toFixed(1)}" text-anchor="${d.a}" font-family="var(--cred)" font-size="11" letter-spacing="1.1" fill="${mark}8c">${d.d} · ${d.n} NIGHTS</text>`;
   });
   g += `<circle cx="${hx.toFixed(1)}" cy="${hy.toFixed(1)}" r="7" fill="${mark}"/>`;
   g += `<circle cx="${hx.toFixed(1)}" cy="${hy.toFixed(1)}" r="14" fill="none" stroke="${mark}" stroke-width="1.4"/>`;

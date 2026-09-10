@@ -19,16 +19,24 @@ export default function Away() {
   );
 
   return (
-    <section className="dept" id="away" data-dept="Away" data-folio="04">
+    <section className="dept" id="away" data-dept="Fernweh" data-folio="04">
       <DeptBar
         folio="04"
-        name="Away"
-        kicker={`${figures.adventuresLogged} adventures · ${figures.nightsAway} nights`}
+        name="Fernweh"
+        kicker={`${figures.adventuresLogged} adventures · ${figures.countriesVisited} countries · ${figures.nightsAway} nights`}
       />
 
+      {/* The headline is a fixed word, not the count.
+          "18 nights" already derived correctly from the adventures array — but
+          putting a growing number in the masthead means the type re-fits and
+          the whole department re-flows every time a trip is logged, and the
+          headline changes meaning as it changes value. Fernweh is the German
+          for the ache to be somewhere far off — the far-sickness that is the
+          opposite of homesickness. The count moves to the department bar,
+          where it can grow without moving anything. */}
       <Mast
-        kicker={`${figures.adventuresLogged} adventures · ${figures.countriesVisited} countries · ${figures.nightsAway} nights`}
-        headline={`${figures.nightsAway} nights`}
+        kicker="Fernweh · the ache to be somewhere far off"
+        headline="Fernweh"
         stats={
           <>
             {countries.join(" · ")}
@@ -40,9 +48,13 @@ export default function Away() {
         }
       >
         <p>
-          Four adventures, two countries, eighteen nights. The countries are
-          derived from the array rather than kept by hand, so this page and the
-          dashboard cannot disagree.
+          German. The ache to be somewhere far off — the opposite of
+          homesickness, and the more honest word for what a route chart is for.
+        </p>
+        <p>
+          {figures.adventuresLogged} adventures, {figures.countriesVisited}{" "}
+          countries, {figures.nightsAway} nights so far this year. Every figure
+          derived from the log below, so adding a trip updates all of them.
         </p>
       </Mast>
 
@@ -120,7 +132,7 @@ export default function Away() {
                 </div>
                 <div
                   className="kick"
-                  style={{ marginTop: 4, color: "var(--red)" }}
+                  style={{ marginTop: 4, color: "var(--red-tx)" }}
                 >
                   French Polynesia · beach
                 </div>

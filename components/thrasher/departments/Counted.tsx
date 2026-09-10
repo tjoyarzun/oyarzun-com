@@ -1,154 +1,247 @@
-import { Caption, DeptBar, Mast, SectionHead } from "@/components/thrasher/editorial";
-import { currentlyReading, favoriteMovies, skiResorts } from "@/lib/data";
+import Sparkline from "@/components/thrasher/Sparkline";
+import { Caption, DeptBar, Mast } from "@/components/thrasher/editorial";
+import { profiles } from "@/lib/data";
+import {
+  adventures,
+  booksPerQuarter,
+  currentlyReading,
+  favoriteMovies,
+  skiResorts,
+} from "@/lib/data";
 import { GOALS, figures, pct } from "@/lib/thrasher/issue";
 
 /**
- * 03 · Counted.
+ * 03 · Counted — the instrument panel.
  *
- * Every figure here is derived in lib/thrasher/issue.ts from the arrays in
- * lib/data.ts. The bar widths are computed too — the snow bars against the
- * busiest resort, the goal bars against their target — so a bar cannot
- * disagree with the number printed at the end of it.
+ * Read as a panel, not a page of cards: one hairline grid, monospace labels,
+ * tabular figures, a sparkline under every readout. Every series is computed
+ * here from the arrays in lib/data.ts, so a sparkline cannot disagree with the
+ * figure above it.
+ *
+ * The one exception is the commit series, which has no server-side source —
+ * it is filled by drawHeat() in lib/thrasher/behaviours.ts from the same
+ * GitHub response that produces the year total, so the readout and its
+ * sparkline come from one request.
  */
 export default function Counted() {
-  const busiest = Math.max(...skiResorts.map((r) => r.days));
+  /* Nights away by month, so the sparkline is a year and not four bars. */
+  const nightsByMonth = Array.from({ length: 12 }, (_, m) =>
+    adventures
+      .filter((a) => new Date(a.date + "T12:00:00Z").getUTCMonth() === m)
+      .reduce((sum, a) => sum + a.nights, 0),
+  );
+  const books = booksPerQuarter.map((q) => q.books);
+  const resorts = [...skiResorts].sort((a, b) => b.days - a.days);
+  const busiest = resorts[0];
+  const now = new Date();
+  const dayOfYear = Math.ceil(
+    (now.getTime() - Date.UTC(now.getUTCFullYear(), 0, 1)) / 86400000,
+  );
+  /* Where a linear pace would have you today — the notch on each goal gauge. */
+  const paceMark = (dayOfYear / 365) * 100;
 
   return (
     <section className="dept" id="counted" data-dept="Counted" data-folio="03">
-      <DeptBar folio="03" name="Counted" kicker="1 Jan – 8 Sep 2026" />
+      <DeptBar folio="03" name="Counted" kicker="1 Jan – 10 Sep 2026" />
 
       <Mast
-        kicker="Every figure counted by hand or derived"
+        kicker="Every figure derived from the array behind it"
         headline="Counted"
         stats={
           <>
-            1 January – 8 September 2026
+            Panel updated on build
             <br />
-            Four headline tiles
+            Commits live from the API
             <br />
             Nothing estimated
           </>
         }
       >
         <p>
-          Every figure on this page is either counted by hand or derived from
-          the array behind it. Where two numbers could disagree, one of them is
-          computed from the other so they can’t.
+          Every figure on this panel is computed from the array behind it, and
+          every sparkline from the same array as the figure above it. Where two
+          numbers could disagree, one is derived from the other so they can’t.
         </p>
       </Mast>
 
       <div className="sec" id="tiles">
-        <div className="four">
-          <div className="stat">
-            <div className="v">{figures.postsPublished}</div>
-            <div className="k">Posts written</div>
+        {/* data-gh-user tells drawHeat() whose commits to fetch on this
+            page — the 52-week grid that used to carry it now lives on /us. */}
+        <div className="panel" data-gh-user={profiles.him.github}>
+          <div className="phead">
+            <span>Readouts · year to date</span>
+            <span className="pr2">
+              Day {dayOfYear} of 365 · {Math.round(paceMark)}% elapsed
+            </span>
           </div>
-          <div className="stat">
-            <div className="v" data-commits>
-              {figures.githubCommits.toLocaleString()}
+
+          <div className="prow r4">
+            <div className="cell">
+              <div className="pl">
+                <span>Commits</span>
+                <span className="pu">52 wk</span>
+              </div>
+              <div className="pv" data-commits>
+                {figures.githubCommits.toLocaleString()}
+              </div>
+              <div className="pn2">Live · public only</div>
+              {/* Filled client-side from the same GitHub response. */}
+              <div className="spark" data-commit-spark />
             </div>
-            <div className="k">Github commits</div>
+
+            <div className="cell">
+              <div className="pl">
+                <span>Nights away</span>
+                <span className="pu">2026</span>
+              </div>
+              <div className="pv">{figures.nightsAway}</div>
+              <div className="pn2">
+                {figures.adventuresLogged} trips · {figures.countriesVisited}{" "}
+                countries
+              </div>
+              <div className="spark">
+                <Sparkline
+                  bars
+                  values={nightsByMonth}
+                  label={`Nights away by month: ${nightsByMonth.join(", ")}`}
+                />
+              </div>
+            </div>
+
+            <div className="cell">
+              <div className="pl">
+                <span>Days on snow</span>
+                <span className="pu">25–26</span>
+              </div>
+              <div className="pv">{figures.skiDays}</div>
+              <div className="pn2">
+                {figures.skiResortCount} resorts · {busiest.name} leads
+              </div>
+              <div className="spark">
+                <Sparkline
+                  bars
+                  values={resorts.map((r) => r.days)}
+                  label={`Days by resort: ${resorts.map((r) => `${r.name} ${r.days}`).join(", ")}`}
+                />
+              </div>
+            </div>
+
+            <div className="cell">
+              <div className="pl">
+                <span>Books</span>
+                <span className="pu">2026</span>
+              </div>
+              <div className="pv">{figures.booksReadThisYear}</div>
+              <div className="pn2">Flat until Q2 · then 4 a quarter</div>
+              <div className="spark">
+                <Sparkline
+                  fill
+                  values={books}
+                  label={`Books per quarter: ${booksPerQuarter.map((q) => `${q.quarter} ${q.books}`).join(", ")}`}
+                />
+              </div>
+            </div>
           </div>
-          <div className="stat">
-            <div className="v">{figures.booksReadThisYear}</div>
-            <div className="k">Books read this year</div>
+
+          <div className="prow r2">
+            <div className="cell">
+              <div className="pl">
+                <span>Against the 2026 targets</span>
+                <span className="pu">Notch = pace</span>
+              </div>
+              <div style={{ marginTop: 10 }}>
+                {GOALS.map((g) => (
+                  <div className="gauge" key={g.label}>
+                    <span className="gl">{g.label}</span>
+                    <span className="gt">
+                      <i
+                        className={pct(g.current, g.goal) >= paceMark ? "r" : undefined}
+                        style={{ width: `${pct(g.current, g.goal)}%` }}
+                      />
+                      {/* Where a linear pace would put you today. Ahead of the
+                          notch fills vermilion, behind it fills ink — so the
+                          colour carries the judgement, not just the length. */}
+                      <b style={{ left: `${paceMark}%` }} />
+                    </span>
+                    <span className="gv">
+                      {g.current}/{g.goal}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="cell">
+              <div className="pl">
+                <span>Days on snow by resort</span>
+                <span className="pu">{figures.skiDays} total</span>
+              </div>
+              <div style={{ marginTop: 10 }}>
+                {resorts.map((r) => (
+                  <div className="gauge" key={r.name}>
+                    <span className="gl">{r.name}</span>
+                    <span className="gt">
+                      <i style={{ width: `${(r.days / busiest.days) * 100}%` }} />
+                    </span>
+                    <span className="gv">{r.days}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-          <div className="stat hl">
-            <div className="v">{figures.countriesVisited}</div>
-            <div className="k">Countries visited</div>
+
+          <div className="prow r2">
+            <div className="cell">
+              <div className="pl">
+                <span>Reading now</span>
+                <span className="pu">Progress</span>
+              </div>
+              <div style={{ marginTop: 10 }}>
+                {currentlyReading.map((b) => (
+                  <div className="gauge" key={b.title}>
+                    <span className="gl" title={b.title}>
+                      {b.title}
+                    </span>
+                    <span className="gt">
+                      {/* Ink, not vermilion. Vermilion on a gauge means
+                          "ahead of pace" on the goals above; reusing it for
+                          plain progress would drain that of meaning. */}
+                      <i style={{ width: `${b.progress}%` }} />
+                    </span>
+                    <span className="gv">{b.progress}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="cell">
+              <div className="pl">
+                <span>Watched · favourites</span>
+                <span className="pu">Rating</span>
+              </div>
+              <div style={{ marginTop: 10 }}>
+                {favoriteMovies.map((m) => (
+                  <div className="gauge" key={m.title}>
+                    <span className="gl" title={m.title}>
+                      {m.title}
+                    </span>
+                    <span className="gt">
+                      <i style={{ width: `${(m.rating / 5) * 100}%` }} />
+                    </span>
+                    <span className="gv">
+                      {m.rating}/5 · {m.year}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
+
         <Caption
-          left="Commits live from the GitHub API · countries derived from the adventures array"
-          right="StatsGrid"
+          left="Commits live from the GitHub GraphQL API · everything else derived from lib/data.ts on build"
+          right={`${GOALS.length} gauges · ${figures.skiResortCount} resorts`}
         />
-      </div>
-
-      <div className="sec three">
-        <div id="books-sec">
-          <SectionHead lite no="01" title="Books" right="By quarter" />
-          {/* Drawn by lib/thrasher/behaviours.ts — a line, because it is a
-              time series, and dashed while the series is flat at zero. */}
-          <div className="chart">
-            <svg
-              id="books"
-              viewBox="0 0 320 168"
-              aria-label="Books finished per quarter, Q2 2025 to Q3 2026"
-            />
-          </div>
-          <Caption
-            left="Books finished per quarter"
-            right={`${figures.booksReadThisYear} this year · flat until Q2`}
-          />
-        </div>
-
-        <div id="snow">
-          <SectionHead lite no="02" title="Snow" right="By resort" />
-          <div className="bars">
-            {skiResorts.map((r) => (
-              <div className="b" key={r.name}>
-                <span className="lb">{r.name}</span>
-                <span className="tr">
-                  <i style={{ width: `${(r.days / busiest) * 100}%` }} />
-                </span>
-                <span className="vv">{r.days}</span>
-              </div>
-            ))}
-          </div>
-          <Caption
-            left="Days on snow, 2025–26"
-            right={`${figures.skiDays} total · ${figures.skiResortCount} resorts`}
-          />
-        </div>
-
-        <div id="goals">
-          <SectionHead lite no="03" title="Goals" right="2026" />
-          <div className="bars">
-            {GOALS.map((g) => (
-              <div className="b" key={g.label}>
-                <span className="lb">{g.label}</span>
-                <span className="tr">
-                  <i className="r" style={{ width: `${pct(g.current, g.goal)}%` }} />
-                </span>
-                <span className="vv">
-                  {g.current}/{g.goal}
-                </span>
-              </div>
-            ))}
-          </div>
-          <Caption left="Against the 2026 targets" right="Ski days nearly there" />
-        </div>
-      </div>
-
-      <div className="sec two" id="media">
-        <div>
-          <SectionHead lite no="04" title="Reading" right="In progress" />
-          {currentlyReading.map((b) => (
-            <div className="book" key={b.title}>
-              <span className="sp" />
-              <div>
-                <div className="bt">{b.title}</div>
-                <div className="ba">
-                  {b.author} · {b.genre}
-                </div>
-                <div className="bp">
-                  <i style={{ width: `${b.progress}%` }} />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div>
-          <SectionHead lite no="05" title="Watched" right="Favourites" />
-          <dl className="widget">
-            {favoriteMovies.map((m) => (
-              <div className="wr" key={m.title}>
-                <dt>{m.title}</dt>
-                <dd>{m.year}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
       </div>
     </section>
   );
