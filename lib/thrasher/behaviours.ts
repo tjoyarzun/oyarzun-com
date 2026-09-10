@@ -14,7 +14,7 @@
 
 import { halftone, paintAllPlates } from "./halftone";
 import { GALLERY_FRAMES, gallery } from "@/lib/copy";
-import { adventures } from "@/lib/data";
+import { adventuresThisYear } from "@/lib/data";
 
 /** Read the live design-system colours, so every drawing inverts with the page. */
 function tokens() {
@@ -314,7 +314,10 @@ function drawMap(): void {
      derived from the data too, so a destination outside the previous bounds
      appears on the plate instead of off the edge of it. ── */
   const HOME = { lat: 40.57, lng: -111.86 };
-  const pts = adventures
+  /* The reporting year's trips, matching every figure printed beside the
+     chart. Drawing all time here would have put a 2025 arc on a plate whose
+     caption counts only 2026. */
+  const pts = adventuresThisYear
     .filter((a) => typeof a.lat === "number" && typeof a.lng === "number")
     .map((a) => ({
       name: a.name,

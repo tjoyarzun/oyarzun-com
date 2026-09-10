@@ -1,6 +1,6 @@
 import Plate from "@/components/thrasher/Plate";
 import { Caption, DeptBar, Mast, SectionHead } from "@/components/thrasher/editorial";
-import { adventures, bucketListItems } from "@/lib/data";
+import { adventuresThisYear, adventuresOtherYears, bucketListItems } from "@/lib/data";
 import { departments, plates } from "@/lib/copy";
 import { fill, lines, rich } from "@/lib/thrasher/fill";
 import { dateline, figures } from "@/lib/thrasher/issue";
@@ -15,9 +15,15 @@ import { dateline, figures } from "@/lib/thrasher/issue";
  * transatlantic leg reads as longer than a domestic one.
  */
 export default function Away() {
-  const log = [...adventures].sort((a, b) => a.date.localeCompare(b.date));
+  /* The log lists the reporting year, because its heading says the year and
+     its total row prints the year's figure. Listing all time under that
+     heading put a 2025 row in a table headed 2026, with a total that did not
+     include it. Trips outside the year are counted in the caption instead,
+     so one is visibly excluded rather than quietly missing. */
+  const log = adventuresThisYear;
+  const earlier = adventuresOtherYears.length;
   const countries = Array.from(
-    new Set(adventures.map((a) => a.country ?? "USA")),
+    new Set(adventuresThisYear.map((a) => (a.country ?? "USA").trim())),
   );
   const d = departments.away;
 
@@ -62,7 +68,7 @@ export default function Away() {
 
       <div className="sec two">
         <div id="log">
-          <SectionHead lite no="02" title="The log" right="2026" />
+          <SectionHead lite no="02" title="The log" right={fill("{year}")} />
           <div className="alog">
             {log.map((a) => (
               <div className="ar" key={a.id}>
@@ -85,6 +91,17 @@ export default function Away() {
               <span className="ann">{figures.nightsAway}</span>
             </div>
           </div>
+          {/* Trips outside the reporting year are excluded from this table and
+              from every figure beside it. Saying so is the difference between
+              a scoped figure and a missing row. */}
+          <Caption
+            left={
+              earlier
+                ? `${log.length} in ${fill("{year}")} · ${earlier} logged in other years, not counted here`
+                : `${log.length} trips · every figure on this page counts ${fill("{year}")} only`
+            }
+            right={`${figures.nightsAway} nights`}
+          />
         </div>
 
         <div id="list">

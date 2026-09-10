@@ -1,5 +1,11 @@
 import type { ReactNode } from "react";
-import { profiles, adventures, skiResorts, goals } from "@/lib/data";
+import {
+  CURRENT_YEAR,
+  adventuresThisYear,
+  goals,
+  profiles,
+  skiResorts,
+} from "@/lib/data";
 import {
   GALLERY_FRAMES,
   SKILL_AXES,
@@ -36,8 +42,10 @@ const goalOf = (label: string, fallback: number) =>
 
 function tokens(): Record<string, string> {
   const { him, her } = profiles;
+  /* The reporting year's countries, in the order first visited, printed as
+     the credit line under the Fernweh masthead. */
   const countries = Array.from(
-    new Set(adventures.map((a) => a.country ?? "USA")),
+    new Set(adventuresThisYear.map((a) => (a.country ?? "USA").trim())),
   );
   const topResort = [...skiResorts].sort((a, b) => b.days - a.days)[0];
   return {
@@ -88,6 +96,8 @@ function tokens(): Record<string, string> {
     himLine: `${him.name} · ${him.title}, ${him.company}`,
     herLine: `${her.name} · ${her.title}, ${her.company}`,
     countryList: countries.join(" · "),
+    year: String(CURRENT_YEAR),
+    earlier: String(figures.adventuresEarlier),
 
     /* the issue's own furniture */
     issueNumber: issue.number,

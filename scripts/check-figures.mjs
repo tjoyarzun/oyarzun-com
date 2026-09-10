@@ -84,6 +84,68 @@ const check = (label, haystack, needle) => {
   console.log(`${ok ? "  ok  " : "  FAIL"} ${label}: ${JSON.stringify(needle)}`);
 };
 
+/* ── Derivation unit checks ─────────────────────────────────────────────
+   Run the trip derivations against synthetic entries, so the rules hold for
+   data that does not exist yet. The page checks below can only see today's
+   array; these see the behaviour.
+
+   The year rule is here because it was broken and shipped: trips were counted
+   all-time while the labels said 2026, so a 2025 trip with nine nights showed
+   "Nights away, 2026 — 27". ── */
+console.log("derivation rules:");
+const unit = JSON.parse(
+  execFileSync(
+    "npx",
+    [
+      "tsx",
+      "-e",
+      `import { tripStats, tripYear, CURRENT_YEAR } from "./lib/data";
+       const mk = (o) => ({ id: 1, name: "x", location: "A, B", lat: 0, lng: 0,
+         type: "sightseeing", who: "Just Us", nights: 1, emoji: "x",
+         description: "", imageUrl: "", ...o });
+       const y = CURRENT_YEAR;
+       process.stdout.write(JSON.stringify({
+         year: y,
+         /* the year a trip belongs to comes from the string, not a Date, so a
+            1 January trip cannot slide into the previous year west of UTC */
+         jan1: tripYear(mk({ date: y + "-01-01" })),
+         dec31: tripYear(mk({ date: y + "-12-31" })),
+         /* countries normalise: three spellings of one country count once */
+         countryCasing: tripStats([
+           mk({ date: y + "-01-02", country: "Italy" }),
+           mk({ date: y + "-01-03", country: " italy " }),
+           mk({ date: y + "-01-04", country: "ITALY" }),
+         ]).countriesVisited,
+         /* a missing country falls back to one value, not to undefined */
+         countryMissing: tripStats([
+           mk({ date: y + "-01-02" }),
+           mk({ date: y + "-01-03" }),
+         ]).countriesVisited,
+         /* nights sum, and a zero-night trip still counts as a trip */
+         zeroNights: tripStats([mk({ date: y + "-01-02", nights: 0 })]),
+         /* empty list does not throw and reports zeroes */
+         empty: tripStats([]),
+       }));`,
+    ],
+    { encoding: "utf8", stdio: ["ignore", "pipe", "inherit"] },
+  ),
+);
+const unitCheck = (label, actual, expected) => {
+  const ok = JSON.stringify(actual) === JSON.stringify(expected);
+  if (!ok) failures++;
+  console.log(
+    `${ok ? "  ok  " : "  FAIL"} ${label}: ${JSON.stringify(actual)}` +
+      (ok ? "" : ` expected ${JSON.stringify(expected)}`),
+  );
+};
+unitCheck("1 Jan belongs to its own year", unit.jan1, unit.year);
+unitCheck("31 Dec belongs to its own year", unit.dec31, unit.year);
+unitCheck("three spellings of one country count once", unit.countryCasing, 1);
+unitCheck("missing country counts as one", unit.countryMissing, 1);
+unitCheck("a zero-night trip still counts as a trip", unit.zeroNights.adventuresLogged, 1);
+unitCheck("and contributes no nights", unit.zeroNights.nightsAway, 0);
+unitCheck("an empty list is zeroes, not a throw", unit.empty.nightsAway, 0);
+
 /* ── No unresolved tokens anywhere ──────────────────────────────────────
    The copy carries {tokens} and every component that prints copy has to run
    it through fill(). Miss one and the token reaches the reader verbatim.

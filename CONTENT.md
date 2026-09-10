@@ -354,6 +354,31 @@ A value of 90 or more is printed in vermilion.
 },
 ```
 
+### Trips count for the year they happened
+
+**`date` decides which year a trip counts for.** Every figure the site prints
+about trips — nights, countries, trips logged, the Adventures gauge, the log
+table, the route chart, the monthly sparkline — counts **the current year
+only**, because every label beside them says so.
+
+This was wrong until it was checked. Books already filtered by year; trips did
+not, while the cover said "Nights away, **2026**". A trip dated 2025 with nine
+nights pushed that figure from 18 to 27, moved the Adventures gauge to 5/20
+under a heading reading "AGAINST THE 2026 TARGETS", and put a 2025 row in a
+log headed 2026.
+
+So a trip outside the current year is **excluded from the figures and named in
+the caption** — "4 in 2026 · 1 logged in other years, not counted here" —
+rather than either inflating a year total or vanishing. Keep old trips in the
+array; they simply stop counting when the year turns.
+
+Two things follow:
+
+- **On 1 January every trip figure resets to zero.** That is the intent, and it
+  matches how the books and goals figures already behaved.
+- **A trip you book in advance and date next year does not count yet.** Give it
+  a real date and it starts counting on its own.
+
 **Adding one trip changes eight things on the site,** all on their own:
 
 1. the nights figure on the cover
@@ -662,9 +687,10 @@ spelled out inside sentences, which is where they used to hide.
 | Figure | Counted from |
 |---|---|
 | Commits, and the activity grid and sparkline | the GitHub API, **on the server** |
-| Nights away | sum of `nights` across `adventures` |
-| Countries | distinct `country` in `adventures` |
-| Trips logged | number of `adventures` |
+| Nights away | sum of `nights` across this year's `adventures` |
+| Countries | distinct `country` in this year's `adventures`, ignoring case and spacing |
+| Trips logged | this year's `adventures` |
+| Trips excluded | `adventures` dated outside this year, named in the log caption |
 | Days on snow | sum of `days` across `skiResorts` |
 | Resorts, and which one leads | `skiResorts` |
 | Books this year | `booksPerQuarter`, rows ending in the current year |

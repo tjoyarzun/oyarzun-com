@@ -2,7 +2,7 @@ import Sparkline from "@/components/thrasher/Sparkline";
 import { Caption, DeptBar, Mast } from "@/components/thrasher/editorial";
 import { profiles } from "@/lib/data";
 import {
-  adventures,
+  adventuresThisYear,
   booksPerQuarter,
   currentlyReading,
   favoriteMovies,
@@ -29,10 +29,14 @@ import { GOALS, figures, pct } from "@/lib/thrasher/issue";
 export default async function Counted() {
   const gh = await getContributions(profiles.him.github ?? "");
   const rt = { commits: gh.ok ? gh.total.toLocaleString() : "—" };
-  /* Nights away by month, so the sparkline is a year and not four bars. */
+  /* Nights away by month, so the sparkline is a year and not four bars.
+     Scoped to the reporting year: filtering on getUTCMonth() alone put March
+     2025 and March 2026 in the same bar, which is a sparkline that silently
+     conflates years. Month comes from the date string rather than a Date, so
+     no timezone can shift a trip into the neighbouring month. */
   const nightsByMonth = Array.from({ length: 12 }, (_, m) =>
-    adventures
-      .filter((a) => new Date(a.date + "T12:00:00Z").getUTCMonth() === m)
+    adventuresThisYear
+      .filter((a) => Number(a.date.slice(5, 7)) === m + 1)
       .reduce((sum, a) => sum + a.nights, 0),
   );
   const books = booksPerQuarter.map((q) => q.books);

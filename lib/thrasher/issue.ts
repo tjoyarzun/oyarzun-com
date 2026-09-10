@@ -15,10 +15,12 @@
 
 import {
   adventures,
+  adventuresOtherYears,
+  adventuresThisYear,
   booksReadThisYear,
   goals,
   skiResorts,
-  travelStats,
+  travelStatsThisYear,
 } from "@/lib/data";
 import { getAllPosts } from "@/lib/posts";
 import { GALLERY_FRAMES } from "@/lib/copy";
@@ -48,16 +50,21 @@ export const GOALS = [
   { label: "Ski days", current: skiDays, goal: target("Ski Days", 40) },
   { label: "Books", current: booksReadThisYear, goal: target("Books Read", 20) },
   { label: "Written", current: postsPublished, goal: target("Blog Posts", 5) },
-  { label: "Adventures", current: adventures.length, goal: target("Adventures", 20) },
+  { label: "Adventures", current: adventuresThisYear.length, goal: target("Adventures", 20) },
 ] as const;
 
 /** The writing target, used by the copy tokens {postsGoal} and {slotsOpen}. */
 export const postsGoal = target("Blog Posts", 5);
 
 export const figures = {
-  nightsAway: travelStats.nightsAway,
-  countriesVisited: travelStats.countriesVisited,
-  adventuresLogged: adventures.length,
+  /* The reporting year's, not all time — every label that prints these says
+     "2026" or "this year". See travelStatsThisYear in lib/data.ts. */
+  nightsAway: travelStatsThisYear.nightsAway,
+  countriesVisited: travelStatsThisYear.countriesVisited,
+  adventuresLogged: travelStatsThisYear.adventuresLogged,
+  /* Trips logged outside the reporting year. Printed in the log's caption so
+     an out-of-year trip is visibly excluded rather than silently dropped. */
+  adventuresEarlier: adventuresOtherYears.length,
   skiDays,
   skiResortCount: skiResorts.length,
   booksReadThisYear,

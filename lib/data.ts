@@ -404,14 +404,72 @@ export const adventures: Adventure[] = [
   },
 ];
 
-export const travelStats = {
-  adventuresLogged: adventures.length,
-  skiResorts: new Set(
-    adventures.filter((a) => a.type === "ski").map((a) => a.location),
-  ).size,
-  nightsAway: adventures.reduce((sum, a) => sum + a.nights, 0),
-  countriesVisited: new Set(adventures.map((a) => a.country ?? "USA")).size,
-};
+/* ── Trips, and the year they belong to ─────────────────────────────────
+   The figures below come in two flavours because the site prints both kinds
+   and used to print only one.
+
+   `travelStats` is ALL TIME. It counted every trip in the array regardless of
+   date, which was wrong everywhere the label said otherwise: adding a
+   2025-dated trip with nine nights pushed the cover's "Nights away, 2026"
+   from 18 to 27, moved the Adventures gauge under "AGAINST THE 2026 TARGETS"
+   to 5/20, and put a 2025 row in a log headed 2026.
+
+   `travelStatsThisYear` is what those labels actually mean. It is derived
+   here rather than in lib/thrasher/issue.ts because the route chart needs it
+   too, and that runs client-side where issue.ts cannot go (it reaches
+   lib/posts.ts, which uses `fs`). One definition, both sides.
+   ─────────────────────────────────────────────────────────────────────── */
+
+/** The year the site is reporting on. */
+export const CURRENT_YEAR = new Date().getFullYear();
+
+/**
+ * The year a trip belongs to, from the leading four characters of `date`.
+ *
+ * Deliberately string slicing rather than `new Date(a.date).getFullYear()`:
+ * a bare "YYYY-MM-DD" is parsed as UTC midnight, so west of Greenwich
+ * `getFullYear()` returns the PREVIOUS year for any 1 January trip. The
+ * string already carries the year unambiguously.
+ */
+export const tripYear = (a: Adventure): number => Number(a.date.slice(0, 4));
+
+/** Trips in the year being reported on, oldest first. */
+export const adventuresThisYear: Adventure[] = adventures
+  .filter((a) => tripYear(a) === CURRENT_YEAR)
+  .sort((a, b) => a.date.localeCompare(b.date));
+
+/** Trips outside it. Counted separately so nothing is silently dropped. */
+export const adventuresOtherYears: Adventure[] = adventures.filter(
+  (a) => tripYear(a) !== CURRENT_YEAR,
+);
+
+/**
+ * Trip figures for an arbitrary list.
+ *
+ * Exported so scripts/check-figures.mjs can assert the behaviour on synthetic
+ * entries — an out-of-year trip, a duplicated country in different casing, a
+ * zero-night trip — without perturbing the real array and rebuilding.
+ */
+export function tripStats(list: Adventure[]) {
+  return {
+    adventuresLogged: list.length,
+    skiResorts: new Set(
+      list.filter((a) => a.type === "ski").map((a) => a.location),
+    ).size,
+    nightsAway: list.reduce((sum, a) => sum + a.nights, 0),
+    /* Countries are normalised before counting, or "USA" and " usa " count
+       twice and the figure quietly inflates. */
+    countriesVisited: new Set(
+      list.map((a) => (a.country ?? "USA").trim().toUpperCase()),
+    ).size,
+  };
+}
+
+/** ALL TIME. Read by the pre-redesign components; not what the labels mean. */
+export const travelStats = tripStats(adventures);
+
+/** The current reporting year. This is what the site prints. */
+export const travelStatsThisYear = tripStats(adventuresThisYear);
 
 /**
  * Figures behind the dashboard's headline tiles.
