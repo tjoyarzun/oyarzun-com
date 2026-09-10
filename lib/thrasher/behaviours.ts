@@ -473,6 +473,48 @@ function drawGallery(): void {
   g.innerHTML = h;
 }
 
+/* ── landing on an anchor ────────────────────────────────────────────────
+   The masthead type is fitted to the measure at runtime, which means every
+   department gets TALLER after the fonts resolve — and the browser has
+   already scrolled to the anchor by then, using the pre-fit layout.
+
+   The error compounds down the page, because each masthead above the target
+   contributes its own growth: arriving at /#cover landed 38px short and
+   looked fine, /#counted was 516px short, /#written 1,216px short — far
+   enough into the previous department that the link read as broken.
+
+   So the hash is honoured a second time, once the layout is final.
+
+   Two things this must not do. It must not fight a reader who started
+   scrolling before the fonts arrived, so any real scroll input cancels it.
+   And it must not animate: the browser has already jumped once, and a smooth
+   crawl on top of that reads as the page lurching twice. scrollIntoView is
+   used rather than a computed offset so the scroll-margin-top that clears
+   the sticky nav is applied for free. */
+let userHasScrolled = false;
+if (typeof window !== "undefined") {
+  const mark = () => {
+    userHasScrolled = true;
+  };
+  ["wheel", "touchmove", "keydown", "pointerdown"].forEach((ev) =>
+    addEventListener(ev, mark, { passive: true, once: true }),
+  );
+}
+
+function honourHash(): void {
+  if (userHasScrolled) return;
+  const hash = location.hash;
+  if (hash.length < 2) return;
+  let el: Element | null = null;
+  try {
+    el = document.querySelector(hash);
+  } catch {
+    return; /* a hash that is not a valid selector */
+  }
+  if (!el) return;
+  el.scrollIntoView({ behavior: "instant", block: "start" });
+}
+
 /* ── boot ─────────────────────────────────────────────────────────────
    Called on mount and after every client navigation. Everything it calls is
    safe to call twice: each init either no-ops when its element is absent or
@@ -486,6 +528,8 @@ export function boot(): void {
   initDepartments();
   initLightbox(); /* after drawGallery, so the 20 new plates get wired */
   fitMast();
+  /* after the fit, not before: the fit is what moves the target. */
+  honourHash();
   paintAllPlates();
 }
 

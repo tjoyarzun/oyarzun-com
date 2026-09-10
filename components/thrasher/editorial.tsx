@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
+import { issue } from "@/lib/copy";
 
 /* ═══════════════════════════════════════════════════════════════════════
    The editorial furniture of the issue.
@@ -106,23 +108,39 @@ export function Caption({ left, right }: { left: ReactNode; right?: ReactNode })
 /**
  * The running head. On the one scroll this is driven live by the scroll-spy,
  * which needs `id="dept"` to write into; on a real route it is static.
+ *
+ * `href` makes the department name a link back to its section, which is the
+ * magazine convention and one of two ways off a post — the other being the
+ * sticky nav, which stays pinned at the top of the window at any scroll
+ * depth. The name is not a link on the home page, where it is the live
+ * scroll-spy readout rather than a destination.
  */
 export function RunningHead({
   dept,
   middle,
   live = false,
+  href,
 }: {
   dept: string;
   middle: string;
   live?: boolean;
+  href?: string;
 }) {
   return (
     <div className="run">
-      <span className="dept" id={live ? "dept" : undefined}>
-        {dept}
-      </span>
+      {href ? (
+        <Link className="dept back" href={href}>
+          {dept}
+        </Link>
+      ) : (
+        <span className="dept" id={live ? "dept" : undefined}>
+          {dept}
+        </span>
+      )}
       <span className="mid">{middle}</span>
-      <span className="iss">Issue 04 · Sep 2026</span>
+      <span className="iss">
+        Issue {issue.number} · {issue.dateline}
+      </span>
     </div>
   );
 }

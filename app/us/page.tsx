@@ -39,6 +39,7 @@ export default function Us() {
     <>
       <RunningHead
         dept="The two of us"
+        href="/#two"
         middle="Two profiles · one overlap · Sandy, Utah"
       />
 

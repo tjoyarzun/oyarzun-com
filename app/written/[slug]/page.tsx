@@ -76,6 +76,7 @@ export default function WrittenPost({ params }: Props) {
     <>
       <RunningHead
         dept="Written"
+        href="/#written"
         middle={`${author.name} · ${post.readTime} min read`}
       />
 

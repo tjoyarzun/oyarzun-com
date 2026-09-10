@@ -75,6 +75,13 @@ export default function Plate({
       aria-label={label ?? `Show this photograph in colour: ${title}`}
     >
       <canvas
+        /* Reserve the plate's final height before the photograph loads.
+           Without this the canvas sits at its intrinsic 300×150 until the
+           halftone engine sets width/height, and every plate on the page
+           shoves the content below it downwards as it resolves — which
+           shifts the text a reader is already looking at, and moves an
+           anchor out from under a link that had just scrolled to it. */
+        style={{ aspectRatio: String(ar) }}
         data-src={src ?? full}
         data-pitch={pitch}
         data-angle={angle}

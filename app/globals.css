@@ -121,6 +121,15 @@ a{color:inherit}
   padding:12px var(--m) 9px;border-bottom:1px solid var(--ink22)}
 .run .dept{font-family:var(--cred);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
   color:var(--red-tx);font-weight:700;white-space:nowrap}
+/* The department name as a way back. Underlined on hover only — it sits in
+   a bar of small caps where a permanent underline would read as noise. */
+.run a.dept.back{text-decoration:none}
+.run a.dept.back:hover{text-decoration:underline;text-decoration-thickness:1px;
+  text-underline-offset:3px}
+.run a.dept.back::after{content:"";display:inline-block;width:4px;height:4px;
+  margin-left:7px;vertical-align:middle;
+  border-left:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
+  transform:rotate(45deg);opacity:.75}
 .run .mid{font-family:var(--cred);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
   color:var(--cap);text-align:center}
 .run .iss{font-family:var(--cred);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
