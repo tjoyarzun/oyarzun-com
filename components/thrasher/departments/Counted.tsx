@@ -8,6 +8,8 @@ import {
   favoriteMovies,
   skiResorts,
 } from "@/lib/data";
+import { departments } from "@/lib/copy";
+import { fill, lines, rich } from "@/lib/thrasher/fill";
 import { GOALS, figures, pct } from "@/lib/thrasher/issue";
 
 /**
@@ -39,29 +41,16 @@ export default function Counted() {
   );
   /* Where a linear pace would have you today — the notch on each goal gauge. */
   const paceMark = (dayOfYear / 365) * 100;
+  const d = departments.counted;
 
   return (
-    <section className="dept" id="counted" data-dept="Counted" data-folio="03">
-      <DeptBar folio="03" name="Counted" kicker="1 Jan – 10 Sep 2026" />
+    <section className="dept" id="counted" data-dept={d.name} data-folio={d.folio}>
+      <DeptBar folio={d.folio} name={d.name} kicker={fill(d.deptKicker)} />
 
-      <Mast
-        kicker="Every figure derived from the array behind it"
-        headline="Counted"
-        stats={
-          <>
-            Panel updated on build
-            <br />
-            Commits live from the API
-            <br />
-            Nothing estimated
-          </>
-        }
-      >
-        <p>
-          Every figure on this panel is computed from the array behind it, and
-          every sparkline from the same array as the figure above it. Where two
-          numbers could disagree, one is derived from the other so they can’t.
-        </p>
+      <Mast kicker={d.kicker} headline={d.headline} stats={lines(d.stats)}>
+        {d.dek.map((para, i) => (
+          <p key={i}>{rich(para)}</p>
+        ))}
       </Mast>
 
       <div className="sec" id="tiles">

@@ -1,839 +1,688 @@
 # Oyarzun.com — Content Update Guide
 
-A quick reference for updating every section of the site. Most updates require editing one file — no code knowledge needed. The GitHub web editor works for everything marked **GitHub web editor**.
+Everything on this site can be changed by editing text in a file. No build
+tools, no terminal, no AI. GitHub's web editor is enough: open the file, click
+the pencil, edit, commit. Vercel builds a preview automatically and you check
+it before it goes live.
+
+**Almost everything lives in two files.**
+
+| File | Holds | What it is |
+|---|---|---|
+| [`lib/copy.ts`](lib/copy.ts) | Every headline, standfirst, caption and label | The **words** |
+| [`lib/data.ts`](lib/data.ts) | Names, jobs, careers, trips, books, skills, awards | The **facts** |
+
+They are separate because a fact changes when the world changes, and a word
+changes when you change your mind about how to say it. You can rewrite all of
+`copy.ts` without any risk of breaking a number, and edit `data.ts` without
+touching a sentence.
+
+Two more places, for two specific things:
+
+| File | Holds |
+|---|---|
+| [`content/posts/`](content/posts) | Blog posts, one Markdown file each |
+| [`public/images/`](public/images) | Photographs |
 
 ---
 
-## Table of Contents
+## ⚠️ Read this before you edit anything
 
-- [Home](#home)
-- [Profiles](#profiles)
-- [Travels](#travels)
-- [Dashboard](#dashboard)
-- [Blog](#blog)
-- [Now](#now)
-- [Footer](#footer)
+**There are 39 files in `components/` that look editable and are not.**
 
----
+The site was redesigned. The old components were left on disk on purpose —
+they are useful reference until the redesign reaches production — but **nothing
+imports them.** If you edit one, the site does not change, no error appears,
+and there is no way to tell from the file itself.
 
-## Home
+The dead ones are every file under:
 
-The home page has seven content areas, top to bottom: Hero, About Us, Profiles preview, a full-width navigation row, then a final two-column row — "Currently" (Memory of the Day + Currently widget) beside "From the Blog" — of equal width, so the two column headings line up. About Us and Profiles preview both come right after the hero so a new visitor understands the site and meets Tommy and Julia before anything else. There's no separate stats/metrics section on the homepage — the real numbers live on the [Dashboard](#dashboard), which the navigation row links to directly. Some areas are edited via simple JSON files (no code needed), some auto-pull from `lib/data.ts` (edit once, updates in two places), and a couple require editing a component file directly.
+- `components/blog/`
+- `components/dashboard/`
+- `components/family/`
+- `components/home/`
+- `components/layout/`
+- `components/profiles/`
+- `components/shared/`
+- `components/travels/`
 
----
+**Everything live is under `components/thrasher/`** — plus one file,
+`components/providers.tsx`, which is wiring for the Negative button and holds
+no content. If a path in an older note or an older version of this guide
+points anywhere else under `components/`, it is out of date.
 
-### 1. Hero section — names, tagline, photo
+The count is exact as of this writing: **39 dead, 16 live.**
 
-**File:** `components/home/HeroSection.tsx` — requires a code editor or GitHub web editor
+Two data files are dead the same way:
 
-This is the full-screen intro at the top of the page. Find these lines and edit in place:
-
-#### Location badge (above the names)
-
-```tsx
-(Sandy, Utah);
-```
-
-Change `Sandy, Utah` to whatever city you're in.
-
-#### Names heading
-
-```tsx
-Tommy Oyarzun
-<br />
-<span className="text-white/60">&</span> Julia Velicev
-```
-
-Update the names on each line.
-
-#### Site descriptor
-
-```tsx
-Our corner of the internet. Data, tech, travel, and life with
-kids.
-```
-
-One sentence stating what the site actually is, sitting right under the names — this is meant to be the first thing that orients a new visitor regardless of whether they came for the professional side, the family side, or the blog. Keep it to one sentence.
-
-#### Role/company badges (new — auto-generated, no edit here)
-
-The two small pills under the names (e.g. "Manager, Analytics · Domo" and "Data Engineer III · SeekWell") are **not hand-typed** — they're pulled automatically from `lib/data.ts` → `profiles.him.title`/`profiles.him.company` and `profiles.her.title`/`profiles.her.company`. To change what they say, edit those fields under [Profiles](#profiles); the hero updates automatically.
-
-#### Tagline paragraph
-
-```tsx
-Skater and tech nerd in Sandy, Utah. Married to a Brazilian data
-engineer. We ski, travel with our kids, and talk data over
-dinner.
-```
-
-Replace with any text. Keep it to 1–2 sentences — it sits below the role badges and above the buttons. Since job titles now live in the badges above, this is the spot for personality, not job descriptions.
-
-#### Buttons
-
-```tsx
-<Link href="/profiles" ...>Our Work</Link>
-<Link href="/travels" ...>Our World</Link>
-<Link href="/blog" ...>Read the Blog</Link>
-```
-
-Three buttons, one per pillar of the site (professional, personal, blog) — this is deliberate so a first-time visitor sees all three in the first screen. Change the button label text. Don't change the `href` values or the buttons will break.
-
-#### Hero photo
-
-```tsx
-src = "/images/switzerland-dock.jpg";
-```
-
-Replace with `/images/your-filename.jpg` (upload the image to `public/images/` first — see [Uploading Photos](#uploading-photos)).
-
-Also update the caption below the photo:
-
-```tsx
-<p ...>Switzerland, 2023</p>
-```
-
-And the `alt` text on the `<Image>` tag for accessibility.
+- `content/now.json` — the "Right now" content moved to `nowRows` in
+  `lib/copy.ts`
+- `content/memory.json` — the Memory-of-the-Day feature no longer exists
 
 ---
 
-### 2. About Us
+## Table of contents
 
-**File:** `components/home/AboutUs.tsx` — requires a code editor or GitHub web editor
-
-```tsx
-This site is part travel log, part professional portfolio, and part
-record of everything in between. Behind it are Tommy and Julia, a
-data and tech duo who never really stopped talking shop. We built
-this place to have somewhere to put it all.
-```
-
-A short mission-statement paragraph right after the hero, expanding on the hero's one-line descriptor before the page moves into profiles/nav/content. Plain static text — no data source, just edit the paragraph directly.
+- [How live figures work](#how-live-figures-work) — the `{curly braces}`
+- [Changing a headline or a paragraph](#changing-a-headline-or-a-paragraph)
+- [Right now — the monthly edit](#right-now--the-monthly-edit)
+- [Names, jobs and bios](#names-jobs-and-bios)
+- [Careers](#careers)
+- [Projects](#projects)
+- [Awards](#awards)
+- [Skills and the spider charts](#skills-and-the-spider-charts)
+- [Trips](#trips)
+- [The bucket list](#the-bucket-list)
+- [Ski days, books, films, reading](#ski-days-books-films-reading)
+- [Goals](#goals)
+- [Photographs](#photographs)
+- [The family album](#the-family-album)
+- [Publishing a blog post](#publishing-a-blog-post)
+- [The colophon at the foot](#the-colophon-at-the-foot)
+- [What updates itself](#what-updates-itself)
+- [What still needs a developer](#what-still-needs-a-developer)
+- [Checking your work](#checking-your-work)
 
 ---
 
-### 3. Profiles preview
+## How live figures work
 
-**File:** `components/home/ProfilesPreview.tsx` — no edits needed here.
+**File:** [`lib/copy.ts`](lib/copy.ts) — GitHub web editor ✓
 
-The two condensed cards ("Who We Are") show each person's name, title/company, and a truncated first line of their bio. These read directly from `lib/data.ts` → `profiles.him`/`profiles.her` — the exact same fields documented under [Profiles](#profiles). Edit there once; it updates the hero badges, this preview, and the full `/profiles` page all together.
-
----
-
-### 4. Navigation row ("Explore")
-
-**File:** `components/home/NavGrid.tsx` — requires a code editor or GitHub web editor
-
-Five clickable cards (`Profiles`, `Travels`, `Dashboard`, `Blog`, `Now`) under an "Explore" heading, sitting on their own row between the profiles preview and the blog — this is the homepage's site-directory row, a quick jump to every section of the site. `Profiles` and `Blog` duplicate the dedicated preview sections elsewhere on the homepage on purpose — those sections are content teasers, this row is pure navigation. `Family Hub` is intentionally **not** in this grid — it's reachable via the "Family Hub" button in the top navigation bar (`components/layout/Navbar.tsx`) instead of being featured on the public homepage. Find the `cards` array:
+Some sentences contain a number that has to stay correct. Those are written as
+a **token** in curly braces, and the real figure is filled in when the site
+builds.
 
 ```ts
-const cards: NavCard[] = [
-  { label: "Profiles", description: "Career and projects we're proud of", href: "/profiles", ... },
-  { label: "Travels", description: "Brazil and Utah and everywhere in between", href: "/travels", ... },
-  { label: "Dashboard", description: "Because data...", href: "/dashboard", ... },
-  { label: "Blog", description: "Tech, AI, trip stories, and more", href: "/blog", ... },
-  { label: "Now", description: "What we're up to right now", href: "/now", ... },
-];
+"{adventures} adventures, {countries} countries, {nights} nights so " +
+  "far this year. Every figure derived from the log below, so adding a " +
+  "trip updates all of them.",
 ```
 
-Edit `label` (the bold card title) and `description` (the small subtitle) for any card. Don't change `href` — that's the link destination.
+On the page that reads *"4 adventures, 2 countries, 18 nights so far this
+year…"* — and if you log a fifth trip in `lib/data.ts`, all three numbers
+change on their own.
 
-**Dashboard card's description is live, not the text above.** The `"Because data..."` placeholder in the array is overridden at render time with a real, live GitHub commit count (e.g. "1,203 GitHub commits and counting") — same `/api/github-activity` fetch pattern as the Dashboard page itself, falling back to `dashboardStats.githubCommits` if the live fetch fails. This is a deliberate lightweight signal of real technical activity for visitors coming from the data/tech community, without recreating a whole stats section on the homepage.
+**You can rewrite the sentence around a token freely.** Move it, drop it, use
+it twice. The only thing you must not do is rename it — `{nights}` works,
+`{Nights}` prints on the page exactly as written, which is a mistake you will
+see immediately in the preview.
+
+The tokens available:
+
+| Token | Means | Comes from |
+|---|---|---|
+| `{commits}` | GitHub contributions, last 52 weeks | live, from the GitHub API |
+| `{nights}` | nights away this year | sum of `adventures` |
+| `{countries}` | countries visited | distinct countries in `adventures` |
+| `{adventures}` | trips logged | number of `adventures` |
+| `{skiDays}` | days on snow | sum of `skiResorts` |
+| `{resorts}` | resorts skied | number of `skiResorts` |
+| `{books}` | books finished this year | sum of `booksPerQuarter` |
+| `{posts}` | posts published | files in `content/posts/` |
+| `{postsGoal}` | the writing target | `goals` in `lib/data.ts` |
+| `{slotsOpen}` | target minus published | both of the above |
+| `{himLine}` | "Tommy Oyarzun · Manager, Analytics, Domo" | `profiles.him` |
+| `{herLine}` | "Julia Velicev · Data Engineer III, SeekWell" | `profiles.her` |
+| `{countryList}` | "USA · Italy" | `adventures` |
+| `{issueNumber}` `{dateline}` `{elevation}` `{updated}` | the issue's own details | `issue` in `lib/copy.ts` |
+
+**Bold:** put `**two asterisks**` around a phrase. That is the only formatting
+the text understands — no HTML, no links.
 
 ---
 
-### 5. From the Blog
+## Changing a headline or a paragraph
 
-**File:** `components/home/BlogTeaser.tsx` — no edits needed here.
+**File:** [`lib/copy.ts`](lib/copy.ts) → the `departments` block — GitHub web editor ✓
 
-The right-hand column of the final homepage row. Blog posts do **not** come from `lib/data.ts` — they're read live from `content/posts/*.mdx` via `getAllPosts()`. Shows the most recent post with the normal-size `BlogCard` treatment (same component used on the `/blog` listing page — cover image, title, excerpt, date/tags), plus up to 2 more posts as a smaller version of the same tile shape (cover image on top, title, excerpt — just more compact, no date/tags row), and shrinks gracefully if there are fewer than 3 posts total (down to just the one card if there's only 1). No subhead line under the heading — the breadth of topics is already established by the hero/About Us copy above. Add or edit posts in `content/posts/` — see [Blog](#blog) for details.
+The home page is one long scroll of six **departments**. Each has its own
+block in `departments`, and every visible word in it is a field you can edit:
+
+```ts
+counted: {
+  folio: "03",                    // the number in the department bar
+  name: "Counted",                // the department's name
+  deptKicker: "1 Jan – 10 Sep 2026",   // small line, right of the bar
+  kicker: "Every figure derived from the array behind it",  // above the headline
+  headline: "Counted",            // THE BIG WORD
+  dek: [
+    "Every figure on this panel is computed from…",   // each string = one paragraph
+  ],
+  stats: [
+    "Panel updated on build",     // the small right-hand column,
+    "Commits live from the API",  // one string per line
+    "Nothing estimated",
+  ],
+},
+```
+
+### Two things to know about `headline`
+
+**It sizes itself.** The headline is stretched to the exact width of the page,
+so a longer word sets smaller and a shorter word sets bigger. You never set a
+size. One or two words is the house style; four is the practical limit.
+
+**Do not put a `{token}` in it.** A headline that changes value re-sizes the
+type and re-flows the whole department every time the number moves. That is
+why department 04 is headlined **Fernweh** rather than "18 nights" — the count
+sits in `deptKicker`, where it can grow without moving anything.
+
+### Adding a paragraph
+
+`dek` is a list. Add a string, get a paragraph:
+
+```ts
+dek: [
+  "The first paragraph.",
+  "A second one, which did not exist before.",
+],
+```
 
 ---
 
-### 6. Currently column — Memory of the Day + Currently widget
+## Right now — the monthly edit
 
-The left-hand column of the final homepage row, paired with "From the Blog" on the right. The "Currently" heading itself lives directly in `app/page.tsx` (not in either component below) — this is intentional, so its spacing matches "From the Blog"'s heading exactly. [About Us](#2-about-us) previously lived in this column too, but that mixed three unrelated things (a site mission statement, a dated photo memory, and a live status widget) into one column with no narrative connection between them — About Us now stands on its own right after the hero instead.
+**File:** [`lib/copy.ts`](lib/copy.ts) → the `nowRows` block — GitHub web editor ✓
 
-**Memory of the Day** — **File:** `content/memory.json` — GitHub web editor ✓
-
-```json
-{
-  "date": "November 14, 2024",
-  "caption": "First snow of the season — Big Cottonwood Canyon",
-  "imageUrl": "https://picsum.photos/seed/memory142/400/300"
-}
-```
-
-| Field      | What it does                                                                                          |
-| ---------- | ----------------------------------------------------------------------------------------------------- |
-| `date`     | The label shown below the photo (e.g. "July 4, 2025")                                                 |
-| `caption`  | The description shown below the date                                                                  |
-| `imageUrl` | Any public image URL. For a real photo, upload it to `public/images/` and use `/images/your-file.jpg` |
-
-**Currently widget** — **File:** `content/now.json` → the `"currently"` block — GitHub web editor ✓
-
-```json
-"currently": {
-  "reading": "Designing Data-Intensive Applications",
-  "watching": "Severance Season 2",
-  "building": "Oyarzun.com",
-  "listening": "Hozier — Unreal Unearth"
-}
-```
-
-These are the four one-liners shown below Memory of the Day. Keep each under ~40 characters — they truncate if too long.
-
----
-
-## Profiles
-
-**File:** `lib/data.ts` — requires a code editor or GitHub web editor ✓
-
-Search for `export const profiles` (around line 123). There are two profile objects: `him` (Tommy) and `her` (Julia).
-
-### GitHub Activity Heatmap
-
-The heatmap on Tommy's profile pulls **real contribution data** from the GitHub API. A token is required — there is no placeholder any more.
-
-Until 2 Sep 2026 the component filled itself with invented data when the fetch failed: a seeded random grid that claimed ~366 contributions across 171 days, against a real 37 across 10, marked only with a small "(preview)". That was removed, because a plausible-looking fake number is worse than an empty grid. Now the card shows an empty grid while loading, and **"Couldn't load GitHub activity right now."** if the request fails — so a missing or expired token is visible instead of silently papered over.
-
-**One-time setup:**
-
-1. Go to [github.com/settings/tokens](https://github.com/settings/tokens) → **Generate new token (classic)**
-2. Give it a name (e.g. `oyarzun-com`) and select only the `read:user` scope
-3. Copy the token
-4. **Locally:** paste it into `.env.local` as `GITHUB_TOKEN=ghp_...`
-5. **On Vercel:** Settings → Environment Variables → add `GITHUB_TOKEN` with the same value
-
-The heatmap refreshes every 24 hours via Next.js caching — no manual update needed.
-
-Only Tommy's column has a heatmap. Julia's profile has no `github` field, so the component isn't rendered on her side at all.
-
-**If the graph looks emptier than expected,** the usual cause is commit attribution rather than a bug. A commit only counts toward `tjoyarzun` if its author email is registered to that GitHub account. Commits authored with a work address land on the work account — or on no account at all — and never appear here. `~/.gitconfig` now picks the identity from the directory, so anything under `~/personal/` commits as the personal address.
-
-### Fields you'll update most often
+This is the one you will edit most. Three groups — him, her, both — and each
+row is a label, a bold headline, and a sentence.
 
 ```ts
 {
-  name: "Tommy Oyarzun",
-  title: "Manager, Analytics",       // job title
-  company: "Domo",                    // current employer
-  bio: "...",                         // paragraph shown on the profile card
-  github: "tjoyarzun",               // GitHub username (no @)
-  linkedin: "tom-oyarzun",           // LinkedIn handle (the part after /in/)
-  resume: "/documents/tommy_oyarzun_resume_2026.pdf",  // path to PDF in public/documents/
-}
+  label: "Reading",
+  headline: "Do Androids Dream of Electric Sheep?",
+  text: "{books} books finished this year against a target of twenty.",
+},
 ```
 
-### Updating the resume PDF
+To add a row, copy an existing one and change the three lines. To remove one,
+delete from the `{` to the `},` inclusive. Four rows per group reads well;
+past six it starts to feel like a changelog rather than a snapshot.
 
-1. Add the new PDF to `public/documents/` (e.g. `tommy_oyarzun_resume_2027.pdf` or `julia_velicev_resume_2027.pdf`).
-2. In `lib/data.ts`, update the `resume` field on the matching profile (`profiles.him` or `profiles.her`) to match the new filename.
+**When you change a row, change the date too.** It is in the same file:
 
-Both Tommy's and Julia's profile cards show a Resume download button whenever `resume` is set on their profile object; it's a disabled placeholder button if `resume` is missing.
+```ts
+now: {
+  updated: "10 September 2026",
+```
 
-### GitHub button (optional per person)
+That one field feeds both the department bar and the last sentence of the
+standfirst, so you only type it once. The whole value of a "now" page is that
+the date is honest.
 
-The `github` field on a `Profile` is optional. Tommy's profile has one, so his card shows a GitHub button (and the [GitHub Activity Heatmap](#github-activity-heatmap) above uses it). Julia's profile has no `github` field, so her card simply doesn't show a GitHub button — there's no placeholder, it's omitted entirely. To add a GitHub button for someone, add a `github: "username"` field to their profile object in `lib/data.ts`.
+---
 
-### Adding or editing a career entry
+## Names, jobs and bios
 
-Find the `career` array inside the profile. Each entry looks like:
+**File:** [`lib/data.ts`](lib/data.ts) → `profiles` — GitHub web editor ✓
+
+```ts
+her: {
+  name: "Julia Velicev",
+  title: "Data Engineer III",
+  company: "SeekWell",
+  bio: "Staff Data Engineer with 10+ years of experience…",
+  linkedin: "julia-velicev",        // just the handle, not the full URL
+  github: "tjoyarzun",              // optional; omit and no GitHub row appears
+```
+
+Changing `title` or `company` updates it **everywhere at once** — the profile
+column, the teaser on the home page, the credit block under two different
+headlines, and the byline on any post that person wrote. That is what
+`{himLine}` and `{herLine}` are for.
+
+---
+
+## Careers
+
+**File:** [`lib/data.ts`](lib/data.ts) → `profiles.him.career` / `profiles.her.career` — GitHub web editor ✓
+
+Newest first. `description` is optional — leave it out and the row is just the
+company and the job title.
 
 ```ts
 {
   company: "Domo",
   title: "Manager, Analytics",
-  years: "2025–Present",
-  description: "One or two sentences about impact.",
+  years: "2025–Present",     // "–Present" is printed as " —"
+  description: "Built the marketing analytics team from scratch…",
 },
 ```
 
-Add a new object to the array, or edit an existing one. Order is top-to-bottom on the timeline (most recent first).
+**One special case:** any row where `company` is exactly `Overstock.com` is
+printed reversed out in vermilion, because that is where you two overlapped.
+Change the company name and the highlight follows it.
 
-### Adding or editing a project
+---
 
-Find the `projects` array inside the profile:
+## Projects
+
+**File:** [`lib/data.ts`](lib/data.ts) → `profiles.*.projects` — GitHub web editor ✓
 
 ```ts
 {
-  title: "Project Name",
-  description: "What it does in one sentence.",
-  tags: ["Python", "dbt", "BigQuery"],
-  githubUrl: "https://github.com/tjoyarzun/repo-name",  // optional
-  liveUrl: "https://yoursite.com",                      // optional
+  title: "Dimple Dell Residence — interactive 3D",
+  description: "A walkable 3D model of the house we're building in Sandy…",
+  tags: ["React Three Fiber", "three.js", "TypeScript"],
+  liveUrl: "https://dimple-dell-3d.vercel.app",   // optional → "Open" button
+  githubUrl: "https://github.com/…",              // optional → "Source" button
 },
 ```
 
-**`githubUrl` is optional.** Omit it for a private repo — a link to one returns
-404 for every visitor, and the card simply doesn't render the GitHub link when
-the field is absent. That's why the Dimple Dell entry has no `githubUrl`.
+The project count in the heading (`Projects · 2`) counts the list, so it can
+never be wrong.
 
-### Interactive project embed
+---
 
-**File:** `lib/data.ts` — add an `embed` block to a project
+## Awards
 
-Optional. Adds a poster image to the project card with a button that opens a
-live app full-screen in an iframe. Tommy's Dimple Dell Residence project uses
-it; delete the block and the card goes back to being text and links.
+**File:** [`lib/data.ts`](lib/data.ts) → `profiles.*.recognition` — GitHub web editor ✓
 
-```ts
-embed: {
-  url: "https://dimple-dell-3d.vercel.app",   // origin to frame — see below
-  poster: "/images/dimple-dell-3d.jpg",       // shown before anything loads
-  posterAlt: "Isometric render of the house.",
-  cta: "Launch the walkthrough",              // button label
-  note: "Orbit with drag. WASD to move.",     // optional line under the button
-},
-```
+The awards block appears **only for a person who has one.** There is no empty
+"Recognition — none" heading, because printing an absence reads as a fact
+about the person.
 
-**The embedded site must allow this one to frame it.** It has to send a
-`Content-Security-Policy` header naming oyarzun.com as an allowed ancestor:
-
-```
-Content-Security-Policy: frame-ancestors 'self' https://oyarzun.com https://www.oyarzun.com
-```
-
-Without it the browser silently refuses to render the frame — you get an empty
-black panel, no error on the page, and nothing in the build output. If you're
-embedding something you don't control and it doesn't send that header, an
-iframe is not an option; use `liveUrl` and let it open in a new tab instead.
-
-Note this also means embeds **cannot be tested on `localhost`** unless the
-embedded app adds `http://localhost:3000` to its own `frame-ancestors`. On the
-Dimple Dell app it deliberately doesn't, so that card only works in production.
-
-**The frame is only mounted when the button is pressed.** Nothing is requested
-from the embedded origin before that — no scripts, no cookies, no WebGL
-context — so the page costs the same for visitors who never open it.
-
-**Poster image:** upload to `public/images/` — see
-[Uploading Photos](#uploading-photos). Landscape works best; the card renders it
-at 16:9. If you're screenshotting the app itself, check the capture for
-anything you don't want public: the Dimple Dell app prints its own title and
-location in the top-left corner, so the shipped poster is cropped above it.
-
-### Recognition card (awards)
-
-**File:** `lib/data.ts` — search for `recognition:` inside a profile object
-
-An optional block on a profile that renders a card at the **bottom of that
-person's column**, below Featured Projects. Julia has one (Influential Women);
-Tommy has none, so nothing is rendered on his side. Add the block to a profile
-and the card appears; delete it and it disappears.
+Julia has one. **Tommy has none** — add a `recognition` block to
+`profiles.him` in the same shape and the section appears on his side:
 
 ```ts
 recognition: {
-  org: "Influential Women",                       // awarding body
-  orgUrl: "https://influentialwomen.com/",        // optional — makes the name a link
-  award: "Verified",                              // short label, e.g. the word on the badge
-  tagline:                                        // optional — the org's own words
-    "Amplifying the achievements and influence of women who lead, innovate, and inspire.",
-  year: "2026",                                   // optional
-  badgeUrl: "/images/badge.png",                  // small mark, shown at 56px
-  certificateUrl: "/images/Julia_Velicev.png",    // the main image
-  certificateAlt:
-    "Influential Women recognition certificate for Julia Velicev, Data Engineer III at SeekWell.",
-  blurb: "One short paragraph about the recognition.",
-  videoId: "1221262818",                          // optional — Vimeo numeric id
-  videoHash: "e2e2ed707e",                        // optional — for an unlisted Vimeo video
-},
-```
-
-| Field | Notes |
-| --- | --- |
-| `badgeUrl` / `certificateUrl` | Upload to `public/images/` — see [Uploading Photos](#uploading-photos) |
-| `certificateAlt` | Describes the certificate for screen readers. `tagline` is appended to it automatically, because words printed inside an image are otherwise unreadable |
-| `tagline` | Rendered **only** in the alt text, not on screen — the supplied certificate already prints it, and showing it twice duplicated the sentence |
-| `year` | Omit it and the card just shows the org name |
-| `videoId` + `videoHash` | Both come from the share link. `vimeo.com/1221262818/e2e2ed707e` → id `1221262818`, hash `e2e2ed707e`. Strip any `?utm_*`, `_hsenc` or `_hsmi` parameters — those are email-campaign trackers and don't belong in the repo |
-
-**The video only loads when someone presses play.** Nothing is requested from
-Vimeo until then, so visitors who don't watch get no third-party requests or
-cookies. Leave `videoId` out entirely and the player is omitted.
-
-Note that embedding publishes the unlisted-video hash in the page source, so
-treat the video as shareable rather than private.
-
-**Colour.** The card is the one place the Influential Women magenta appears
-(`iw-pink*` in `tailwind.config.ts`). It belongs to the awarding body, not to
-this site, so it stops at the card's edge. A different award with different
-brand colours would want its own tokens.
-
-### Updating skills (radar chart)
-
-Find the `skills` array. Each entry has a `skill` name and a `value` from 0–100:
-
-```ts
-{ skill: "SQL", value: 95 },
-```
-
----
-
-## Travels
-
-**File:** `lib/data.ts` — GitHub web editor ✓
-
-### Adventure Log & Map
-
-Search for `export const adventures`. Adventures can be anywhere in the world — just provide accurate lat/lng coordinates. Each entry is one dot on the map and one row in the log table:
-
-```ts
-{
-  id: 21,                              // must be unique — increment from the last one
-  name: "Bells Canyon Upper Falls",
-  location: "Sandy, UT",
-  lat: 40.5765,                        // latitude for the map pin
-  lng: -111.8010,                      // longitude for the map pin
-  date: "2025-08-15",
-  country: "USA",                      // see the note below — always set this
-  type: "hike",                        // "hike" | "ski" | "camp" | "bike" | "sightseeing" | "beach"
-  who: "Family",                       // "Family" | "Just Us" | "Solo"
-  nights: 0,                           // 0 = day trip; 1+ = overnight stays
-  emoji: "🥾",
-  description: "One sentence about the adventure.",
-  imageUrl: "https://picsum.photos/seed/bells/400/300",
-},
-```
-
-**Always set `country`.** It is optional in the type, but anything left blank
-silently counts as `"USA"` — and the "Countries" figures on both /travels and
-the dashboard are the count of distinct `country` values. No record had this
-field until 1 Sep 2026, so the site reported 1 country while two of the four
-trips were to Italy.
-
-`imageUrl` may point at a file in `public/images/` or a remote URL, but a
-remote host has to be allowlisted first — see [Uploading Photos](#uploading-photos).
-
-To find lat/lng for a location: search the place in Google Maps, right-click the pin, and copy the coordinates.
-
-### Adding a new trip type
-
-If you want to use a type not in the list above (e.g. a new category beyond
-hike/ski/camp/bike/sightseeing/beach), you must update **three files** or the
-Vercel build will fail:
-
-1. **`lib/data.ts`** — find `type AdventureType =` near the top and add the new value to the union.
-2. **`components/travels/AdventureLog.tsx`** — find `type AdventureType =` and add the same value. Also add it to `TYPE_ICON` (the emoji map) and `TYPE_FILTERS` (the filter chip list).
-3. **`components/travels/BucketList.tsx`** — find `type AdventureType =` and add the same value. Also add it to `TYPE_ICON`.
-
-All three files keep their own copy of the type — they must stay in sync.
-
-### Bucket List
-
-Search for `export const bucketListItems`. Same structure — add items you haven't done yet:
-
-```ts
-{
-  id: 10,
-  name: "The Havasupai Falls",
-  state: "AZ",
-  description: "One sentence.",
-  imageUrl: "https://picsum.photos/seed/havasupai/400/300",
-  type: "hike",
+  org: "Influential Women",
+  orgUrl: "https://influentialwomen.com/",
+  award: "Verified",
+  tagline: "Amplifying the achievements and influence of women who…",
+  year: "2026",
+  badgeUrl: "/images/badge.png",
+  certificateUrl: "/images/Julia_Velicev.png",
+  certificateAlt: "Influential Women recognition certificate for…",
+  blurb: "She advanced from Analyst to Data Engineer III through…",
+  videoId: "1221262818",      // optional Vimeo id → "Watch the film" button
+  videoHash: "e2e2ed707e",    // the unlisted-video hash
 },
 ```
 
 ---
 
-## Dashboard
+## Skills and the spider charts
 
-**File:** `lib/data.ts` — GitHub web editor ✓
-
-The dashboard charts pull from several data arrays. Find each by searching the file.
-
-### Ski data (`skiResorts`)
+**File:** [`lib/data.ts`](lib/data.ts) → `profiles.*.skills` — GitHub web editor ✓
 
 ```ts
-{ name: "Park City", days: 18, vertical: 52000, runs: 41 },
+skills: [
+  { skill: "SQL", value: 95 },      // value is 0–100, self-assessed
+  { skill: "Python", value: 90 },
+],
 ```
 
-Update `days`, `vertical` (total feet skied), and `runs` at the end of each ski season.
+**The two charts share one set of axes**, built automatically from both lists
+combined. That is on purpose: if each chart used only its own skills, the two
+shapes would look comparable and would not be.
 
-### Adventures by Year (auto-aggregated)
+Consequences worth knowing:
 
-No edits needed — this chart reads directly from the `adventures` array in the Travels section. Every time you add a new adventure entry with a `date`, this chart updates automatically.
+- **Add a skill to one person and it appears on both charts** — as a real
+  value for them, and as zero for the other. A zero is information, not a gap:
+  Julia's `Domo` axis collapses to the centre because she does not list it.
+- The axes are ordered by the two values added together, so the strongest
+  shared skills come first.
+- Ten axes is about the limit before the labels crowd. There are ten now.
 
-### Currently reading (`currentlyReading`)
+A value of 90 or more is printed in vermilion.
 
-**File:** `lib/data.ts` — search for `export const currentlyReading`
+---
 
-This feeds the "Currently Reading" card, not the Books Read count. (The count
-comes from [`booksPerQuarter`](#books-read-per-quarter-booksperquarter).)
+## Trips
+
+**File:** [`lib/data.ts`](lib/data.ts) → `adventures` — GitHub web editor ✓
 
 ```ts
 {
-  title: "Designing Data-Intensive Applications",
-  author: "Martin Kleppmann",
-  progress: 100,    // 0–100. Use < 100 for in-progress books.
-  coverColor: "#2a9d8f",
-  genre: "Technical",
+  id: 5,                       // any number not already used
+  name: "Roman Holiday",
+  location: "Rome, Italy",
+  country: "Italy",            // used to count countries — spell it consistently
+  lat: 41.8881,                // decimal degrees; negative lng = west
+  lng: 12.4792,
+  date: "2026-05-23",          // YYYY-MM-DD
+  type: "sightseeing",
+  who: "Just Us",
+  nights: 2,
+  emoji: "🏛️",
+  description: "…",
+  imageUrl: "https://picsum.photos/seed/rome/400/250",
 },
 ```
 
-The section was previously documented as `books`, which is not an export that
-exists.
+**Adding one trip changes eight things on the site,** all on their own:
 
-### Goals (`goals` + `goalsYear`)
+1. the nights figure on the cover
+2. the nights readout in the Counted panel, and its by-month sparkline
+3. the trips-and-countries line under it
+4. the Fernweh department bar
+5. both paragraphs of the Fernweh standfirst
+6. the country list in its credit column
+7. the log table and its total
+8. the Adventures goal gauge
 
-**File:** `lib/data.ts` — search for `export const goalsYear` and `export const goals`
+The route chart is drawn from `lat` and `lng`, so a new destination appears on
+the map with an arc from Sandy. Get the coordinates from Google Maps — right-
+click a spot and the first pair of numbers is `lat, lng`.
 
-Update `goalsYear` to change the year shown in the card title:
+---
+
+## The bucket list
+
+**File:** [`lib/data.ts`](lib/data.ts) → `bucketListItems` — GitHub web editor ✓
 
 ```ts
-export const goalsYear = "2026";
+{
+  id: 1,
+  name: "Tahiti",
+  state: "French Polynesia",
+  description: "We do love beaches.",
+  imageUrl: "…",
+  type: "beach",
+},
 ```
 
-The goals array looks like this:
+Add an entry and a card appears under "On the list". There is one entry today,
+so there is one card.
+
+**About `imageUrl`:** if it points at another website, the card falls back to a
+stand-in photograph. See [Photographs](#photographs) for why.
+
+---
+
+## Ski days, books, films, reading
+
+**File:** [`lib/data.ts`](lib/data.ts) — GitHub web editor ✓
+
+```ts
+export const skiResorts = [
+  { name: "Snowbird", days: 18, vertical: 3100, runs: 330 },
+];
+```
+
+Days on snow, the resort count, the bars, the sparkline and the Ski goal gauge
+all come from this one list. The bars are drawn relative to the busiest
+resort, so they cannot disagree with the numbers beside them.
+
+```ts
+export const booksPerQuarter = [
+  { quarter: "Q2 26", books: 4 },   // the last two digits pick out this year
+];
+
+export const currentlyReading = [
+  { title: "…", author: "…", progress: 25, genre: "Sci-Fi", coverColor: "#1C1917" },
+];
+
+export const favoriteMovies = [
+  { title: "Backrooms", year: 2026, director: "…", genre: "Horror",
+    rating: 5, platform: "Theater", posterColor: "#C8973E" },
+];
+```
+
+`coverColor` and `posterColor` are left over from the old design and are not
+used any more. Harmless; leave them.
+
+---
+
+## Goals
+
+**File:** [`lib/data.ts`](lib/data.ts) → `goals` — GitHub web editor ✓
+
+**Edit only the `goal` number.**
 
 ```ts
 export const goals = [
   { label: "Adventures", current: 0, goal: 20, pct: 0 },
   { label: "Ski Days",   current: 0, goal: 40, pct: 0 },
-  { label: "Books Read", current: 7, goal: 20, pct: 35 },
-  { label: "Blog Posts", current: 0, goal: 5,  pct: 0 },
+  { label: "Books Read", current: 8, goal: 20, pct: 40 },
+  { label: "Blog Posts", current: 3, goal: 5,  pct: 60 },
 ];
 ```
 
-**How each goal's progress is calculated:**
+`current` and `pct` are **ignored**, and they are deliberately left wrong so
+nobody trusts them. Where you actually are is counted from the lists above —
+which is the point, because this array used to claim 0 adventures against four
+logged and 3 posts against two files, and the site printed both.
 
-| Goal | How `current` is set | What to edit |
-|---|---|---|
-| **Adventures** | Auto-counted from the `adventures` array (entries whose `date` starts with the current year) | Only edit `goal` — `current` and `pct` are ignored |
-| **Blog Posts** | Auto-counted from the actual MDX files in `content/posts/` (excludes drafts) | Only edit `goal` — `current` and `pct` are ignored |
-| **Ski Days** | Manual — update as the season progresses | Edit `current` and recalculate `pct = Math.round(current / goal * 100)` |
-| **Books Read** | Manual — update as you finish books | Edit `current` and recalculate `pct = Math.round(current / goal * 100)` |
+Each gauge in the Counted panel also carries a **notch** showing where a
+steady pace would have you today. Ahead of the notch fills vermilion, behind
+it fills ink.
 
-**At the start of each new year:** update `goalsYear`, reset `current` to `0` and `pct` to `0` for Ski Days and Books Read, and set new `goal` targets for all four.
+---
 
-### Books read per quarter (`booksPerQuarter`)
+## Photographs
 
-**File:** `lib/data.ts` — search for `export const booksPerQuarter`
+**Files:** [`public/images/`](public/images) and [`lib/copy.ts`](lib/copy.ts) → `plates` — GitHub web editor ✓
 
-Each entry is one quarter. Add a new row at the end when a new quarter starts:
+Every photograph on this site is **screened** — printed as halftone dots, the
+way a magazine prints a photograph, with the dot size worked out from the
+brightness of the picture underneath. Clicking one shows the real colour.
 
-```ts
-export const booksPerQuarter = [
-  { quarter: "Q1 24", books: 7 },
-  { quarter: "Q2 24", books: 8 },
-  // add new quarters here
-];
-```
+### Swapping a picture
 
-The quarter label format is `"Q# YY"` (e.g. `"Q1 25"` for January–March 2025).
-
-### Recent Favorite Movies (`favoriteMovies`)
-
-**File:** `lib/data.ts` — search for `export const favoriteMovies`
-
-Each entry is one movie card on the dashboard. Keep the list to 3–5 movies; remove older entries as you add new ones.
+1. Upload the file to `public/images/` (in GitHub: **Add file → Upload files**).
+2. In `lib/copy.ts`, find the entry in `plates` and change `src`:
 
 ```ts
-{
-  title: "Anora",
-  year: 2024,
-  director: "Sean Baker",
-  posterColor: "#C8973E",   // hex color for the poster color swatch
-  genre: "Drama",
-  rating: 5,                // whole number 1–5
-  platform: "Theater",      // optional — "Theater", "Netflix", "AppleTV+", "MUBI", etc.
+portraitHim: {
+  src: "/images/summit-selfie.jpg",   // ← change this
+  detail: "Self-timer · 2026",        // the caption in the colour view
+  crop: "0.24,0.44,0.34",
+  placeholder: true,                  // set to false once it is the real one
 },
 ```
 
-| Field         | Notes                                                                           |
-| ------------- | ------------------------------------------------------------------------------- |
-| `title`       | Movie title                                                                     |
-| `year`        | Release year                                                                    |
-| `director`    | Director's name                                                                 |
-| `posterColor` | Hex color for the cover swatch — pick something evocative of the film's palette |
-| `genre`       | Short label, e.g. `"Drama"` or `"Sci-Fi / Action"`                              |
-| `rating`      | Whole number 1–5                                                                |
-| `platform`    | Optional — omit if you don't remember or don't want to show it                  |
+### The picture must live in this repo
+
+A photograph on someone else's server **cannot be screened at all.** The
+halftone works by reading the individual pixels of the picture, and browsers
+refuse to let a page read pixels from an image it fetched off another domain.
+There is no way around it — the file has to be in `public/images/`.
+
+Two blog covers are remote today and fall back to a stand-in plate. Download
+them into `public/images/` and set `coverImage` in the post to that path, and
+they will screen properly.
+
+### `crop` is not a one-line edit
+
+`crop` is `across,down,zoom` as fractions. `0.5,0.5,1` is centred and
+full-frame. `0.24,0.44,0.34` is 24% across, 44% down, at a 34% zoom.
+
+**You cannot get this right by reading it.** Change it, let Vercel build the
+preview, look, nudge, repeat. Two quirks that will otherwise waste your time:
+
+- When the frame is **wider** than the photograph, the *across* value does
+  nothing at all. Only *down* and *zoom* move the picture.
+- `gamma` is the tone curve and it works backwards from what you would guess:
+  **raising it makes a dark-on-light picture lighter,** because the number
+  controls how much ink is laid down rather than how dark the result is. Leave
+  it at 1 unless a plate looks muddy.
+
+### Negative
+
+The button in the top bar runs the whole site as a photocopier would, and it
+remembers your choice. Every photograph is re-screened inverted. You do not
+have to do anything for a new picture to work in it.
 
 ---
 
-### KPI Cards
+## The family album
 
-The 4 stat cards pull from `dashboardStats` in `lib/data.ts`:
-
-**All four are derived. None of them is edited directly any more.**
-
-| Card              | Source                                   | How to update                                                        |
-|---|---|---|
-| GitHub Commits    | Live GitHub API on page load             | Automatic. `githubCommits` in `dashboardStats` is only the value shown before the request resolves |
-| Blog Posts        | Counted from `content/posts/*.mdx`       | Automatic — publish or delete an MDX file                            |
-| Books Read        | Summed from `booksPerQuarter`            | Add or edit a quarter in [`booksPerQuarter`](#books-read-per-quarter-booksperquarter). Editing `dashboardStats.booksReadThisYear` does nothing |
-| Countries Visited | Distinct `country` values in `adventures` | Add a trip with a new `country`. Editing `dashboardStats.countriesVisited` does nothing |
-
-`dashboardStats` used to hold twelve hand-kept numbers. Eight of them
-(`photosInLibrary`, `totalHikes`, `skiResortsVisited`, `utahNationalParks`,
-`elevationRecord`, `milesHiked`, `skiDays`, `statesVisited`) were never
-rendered anywhere and were deleted on 2 Sep 2026. They were removed rather than
-left in place because they read as authoritative while disagreeing with the
-derived figures beside them: `skiResortsVisited` said 8 against a `skiResorts`
-table totalling 5 resorts, and `countriesVisited` said 12 against a derived 2.
-
-The four that remain are pre-render fallbacks only — every one is replaced with
-a live or derived value before it reaches the screen.
-
----
-
-## Blog
-
-**File:** `content/posts/*.mdx` — GitHub web editor ✓
-
-Blog content lives entirely in these MDX files. Nothing in `lib/data.ts`
-duplicates it.
-
-### Publishing a new post
-
-1. Go to `content/posts/` in your GitHub repo.
-2. Click **Add file → Create new file**.
-3. Name it `your-post-slug.mdx` (lowercase, hyphens, no spaces).
-4. Paste this template at the top, fill in the fields, then write your post below in regular markdown:
-
-```
----
-title: "Your Post Title"
-author: "him"
-date: "2025-07-04"
-readTime: 5
-tags: ["Data Engineering", "Utah"]
-excerpt: "One or two sentences that appear in the blog card preview."
-coverImage: "/images/your-photo.jpg"
-draft: false
----
-
-Your post content goes here in regular Markdown.
-
-## Section Heading
-
-Write normally — bold, italic, code blocks, lists all work.
-```
-
-| Field        | Notes                                                                                         |
-| ------------ | --------------------------------------------------------------------------------------------- |
-| `author`     | `"him"`, `"her"`, or `"both"`                                                                 |
-| `date`       | `YYYY-MM-DD` format                                                                           |
-| `readTime`   | Estimated minutes — count ~200 words/min                                                      |
-| `tags`       | Must be in the `["Tag One", "Tag Two"]` format. Tags appear as filter chips on the blog page. |
-| `draft`      | `true` keeps the post out of the blog index, the home-page teaser and the post count. Omit it or set `false` to publish. **This only started working on 1 Sep 2026** — before that the index ignored the flag and published drafts anyway |
-| `coverImage` | A file in `public/images/` (e.g. `/images/your-photo.jpg`), or a remote URL from an allowlisted host — see [Uploading Photos](#uploading-photos). **Not** just any public URL |
-
-### Adding a real cover image to a post
-
-By default posts use placeholder images. To use a real photo:
-
-1. Drop the image into `public/images/` in the repo (see [Uploading Photos](#uploading-photos)).
-2. In the post's `.mdx` file, update the `coverImage` frontmatter field:
-   ```
-   coverImage: "/images/your-photo.jpg"
-   ```
-
-That's the whole job — one place, not two. An older version of this guide had
-a step 3 telling you to mirror the value into `export const blogPosts` in
-`lib/data.ts`. That array was never read by anything and was deleted on
-2 Sep 2026, along with the `BlogPost` interface it used and a duplicate
-`Author` type — 56 lines in total.
-
-**`content/posts/*.mdx` is the single source of truth for blog content.** Every
-blog surface — the index, the home-page teaser, the post page and the dashboard
-post count — reads the MDX frontmatter through `lib/posts.ts`. There is nothing
-in `lib/data.ts` to keep in step.
-
-### Editing an existing post
-
-Open the `.mdx` file in `content/posts/` and edit directly. Both the frontmatter fields and the body text are editable.
-
-### Removing a post
-
-Delete the `.mdx` file. It disappears from the blog index automatically.
-
----
-
-## Now
-
-**File:** `content/now.json` — GitHub web editor ✓
-
-This single file drives both the **Currently widget on the home page** and the full **/now page**.
-
-```json
-{
-  "updatedAt": "July 2025",
-
-  "currently": {
-    "reading": "Short one-liner for the home widget",
-    "watching": "Short one-liner for the home widget",
-    "building": "Short one-liner for the home widget",
-    "listening": "Short one-liner for the home widget"
-  },
-
-  "building": [
-    "Oyarzun.com — this very site",
-    "A personal data lakehouse on AWS with dbt + Redshift"
-  ],
-
-  "reading": {
-    "him": "Designing Data-Intensive Applications by Martin Kleppmann",
-    "her": "The Data Warehouse Toolkit by Ralph Kimball"
-  },
-
-  "watching": [
-    "Severance (Season 2) — This show is everything.",
-    "The Bear (Rewatch) — Still stressful."
-  ],
-
-  "listening": ["Hozier", "Lord Huron", "Khruangbin"],
-
-  "utahStatus": [
-    "Ski season is HERE. Park City opening day was absolutely amazing.",
-    "Planning a spring trip to Havasupai Falls in Arizona."
-  ],
-
-  "excitedAbout": [
-    "dbt 1.9 features dropping this month",
-    "Watching the Utah tech scene grow into something special",
-    "Our first family ski trip with the kids this February"
-  ]
-}
-```
-
-### Tips
-
-- **`updatedAt`** — update this whenever you edit the file so readers know it's fresh.
-- **`currently.*`** — keep these short (under ~40 characters), they show as a single line on the home page.
-- **Arrays** (`building`, `watching`, `listening`, `utahStatus`, `excitedAbout`) — add or remove items freely. Each item in the array becomes one bullet on the Now page.
-- **`reading`** is structured differently because Tommy and Julia each get their own line. Change `him` and `her` separately.
-
----
-
-## Footer
-
-**File:** `components/layout/Footer.tsx` — GitHub web editor ✓
-
-The footer has four columns: Brand, Site, Connect, and Family. Each is edited in a different part of the file.
-
----
-
-### Tagline and description text
-
-Find these two lines near the top of the `Footer` component:
-
-```tsx
-Built with ❤️ and data in Utah
-```
-
-```tsx
-Personal site for Tommy Oyarzun and Julia Velicev. Data, mountains, and family life in the Wasatch.
-```
-
-Edit the text between the tags. Keep the tagline short (one line) and the description to 1–2 sentences.
-
----
-
-### Site column (internal navigation links)
-
-Find the `siteLinks` array at the top of the file:
+**File:** [`lib/copy.ts`](lib/copy.ts) → `gallery` — GitHub web editor ✓
 
 ```ts
-const siteLinks = [
-  { label: "Home", href: "/" },
-  { label: "Profiles", href: "/profiles" },
-  { label: "Travels", href: "/travels" },
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "Blog", href: "/blog" },
-  { label: "Now", href: "/now" },
-  { label: "Family Hub", href: "/family" },
+export const gallery = [
+  "/images/switzerland-dock.jpg",
+  "/images/summit-selfie.jpg",
+  "/images/dimple-dell-3d.jpg",
 ];
 ```
 
-- **To rename a link:** change the `label` value.
-- **To remove a link:** delete the entire `{ label: ..., href: ... }` line.
-- **To add a link:** add a new `{ label: "Name", href: "/path" }` entry. Don't change existing `href` values or the links will break.
+Twenty frames are drawn, cycling through this list, each with its own crop.
+Add paths and the wall gets more variety. The crops come from a fixed seed, so
+a rebuild never reshuffles it.
+
+### ⚠️ The password box checks nothing
+
+Anyone who presses Enter gets in. This has always been true — the old gate did
+the same. The album is kept private by two things that **do** work:
+
+1. the page tells search engines not to index it (`noindex, nofollow`)
+2. the address is not linked from anywhere public
+
+**Do not describe this gate to anyone as protecting the photographs.** Real
+privacy needs the images served from behind a password check on the server,
+which is a developer task.
 
 ---
 
-### Connect column (social icons)
+## Publishing a blog post
 
-Each social link is an `<a>` tag inside the Connect column. Find the block that looks like:
+**Folder:** [`content/posts/`](content/posts) — GitHub web editor ✓
 
-```tsx
-<a href="https://github.com/tjoyarzun" ...>
-<a href="https://linkedin.com/in/tom-oyarzun" ...>
-<a href="https://letterboxd.com/toyarzun" ...>
-```
+This is unchanged from before. One Markdown file per post; the filename is the
+web address.
 
-To update a URL, replace the value inside `href="..."`. Keep the rest of the tag (the `target`, `rel`, `aria-label`, and icon) intact.
+1. **Add file → Create new file** in `content/posts/`
+2. Name it `my-new-post.mdx` — lowercase, hyphens, no spaces. It becomes
+   `oyarzun.com/written/my-new-post`.
+3. Paste this at the top, between the two `---` lines, and edit it:
 
+```mdx
+---
+title: "The title, as it should appear"
+author: "him"
+date: "2026-09-14"
+readTime: 6
+tags: ["Analytics", "Data"]
+excerpt: "One or two sentences. Shown in the index and used as the description when the post is shared."
+coverImage: "/images/my-cover.jpg"
+draft: false
 ---
 
-### Family column (external family sites)
+Your first paragraph. This one gets the big initial letter.
 
-Find the "Col 4: Family sites" block. Each external link looks like:
+## A subheading
 
-```tsx
-<a href="https://tomas.oyarzun.com" ...>
-  Tomas Oyarzun
-  <ExternalLink ... />
-</a>
+More text. **Bold** and *italic* work, and so do lists:
+
+- one
+- two
+
+> A quotation, which is set large and reversed out between two rules.
 ```
 
-- **To update a URL:** replace the `href` value.
-- **To rename the link text:** replace the text between `>` and `<ExternalLink`.
-- **To add a family site:** copy one of the `<li>` blocks and paste it below. Update the `href` and link text.
-- **To remove a site:** delete the entire `<li>...</li>` block.
+**The fields:**
 
----
-
-### Bottom bar
-
-The copyright line and "Made in Utah" badge are at the very bottom of the file:
-
-```tsx
-&copy; {new Date().getFullYear()} Oyarzun.com &middot; All rights reserved
-```
-
-```tsx
-Made in Utah;
-```
-
-Edit the text directly. The year updates automatically via `new Date().getFullYear()` — don't touch that part.
-
----
-
-## Uploading Photos
-
-For any section where you want to use a real photo instead of a placeholder:
-
-1. In GitHub, navigate to `public/images/` in the repo.
-2. Click **Add file → Upload files** and drop your image in.
-3. Reference it as `/images/your-filename.jpg` in any `imageUrl` or `coverImage` field.
-
-### Using a remote image URL
-
-Every image on the site now renders through Next.js's image optimiser, which
-**refuses any host not on an allowlist**. Point a field at an unlisted host and
-you get a broken image — the build still passes, so nothing warns you.
-
-Currently allowed, in `next.config.mjs`:
-
-| Host | Used by |
+| Field | Notes |
 |---|---|
-| `picsum.photos` | family photos, feed, albums, gate background, adventures |
-| `images.unsplash.com` | a blog cover |
-| `img-v3.deepdreamgenerator.com` | a blog cover |
-| `lh3.googleusercontent.com` | the Tahiti bucket-list photo |
+| `author` | `"him"`, `"her"` or `"both"` — sets the byline and the profile link |
+| `date` | `YYYY-MM-DD`. The index is newest first. |
+| `readTime` | minutes, your estimate |
+| `tags` | shown on the index row and in the margin of the post |
+| `excerpt` | keep it to two sentences; it is also the share description |
+| `coverImage` | put the file in `public/images/` and use `/images/name.jpg` |
+| `draft` | `true` hides it from the site completely |
 
-To use a new host, add it to `remotePatterns` in `next.config.mjs`:
+**Two things happen on their own when you publish:**
 
-```js
-{ protocol: "https", hostname: "your-host.com" },
-```
+- The post appears in the numbered index, and one "Unwritten" slot disappears.
+- Every `{posts}` and `{slotsOpen}` figure across the site updates — the
+  Counted panel, the Written goal gauge, the standfirst, the Right-now row.
 
-Uploading into `public/images/` avoids this entirely and is the simpler path.
+**The first letter of your first paragraph** is set as a large initial in a
+vermilion box. If your post opens on an acronym — "AI will not…" — the site
+notices and skips the initial, because it would otherwise print a boxed **A**
+followed by "I will not…".
 
-**Tips:**
+To **edit** a post, edit the file. To **remove** one, either delete the file
+or set `draft: true`, which keeps the text for later.
 
-- Keep images under 1MB for fast load times. JPG is preferred over PNG for photos.
-- If your photo is a HEIC (iPhone) or DNG (RAW), convert it to JPG first using the Mac Photos app (File → Export → Export 1 Photo → JPG).
-- Name files clearly: `zermatt-ski-2023.jpg` not `IMG_4821.jpg`.
+---
+
+## The colophon at the foot
+
+**File:** [`lib/copy.ts`](lib/copy.ts) → `colophon` — GitHub web editor ✓
+
+The long paragraph at the bottom of every page, describing how the site is
+made.
+
+**⚠️ It ends with "No analytics, no newsletter, nothing here is measuring
+you."** That sentence is only true while the analytics package stays out of
+`app/layout.tsx`. If analytics is ever added back, this sentence has to change
+in the same commit — and so do two readouts, the "None / Analytics on this
+site" tile on the cover and the "Not doing / Measuring you" row in Right now.
+
+---
+
+## What updates itself
+
+You never edit these:
+
+| Thing | How |
+|---|---|
+| Commit count and the 52-week grid | fetched live from the GitHub API on page load |
+| The commit sparkline in the panel | same request as the count, so they always agree |
+| Nights, countries, trips | counted from `adventures` |
+| Days on snow, resort count | counted from `skiResorts` |
+| Books this year | summed from `booksPerQuarter` for the current year |
+| Posts published, slots open | counted from `content/posts/` |
+| Every goal gauge and its pace notch | derived, and the notch from today's date |
+| The route chart | drawn from the `lat`/`lng` on each trip |
+| Both spider charts | drawn from the two `skills` lists |
+| The running head and page number | follow you as you scroll |
+| Every headline's size | fitted to the width of the page |
+
+If the GitHub API is unreachable, the commit grid says so rather than drawing
+plausible-looking fake data.
+
+---
+
+## What still needs a developer
+
+Honest list. These are not edits you can make in the web editor:
+
+| Change | Why |
+|---|---|
+| Adding or removing a department | It is a section of a page, not a content field |
+| Renaming a nav item | `components/thrasher/Nav.tsx` |
+| A link inside a paragraph | The copy file is plain text on purpose, so a stray `<` can never break the page |
+| The tag filter under "Everything written" | The tags show, but filtering is not built |
+| A screened treatment for the Vimeo player and the 3D walkthrough | Both are plain links today |
+| Real privacy on the family album | Needs a server-side check |
+| Colours, type sizes, spacing | `app/globals.css` |
+| Halftone `crop` and `gamma` by feel | Editable, but needs the preview to judge — see [Photographs](#photographs) |
+
+---
+
+## Checking your work
+
+**You cannot break the live site by editing these files.** Two safety nets:
+
+1. **A typo stops the build.** Delete a quote or a comma and Vercel fails the
+   build with an error naming the file and the line. The old version keeps
+   serving.
+2. **Every commit gets a preview.** Vercel comments a preview link on the
+   commit. Look at it before merging.
+
+A quick checklist after an edit:
+
+- [ ] Does the preview build succeed?
+- [ ] Any `{tokens}` printed literally on the page? That is a misspelt token.
+- [ ] If you changed the Right-now rows, did you change `updated` as well?
+- [ ] If you swapped a photograph, does the crop still frame it? Check on a
+      phone as well — the plates are cropped to the same fractions at every
+      size but the frame shape changes.
+- [ ] If you edited something and nothing changed, check you were not in one
+      of the [39 dead files](#-read-this-before-you-edit-anything).
+
+### If a build fails
+
+The error names the file and the line. It is almost always one of three
+things: a missing `"` , a missing `,` at the end of a line, or a `{` without
+its matching `}`. Compare the block you edited against the one above it — they
+have the same shape.

@@ -1,94 +1,84 @@
 import Plate from "@/components/thrasher/Plate";
 import { Caption, DeptBar, Mast } from "@/components/thrasher/editorial";
-import { figures } from "@/lib/thrasher/issue";
+import { departments, plates } from "@/lib/copy";
+import { fill, lines, rich } from "@/lib/thrasher/fill";
 
 /**
  * 01 · Cover.
  *
- * The cover plate is the one screened at the coarsest ruling (5.0px) and the
- * only one reversed out — light ink on a dark ground — because it is printed
- * at the largest reproduction size in the issue. Screen ruling is keyed to
+ * Every word on this page comes from `departments.cover` in lib/copy.ts and
+ * every photograph from `plates` in the same file. Nothing here is written in
+ * this component, which is the point: the copy is editable in a browser and
+ * the layout is not something you should have to read to change a sentence.
+ *
+ * The cover plate is screened at the coarsest ruling (5.0px) and is the only
+ * one reversed out — light ink on a dark ground — because it is printed at
+ * the largest reproduction size in the issue. Screen ruling is keyed to
  * reproduction size throughout, so the dots read at a constant optical weight
  * whether the plate is 1200px wide or 180px.
  */
 export default function Cover() {
-  return (
-    <section className="dept" id="cover" data-dept="Cover" data-folio="01">
-      <DeptBar folio="01" name="Cover" kicker="Issue 04 · September 2026" />
+  const c = departments.cover;
+  const p = plates.cover;
 
-      <Mast
-        kicker="Two subjects · one valley · Sandy, Utah"
-        headline="Oyarzun"
-        stats={
-          <>
-            Issue 04 · September 2026
-            <br />
-            4,505 ft above sea level
-            <br />
-            Nothing here is measuring you
-          </>
-        }
-      >
-        <p>
-          He runs analytics at Domo. She engineers data at SeekWell. They met at
-          Overstock and never left Utah. Everything here was counted by hand.
-        </p>
+  return (
+    <section className="dept" id="cover" data-dept={c.name} data-folio={c.folio}>
+      <DeptBar folio={c.folio} name={c.name} kicker={fill(c.deptKicker)} />
+
+      <Mast kicker={c.kicker} headline={c.headline} stats={lines(c.stats)}>
+        {c.dek.map((para, i) => (
+          <p key={i}>{rich(para)}</p>
+        ))}
       </Mast>
 
       <div className="sec" style={{ marginTop: 18 }}>
         <div className="cover" style={{ marginTop: 0 }}>
           <Plate
-            full="/images/summit-selfie.jpg"
-            title="Top of the ridge, Little Cottonwood"
-            detail="Self-timer · 2026"
+            full={p.src}
+            title={p.title ?? "Cover photograph"}
+            detail={p.detail}
             label="Show the cover photograph in colour"
             pitch={5.0}
             gamma={1.02}
             ar={2.35}
             ink="#dcd9d0"
             paper="#141414"
-            crop="0.44,0.58,0.90"
+            crop={p.crop}
           />
           <div className="ov">
             <h2>
-              Two people,
-              <br />
-              one valley
+              {c.coverTitle.map((l, i) => (
+                <span key={i}>
+                  {i > 0 ? <br /> : null}
+                  {l}
+                </span>
+              ))}
             </h2>
-            <p>
-              Twelve years of analytics and ten of data engineering, at the
-              bottom of a wall that goes up eleven thousand feet.
-            </p>
+            <p>{rich(c.coverBlurb)}</p>
           </div>
         </div>
         <Caption
-          left="Cover · the ridge above Little Cottonwood"
+          left={
+            p.placeholder
+              ? "Placeholder cover — swap `plates.cover.src` in lib/copy.ts"
+              : "Cover · the ridge above Little Cottonwood"
+          }
           right="Screen 5.0px · 45°"
         />
       </div>
 
       <div className="sec">
         <div className="figstrip">
-          <div className="f">
-            <div className="v" data-commits>
-              {figures.githubCommits.toLocaleString()}
+          {c.figures.map((f) => (
+            <div className={f.highlight ? "f hl" : "f"} key={f.label}>
+              {/* data-commits lets the live GitHub figure overwrite the
+                  build-time one; it is harmless on the others. */}
+              <div className="v" data-commits={f.value === "{commits}" ? "" : undefined}>
+                {fill(f.value)}
+              </div>
+              <div className="k">{f.label}</div>
             </div>
-            <div className="k">Github commits</div>
-          </div>
-          <div className="f">
-            <div className="v">{figures.nightsAway}</div>
-            <div className="k">Nights away, 2026</div>
-          </div>
-          <div className="f">
-            <div className="v">{figures.skiDays}</div>
-            <div className="k">Days on snow</div>
-          </div>
-          {/* FLAG: this tile and the colophon both claim no analytics, which is
-              not true while @vercel/analytics is mounted. Decision pending. */}
-          <div className="f hl">
-            <div className="v">None</div>
-            <div className="k">Analytics on this site</div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

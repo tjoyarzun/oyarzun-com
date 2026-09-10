@@ -17,6 +17,7 @@ import {
   adventures,
   booksReadThisYear,
   dashboardStats,
+  goals,
   skiResorts,
   travelStats,
 } from "@/lib/data";
@@ -29,15 +30,29 @@ export const skiDays = skiResorts.reduce((sum, r) => sum + r.days, 0);
 export const postsPublished = getAllPosts().filter((p) => !p.draft).length;
 
 /**
- * The 2026 targets. Only the goal is a constant; every `current` is derived,
- * so a bar can never disagree with the department it sits next to.
+ * The 2026 targets and where we are against them.
+ *
+ * The TARGET comes from `goals` in lib/data.ts, so raising a goal is an edit
+ * to the documented facts file rather than to this one. The label the site
+ * prints is set here, because it is display copy — data.ts says "Blog Posts"
+ * and the department is called Written.
+ *
+ * Every `current` is DERIVED. That is the whole point: `goals` in data.ts
+ * also carries hand-kept `current` values, and they had already drifted to
+ * 0 adventures against four logged and 3 posts against two files.
  */
+const target = (label: string, fallback: number): number =>
+  goals.find((g) => g.label === label)?.goal ?? fallback;
+
 export const GOALS = [
-  { label: "Ski days", current: skiDays, goal: 40 },
-  { label: "Books", current: booksReadThisYear, goal: 20 },
-  { label: "Written", current: postsPublished, goal: 5 },
-  { label: "Adventures", current: adventures.length, goal: 20 },
+  { label: "Ski days", current: skiDays, goal: target("Ski Days", 40) },
+  { label: "Books", current: booksReadThisYear, goal: target("Books Read", 20) },
+  { label: "Written", current: postsPublished, goal: target("Blog Posts", 5) },
+  { label: "Adventures", current: adventures.length, goal: target("Adventures", 20) },
 ] as const;
+
+/** The writing target, used by the copy tokens {postsGoal} and {slotsOpen}. */
+export const postsGoal = target("Blog Posts", 5);
 
 export const figures = {
   /** Seed value; the live figure comes from the GitHub API client-side. */

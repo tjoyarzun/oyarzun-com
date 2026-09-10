@@ -13,6 +13,7 @@
    ═══════════════════════════════════════════════════════════════════════ */
 
 import { halftone, paintAllPlates } from "./halftone";
+import { gallery } from "@/lib/copy";
 
 /** Read the live design-system colours, so every drawing inverts with the page. */
 function tokens() {
@@ -447,13 +448,11 @@ function initDepartments(): void {
 function drawGallery(): void {
   const g = document.getElementById("gal");
   if (!g) return;
-  /* Placeholder sources until the real album lands. Deterministic crops so a
-     rebuild does not reshuffle the wall. */
-  const src = [
-    "/images/switzerland-dock.jpg",
-    "/images/summit-selfie.jpg",
-    "/images/dimple-dell-3d.jpg",
-  ];
+  /* Sources come from `gallery` in lib/copy.ts, so adding a photograph to
+     the album is an edit to that file rather than to this one. Crops are
+     chosen from a fixed seed, so a rebuild never reshuffles the wall. */
+  const src = gallery;
+  if (!src.length) return;
   let s = 77;
   const rnd = () => {
     s = (s * 1103515245 + 12345) & 0x7fffffff;
@@ -461,7 +460,7 @@ function drawGallery(): void {
   };
   let h = "";
   for (let i = 0; i < 20; i++) {
-    const f = src[i % 3];
+    const f = src[i % src.length];
     const x = (0.28 + rnd() * 0.44).toFixed(2);
     const y = (0.26 + rnd() * 0.46).toFixed(2);
     const z = (0.34 + rnd() * 0.34).toFixed(2);

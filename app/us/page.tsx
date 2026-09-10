@@ -10,6 +10,8 @@ import {
   SectionHead,
 } from "@/components/thrasher/editorial";
 import { profiles } from "@/lib/data";
+import { plates, us as copy } from "@/lib/copy";
+import { lines, rich } from "@/lib/thrasher/fill";
 import { figures } from "@/lib/thrasher/issue";
 
 /**
@@ -43,28 +45,13 @@ export default function Us() {
       <main id="main" className="spread">
         <Mast
           tight={false}
-          kicker="Twelve years and ten years, five of them in the same building"
-          headline="The two of us"
-          stats={
-            <>
-              {him.name} · {him.title}, {him.company}
-              <br />
-              {her.name} · {her.title}, {her.company}
-              <br />
-              {figures.githubCommits.toLocaleString()} commits · 19 years between us
-            </>
-          }
+          kicker={copy.kicker}
+          headline={copy.headline}
+          stats={lines(copy.stats)}
         >
-          <p>
-            Twelve years of analytics and ten of data engineering. Five of those
-            years were spent in the same building, on different floors, before
-            either of us thought to mention it.
-          </p>
-          <p>
-            Both stacks below are plotted on the same ten axes, so the two
-            shapes mean the same thing. Everything on this page comes out of one
-            file.
-          </p>
+          {copy.dek.map((para, i) => (
+            <p key={i}>{rich(para)}</p>
+          ))}
         </Mast>
 
         <div className="sec">
@@ -72,9 +59,7 @@ export default function Us() {
             <ProfileColumn
               who="him"
               profile={him}
-              /* PLACEHOLDER — the summit photograph standing in for a
-                 portrait. Swap the path; the crop needs re-tuning per image. */
-              portrait={{ src: "/images/summit-selfie.jpg", crop: "0.24,0.44,0.34" }}
+              portrait={plates.portraitHim}
               years={12}
               place="Sandy, UT · 4,505 ft"
               extraFields={[
@@ -94,11 +79,7 @@ export default function Us() {
             <ProfileColumn
               who="her"
               profile={her}
-              portrait={{
-                src: her.recognition?.certificateUrl ?? "/images/Julia_Velicev.png",
-                crop: "0.70,0.30,0.44",
-                gamma: 1.06,
-              }}
+              portrait={plates.portraitHer}
               years={10}
               place="Draper, UT · hybrid"
               extraFields={[
@@ -112,18 +93,9 @@ export default function Us() {
                 <br />
                 –2019
               </div>
-              <p>
-                <b>Same company, five years, different floors.</b> He was
-                Manager of BI Development at Overstock.com while she was growing
-                from BI Developer to Manager of Data Engineering there. Her
-                tenure ran to 2023 — nine years in all.
-              </p>
+              <p>{rich(copy.overlapText)}</p>
               <div className="mono" style={{ textAlign: "right" }}>
-                Overstock.com
-                <br />
-                Midvale, Utah
-                <br />
-                The overlap
+                {lines(copy.overlapStats)}
               </div>
             </div>
           </div>
@@ -196,7 +168,7 @@ export default function Us() {
 
         <div className="sec">
           <div className="end">
-            <div className="kick">Back to the issue</div>
+            <div className="kick">{copy.backLabel}</div>
             <div style={{ display: "flex", gap: 9, marginTop: 13, flexWrap: "wrap" }}>
               <Link className="btn gho" href="/#two">
                 The issue

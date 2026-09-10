@@ -2,6 +2,8 @@ import Link from "next/link";
 import Plate from "@/components/thrasher/Plate";
 import { Caption, DeptBar, Mast } from "@/components/thrasher/editorial";
 import { profiles } from "@/lib/data";
+import { departments, plates } from "@/lib/copy";
+import { fill, lines, rich } from "@/lib/thrasher/fill";
 import { axesFor, figures } from "@/lib/thrasher/issue";
 
 /**
@@ -18,6 +20,7 @@ import { axesFor, figures } from "@/lib/thrasher/issue";
  */
 export default function TwoOfUs() {
   const { him, her } = profiles;
+  const d = departments.two;
   const strongest = (who: "him" | "her") =>
     axesFor(who).reduce((a, b) => (b.value > a.value ? b : a));
 
@@ -39,11 +42,7 @@ export default function TwoOfUs() {
     {
       who: "her" as const,
       profile: her,
-      portrait: {
-        src: her.recognition?.certificateUrl ?? "/images/Julia_Velicev.png",
-        crop: "0.70,0.30,0.44",
-        gamma: 1.06,
-      },
+      portrait: plates.portraitHer,
       facts: [
         ["Years in field", "10"],
         [
@@ -62,30 +61,12 @@ export default function TwoOfUs() {
       data-dept="The two of us"
       data-folio="02"
     >
-      <DeptBar
-        folio="02"
-        name="The two of us"
-        kicker="The feature · full spread at /us"
-      />
+      <DeptBar folio={d.folio} name={d.name} kicker={fill(d.deptKicker)} />
 
-      <Mast
-        kicker="Twelve years and ten years, five of them in the same building"
-        headline="The two of us"
-        stats={
-          <>
-            {him.name} · {him.title}, {him.company}
-            <br />
-            {her.name} · {her.title}, {her.company}
-            <br />
-            Both in Sandy, Utah
-          </>
-        }
-      >
-        <p>
-          Twelve years of analytics and ten of data engineering. Five of those
-          years were spent in the same building, on different floors, before
-          either of us thought to mention it.
-        </p>
+      <Mast kicker={d.kicker} headline={d.headline} stats={lines(d.stats)}>
+        {d.dek.map((para, i) => (
+          <p key={i}>{rich(para)}</p>
+        ))}
       </Mast>
 
       <div className="sec">
@@ -134,35 +115,27 @@ export default function TwoOfUs() {
 
           <div className="overlap" id="overlap">
             <div className="big">
-              2014
-              <br />
-              –2019
+              {d.overlapYears.map((y, i) => (
+                <span key={i}>
+                  {i > 0 ? <br /> : null}
+                  {y}
+                </span>
+              ))}
             </div>
-            <p>
-              <b>Same company, five years, different floors.</b> He was Manager
-              of BI Development at Overstock.com while she was growing from BI
-              Developer to Manager of Data Engineering there.
-            </p>
+            <p>{rich(d.overlapText)}</p>
             <div className="mono" style={{ textAlign: "right" }}>
-              Overstock.com
-              <br />
-              Midvale, Utah
-              <br />
-              The overlap
+              {lines(d.overlapStats)}
             </div>
           </div>
         </div>
 
         <div className="teaseout">
           <div>
-            <div className="kick">The full spread</div>
-            <p>
-              Both stacks on the same ten axes, careers in full, every project,
-              the commit year, and the certificate at reproduction size.
-            </p>
+            <div className="kick">{d.teaseLabel}</div>
+            <p>{rich(d.teaseBlurb)}</p>
           </div>
           <Link className="btn" href="/us">
-            Read the feature
+            {d.teaseCta}
           </Link>
         </div>
         <Caption left="Teaser · the department itself is a route" right="/us" />

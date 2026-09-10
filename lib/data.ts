@@ -671,6 +671,20 @@ export const recentActivities = [
 
 export const goalsYear = "2026";
 
+/**
+ * The 2026 targets.
+ *
+ * `goal` is the number to edit — it is read by lib/thrasher/issue.ts, which
+ * is what draws the gauges in the Counted panel.
+ *
+ * `current` and `pct` are IGNORED by the live site and are deliberately left
+ * wrong so nobody trusts them: the real values are derived from the arrays in
+ * this file (adventures, skiResorts, booksPerQuarter, content/posts), because
+ * hand-kept progress is exactly what drifted before — this array claimed 0
+ * adventures against four logged and 3 posts against two files. They survive
+ * only because the pre-redesign components/dashboard/GoalsChart.tsx still
+ * imports them; delete both fields when that file goes.
+ */
 export const goals = [
   { label: "Adventures", current: 0, goal: 20, pct: 0 },
   { label: "Ski Days", current: 0, goal: 40, pct: 0 },

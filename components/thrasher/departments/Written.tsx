@@ -7,7 +7,9 @@ import {
   SectionHead,
 } from "@/components/thrasher/editorial";
 import { getAllPosts } from "@/lib/posts";
-import { GOALS, dateline, plateSource } from "@/lib/thrasher/issue";
+import { departments } from "@/lib/copy";
+import { fill, lines, rich } from "@/lib/thrasher/fill";
+import { dateline, plateSource, postsGoal } from "@/lib/thrasher/issue";
 
 /**
  * 06 · Written.
@@ -24,37 +26,19 @@ const AUTHOR = { him: "Him", her: "Her", both: "Both" } as const;
 export default function Written() {
   const posts = getAllPosts().filter((p) => !p.draft);
   const [featured] = posts;
-  const goal = GOALS.find((g) => g.label === "Written");
-  const remaining = Math.max(0, (goal?.goal ?? 5) - posts.length);
+  const remaining = Math.max(0, postsGoal - posts.length);
 
   const cover = featured ? plateSource(featured.coverImage) : null;
+  const d = departments.written;
 
   return (
-    <section className="dept" id="written" data-dept="Written" data-folio="06">
-      <DeptBar
-        folio="06"
-        name="Written"
-        kicker={`${posts.length} posts · ${new Set(posts.map((p) => p.author)).size} authors`}
-      />
+    <section className="dept" id="written" data-dept={d.name} data-folio={d.folio}>
+      <DeptBar folio={d.folio} name={d.name} kicker={fill(d.deptKicker)} />
 
-      <Mast
-        kicker="Two posts · two authors · each with its own address"
-        headline="Written"
-        stats={
-          <>
-            {posts.length} published · 0 drafts
-            <br />
-            next-mdx-remote
-            <br />
-            /written/&lt;slug&gt;
-          </>
-        }
-      >
-        <p>
-          Two posts so far against a target of five. Each one is its own page
-          with its own address, because a post you cannot link to is not
-          published.
-        </p>
+      <Mast kicker={d.kicker} headline={d.headline} stats={lines(d.stats)}>
+        {d.dek.map((para, i) => (
+          <p key={i}>{rich(para)}</p>
+        ))}
       </Mast>
 
       {featured && cover ? (
@@ -109,10 +93,10 @@ export default function Written() {
       <div className="sec">
         <SectionHead
           no="·"
-          title="Everything written"
+          title={d.indexTitle}
           right={
             <>
-              {posts.length} of {goal?.goal ?? 5} for 2026
+              {posts.length} of {postsGoal} for 2026
               <br />
               Newest first
             </>
@@ -153,11 +137,9 @@ export default function Written() {
                 {String(posts.length + i + 1).padStart(2, "0")}
               </div>
               <div>
-                <h3 className="wt">Unwritten</h3>
+                <h3 className="wt">{d.emptyTitle}</h3>
                 <p className="wx">
-                  {i === 0
-                    ? "Next up. The slots are drawn so the gap to the 2026 goal is part of the list rather than a claim above it."
-                    : ""}
+                  {i === 0 ? fill(d.emptyFirstBlurb) : ""}
                 </p>
               </div>
               <div className="wm2">

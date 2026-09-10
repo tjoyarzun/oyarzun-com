@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Caption, SectionHead } from "@/components/thrasher/editorial";
 import { mountAlbum } from "@/lib/thrasher/behaviours";
+import { family as copy } from "@/lib/copy";
 
 /**
  * The gate and the album.
@@ -44,14 +45,14 @@ export default function FamilyAlbum() {
           }}
         >
           <div className="gt">
-            Password
-            <br />
-            required
+            {copy.gateHeadline.map((l, i) => (
+              <span key={i}>
+                {i > 0 ? <br /> : null}
+                {l}
+              </span>
+            ))}
           </div>
-          <p>
-            Ask either of us. There is no reset link and no account to make,
-            because there is no account.
-          </p>
+          <p>{copy.gateText}</p>
           <div className="fld2">
             <input
               type="password"
@@ -92,12 +93,15 @@ export default function FamilyAlbum() {
           </>
         ) : (
           <div className="gate" aria-hidden="true">
-            <div className="gt" style={{ color: "var(--ink45)" }}>
-              Twenty
-              <br />
-              frames
+            <div className="gt" style={{ color: "var(--cap)" }}>
+              {copy.lockedHeadline.map((l, i) => (
+                <span key={i}>
+                  {i > 0 ? <br /> : null}
+                  {l}
+                </span>
+              ))}
             </div>
-            <p>Behind the gate. Nothing here is indexed and nothing is shared.</p>
+            <p>{copy.lockedText}</p>
           </div>
         )}
       </div>

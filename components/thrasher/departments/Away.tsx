@@ -1,6 +1,8 @@
 import Plate from "@/components/thrasher/Plate";
 import { Caption, DeptBar, Mast, SectionHead } from "@/components/thrasher/editorial";
-import { adventures } from "@/lib/data";
+import { adventures, bucketListItems } from "@/lib/data";
+import { departments, plates } from "@/lib/copy";
+import { fill, lines, rich } from "@/lib/thrasher/fill";
 import { dateline, figures } from "@/lib/thrasher/issue";
 
 /**
@@ -17,45 +19,16 @@ export default function Away() {
   const countries = Array.from(
     new Set(adventures.map((a) => a.country ?? "USA")),
   );
+  const d = departments.away;
 
   return (
-    <section className="dept" id="away" data-dept="Fernweh" data-folio="04">
-      <DeptBar
-        folio="04"
-        name="Fernweh"
-        kicker={`${figures.adventuresLogged} adventures · ${figures.countriesVisited} countries · ${figures.nightsAway} nights`}
-      />
+    <section className="dept" id="away" data-dept={d.name} data-folio={d.folio}>
+      <DeptBar folio={d.folio} name={d.name} kicker={fill(d.deptKicker)} />
 
-      {/* The headline is a fixed word, not the count.
-          "18 nights" already derived correctly from the adventures array — but
-          putting a growing number in the masthead means the type re-fits and
-          the whole department re-flows every time a trip is logged, and the
-          headline changes meaning as it changes value. Fernweh is the German
-          for the ache to be somewhere far off — the far-sickness that is the
-          opposite of homesickness. The count moves to the department bar,
-          where it can grow without moving anything. */}
-      <Mast
-        kicker="Fernweh · the ache to be somewhere far off"
-        headline="Fernweh"
-        stats={
-          <>
-            {countries.join(" · ")}
-            <br />
-            {figures.adventuresLogged} adventures logged
-            <br />
-            {figures.skiDays} ski days, separately
-          </>
-        }
-      >
-        <p>
-          German. The ache to be somewhere far off — the opposite of
-          homesickness, and the more honest word for what a route chart is for.
-        </p>
-        <p>
-          {figures.adventuresLogged} adventures, {figures.countriesVisited}{" "}
-          countries, {figures.nightsAway} nights so far this year. Every figure
-          derived from the log below, so adding a trip updates all of them.
-        </p>
+      <Mast kicker={d.kicker} headline={d.headline} stats={lines(d.stats)}>
+        {d.dek.map((para, i) => (
+          <p key={i}>{rich(para)}</p>
+        ))}
       </Mast>
 
       <div className="sec" id="routes">
@@ -115,48 +88,42 @@ export default function Away() {
           {/* PLACEHOLDER PLATES — both screens point at stand-in photographs.
               Swap the `full`/`src` paths when the real ones land; the crop
               values will need re-tuning per image and nothing else. */}
+          {/* Rendered from `bucketListItems` in lib/data.ts — add an entry
+              there and a card appears. The plate falls back to a stand-in
+              from `plates` in lib/copy.ts, because a photograph on someone
+              else's server cannot be screened: the halftone engine reads
+              pixels off a canvas, and the browser refuses that for an image
+              fetched cross-origin. */}
           <div className="two" style={{ gap: 16 }}>
-            <div>
-              <Plate
-                full="/images/switzerland-dock.jpg"
-                title="Tahiti · French Polynesia"
-                detail="On the list · we do love beaches"
-                cta="Colour"
-                pitch={2.6}
-                ar={1.3}
-                crop="0.5,0.3,0.5"
-              />
-              <div className="bcard" style={{ marginTop: 8, paddingTop: 8 }}>
-                <div className="bh" style={{ fontSize: 15, margin: 0 }}>
-                  Tahiti
+            {bucketListItems.map((b, i) => {
+              const stand = i % 2 === 0 ? plates.bucketTahiti : plates.bucketUintas;
+              const remote = /^https?:\/\//.test(b.imageUrl ?? "");
+              return (
+                <div key={b.id}>
+                  <Plate
+                    full={remote || !b.imageUrl ? stand.src : b.imageUrl}
+                    title={`${b.name} · ${b.state}`}
+                    detail={b.description}
+                    cta="Colour"
+                    pitch={2.6}
+                    ar={1.3}
+                    crop={stand.crop}
+                  />
+                  <div className="bcard" style={{ marginTop: 8, paddingTop: 8 }}>
+                    <div className="bh" style={{ fontSize: 15, margin: 0 }}>
+                      {b.name}
+                    </div>
+                    <div
+                      className="kick"
+                      style={{ marginTop: 4, color: "var(--red-tx)" }}
+                    >
+                      {b.state}
+                      {b.type ? ` · ${b.type}` : ""}
+                    </div>
+                  </div>
                 </div>
-                <div
-                  className="kick"
-                  style={{ marginTop: 4, color: "var(--red-tx)" }}
-                >
-                  French Polynesia · beach
-                </div>
-              </div>
-            </div>
-            <div>
-              <Plate
-                full="/images/summit-selfie.jpg"
-                title="The Uintas · Utah"
-                detail="On the list"
-                cta="Colour"
-                pitch={2.6}
-                ar={1.3}
-                crop="0.68,0.5,0.5"
-              />
-              <div className="bcard" style={{ marginTop: 8, paddingTop: 8 }}>
-                <div className="bh" style={{ fontSize: 15, margin: 0 }}>
-                  The Uintas
-                </div>
-                <div className="kick" style={{ marginTop: 4 }}>
-                  Utah · on the list
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
       </div>

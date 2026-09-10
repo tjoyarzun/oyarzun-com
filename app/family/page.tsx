@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import FamilyAlbum from "@/components/thrasher/FamilyAlbum";
 import { Folio, Mast, RunningHead } from "@/components/thrasher/editorial";
+import { family as copy } from "@/lib/copy";
+import { lines, rich } from "@/lib/thrasher/fill";
 
 /**
  * /family — the one page in the issue that has to be a real route.
@@ -24,22 +26,13 @@ export default function Family() {
       <main id="main">
         <Mast
           tight={false}
-          kicker="For family · not indexed, not shared"
-          headline="Private"
-          stats={
-            <>
-              Password required
-              <br />
-              Twenty photographs
-              <br />
-              noindex, nofollow
-            </>
-          }
+          kicker={copy.kicker}
+          headline={copy.headline}
+          stats={lines(copy.stats)}
         >
-          <p>
-            This section is for family. Nothing behind it is indexed, nothing is
-            shared, and nothing on this site is measuring you.
-          </p>
+          {copy.dek.map((para, i) => (
+            <p key={i}>{rich(para)}</p>
+          ))}
         </Mast>
         <FamilyAlbum />
       </main>
