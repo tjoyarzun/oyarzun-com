@@ -337,6 +337,43 @@ function drawBooks(): void {
 }
 
 /* ── AdventureMap — a route chart on a real graticule ────────────────── */
+/* ── the coastline ───────────────────────────────────────────────────────
+   The route chart used to be a graticule with arcs on it and nothing else,
+   which is a coordinate grid rather than a map: there was no way to tell that
+   Rome is in Italy or San Francisco on a coast.
+
+   The outlines come from public/land.json — 73 rings, 1,934 points, 8KB
+   gzipped — generated from Natural Earth 1:110m by scripts/gen-land.mjs.
+   Fetched rather than bundled, because it is a decorative base layer for one
+   department thousands of pixels down the page, and the alternative was 24KB
+   in the first-load JS of every route including the posts, which have no map.
+
+   Cached at module scope, so a client navigation back to the home page
+   redraws from memory rather than asking again. */
+type Ring = [number, number][];
+let LAND: Ring[] | null = null;
+let landPending = false;
+
+function loadLand(): void {
+  if (LAND || landPending) return;
+  landPending = true;
+  fetch("/land.json")
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+    .then((d: { land: Ring[] }) => {
+      LAND = d.land;
+      /* Redraw now that there is something to draw. The chart renders
+         perfectly well without land, so nothing was blocked on this. */
+      drawMap();
+    })
+    .catch(() => {
+      /* No land, no fuss — the graticule and the arcs still carry the plate. */
+      LAND = [];
+    })
+    .finally(() => {
+      landPending = false;
+    });
+}
+
 function drawMap(): void {
   const svg = document.getElementById("chart");
   const wrap = svg?.closest(".map") as HTMLElement | null;
@@ -378,10 +415,34 @@ function drawMap(): void {
   const lats = [HOME.lat, ...pts.map((d) => d.lat)];
   const padLon = Math.max(12, (Math.max(...lons) - Math.min(...lons)) * 0.1);
   const padLat = Math.max(5, (Math.max(...lats) - Math.min(...lats)) * 0.22);
-  const LON0 = Math.min(...lons) - padLon;
-  const LON1 = Math.max(...lons) + padLon;
-  const LAT0 = Math.max(...lats) + padLat;
-  const LAT1 = Math.min(...lats) - padLat;
+
+  /* ── Minimum spans, so the coastline is recognisable geography rather than
+     a vertical sliver.
+
+     Framed to the markers alone this window was 35-45°N — five degrees of
+     padding around four destinations that all sit near the 40th parallel.
+     Correct framing, useless map: North America and Europe both cropped to
+     ambiguous strips with no coastline anyone could name. A route chart is
+     read by recognising where the arcs land, so the window has to be wide
+     enough to show that, even when the trips themselves are clustered. ── */
+  const MIN_LAT_SPAN = 38;
+  const MIN_LON_SPAN = 80;
+  const widen = (lo: number, hi: number, min: number): [number, number] => {
+    const span = hi - lo;
+    if (span >= min) return [lo, hi];
+    const grow = (min - span) / 2;
+    return [lo - grow, hi + grow];
+  };
+  const [LON0, LON1] = widen(
+    Math.min(...lons) - padLon,
+    Math.max(...lons) + padLon,
+    MIN_LON_SPAN,
+  );
+  const [LAT1, LAT0] = widen(
+    Math.min(...lats) - padLat,
+    Math.max(...lats) + padLat,
+    MIN_LAT_SPAN,
+  );
 
   /* Height from the geographic window, but never a sliver. A 174-degree
      longitude span over 23 of latitude wants a 5.5:1 plate, which at phone
@@ -404,6 +465,12 @@ function drawMap(): void {
   /* Type and density step with the reproduction size. Below 560px the date
      line is dropped entirely rather than set at an unreadable size — fewer
      things, still legible, beats everything present and none of it readable. */
+  /* Labels are knocked out of whatever they cross. The arcs and the
+     graticule both run through the label positions — Rome's dateline had a
+     dashed vermilion arc straight through it — and paint-order lets one
+     <text> paint a ground-coloured stroke first and the glyph on top, which
+     is a halo without a second element or a filter. */
+  const knock = `stroke="#141414" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke"`;
   const tight = W < 560;
   const fCity = tight ? 13 : 21;
   const fMeta = tight ? 9 : 11;
@@ -416,6 +483,46 @@ function drawMap(): void {
 
   let g = "";
 
+  /* ── Land first, so every line and label sits on top of it.
+     Rings whose bounding box misses the window are culled rather than left
+     to the SVG clip: at a 174-degree window most of the world is off-plate,
+     and a path string carrying it is bytes and parse time for nothing.
+
+     A ring is drawn as one path with a fill and its own hairline coast. The
+     fill is deliberately quiet — this is the ground the chart is printed on,
+     not the subject of it. ── */
+  if (LAND && LAND.length) {
+    const paths: string[] = [];
+    for (const ring of LAND) {
+      let minLon = Infinity, maxLon = -Infinity, minLat = Infinity, maxLat = -Infinity;
+      for (const [lo, la] of ring) {
+        if (lo < minLon) minLon = lo;
+        if (lo > maxLon) maxLon = lo;
+        if (la < minLat) minLat = la;
+        if (la > maxLat) maxLat = la;
+      }
+      if (maxLon < LON0 || minLon > LON1 || maxLat < LAT1 || minLat > LAT0) continue;
+      let d = "";
+      for (let i = 0; i < ring.length; i++) {
+        const x = X(ring[i][0]);
+        const y = Y(ring[i][1]);
+        d += `${i ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`;
+      }
+      paths.push(d + "Z");
+    }
+    if (paths.length) {
+      const d = paths.join("");
+      /* Quiet, but readable. At 7% fill and a 30% coast the continents were
+         present and unidentifiable — the plate looked black, which is what
+         was reported. The coastline carries the shape and the fill just
+         separates land from sea. */
+      g += `<path d="${d}" fill="${mark}1f" stroke="none"/>`;
+      g += `<path d="${d}" fill="none" stroke="${mark}8c" stroke-width="1" stroke-linejoin="round"/>`;
+    }
+  } else {
+    loadLand();
+  }
+
   /* Graticule, at whatever interval gives roughly six lines for this window. */
   const step = (span: number) =>
     [1, 2, 5, 10, 20, 30, 45, 60].find((v) => span / v <= 6) ?? 60;
@@ -424,13 +531,13 @@ function drawMap(): void {
   for (let l = Math.ceil(LON0 / lonStep) * lonStep; l <= LON1; l += lonStep) {
     const x = X(l).toFixed(1);
     g += `<line x1="${x}" y1="0" x2="${x}" y2="${H}" stroke="${mark}1f" stroke-width="1"/>`;
-    g += `<text x="${x}" y="${H - 7}" text-anchor="middle" font-family="var(--cred)" font-size="${fGrat}" letter-spacing="1" fill="${mark}8c">${Math.abs(Math.round(l))}°${l < 0 ? "W" : l > 0 ? "E" : ""}</text>`;
+    g += `<text x="${x}" y="${H - 7}" text-anchor="middle" font-family="var(--cred)" font-size="${fGrat}" letter-spacing="1" fill="${mark}8c" ${knock}>${Math.abs(Math.round(l))}°${l < 0 ? "W" : l > 0 ? "E" : ""}</text>`;
   }
   for (let a = Math.floor(LAT0 / latStep) * latStep; a >= LAT1; a -= latStep) {
     const y = Y(a);
     if (y < 12 || y > H - 12) continue;
     g += `<line x1="0" y1="${y.toFixed(1)}" x2="${W}" y2="${y.toFixed(1)}" stroke="${mark}1f" stroke-width="1"/>`;
-    g += `<text x="8" y="${(y - 5).toFixed(1)}" font-family="var(--cred)" font-size="${fGrat}" letter-spacing="1" fill="${mark}8c">${Math.round(a)}°N</text>`;
+    g += `<text x="8" y="${(y - 5).toFixed(1)}" font-family="var(--cred)" font-size="${fGrat}" letter-spacing="1" fill="${mark}8c" ${knock}>${Math.round(a)}°N</text>`;
   }
 
   const hx = X(HOME.lng);
@@ -474,9 +581,9 @@ function drawMap(): void {
     if (Math.abs(d.ly - d.y) > 2) {
       g += `<line x1="${d.x.toFixed(1)}" y1="${d.y.toFixed(1)}" x2="${d.lx.toFixed(1)}" y2="${(d.ly - lineH * 0.3).toFixed(1)}" stroke="${mark}59" stroke-width="1"/>`;
     }
-    g += `<text x="${d.lx.toFixed(1)}" y="${d.ly.toFixed(1)}" text-anchor="${d.anchor}" font-family="var(--disp)" font-weight="800" font-size="${fCity}" fill="${mark}" letter-spacing="-.2">${d.place.toUpperCase()}</text>`;
+    g += `<text x="${d.lx.toFixed(1)}" y="${d.ly.toFixed(1)}" text-anchor="${d.anchor}" font-family="var(--disp)" font-weight="800" font-size="${fCity}" fill="${mark}" letter-spacing="-.2" ${knock}>${d.place.toUpperCase()}</text>`;
     if (showDates) {
-      g += `<text x="${d.lx.toFixed(1)}" y="${(d.ly + fMeta + 3).toFixed(1)}" text-anchor="${d.anchor}" font-family="var(--cred)" font-size="${fMeta}" letter-spacing="1.1" fill="${mark}8c">${d.d} · ${d.n} NIGHTS</text>`;
+      g += `<text x="${d.lx.toFixed(1)}" y="${(d.ly + fMeta + 3).toFixed(1)}" text-anchor="${d.anchor}" font-family="var(--cred)" font-size="${fMeta}" letter-spacing="1.1" fill="${mark}8c" ${knock}>${d.d} · ${d.n} NIGHTS</text>`;
     }
   });
 
@@ -485,7 +592,7 @@ function drawMap(): void {
   g += `<circle cx="${hx.toFixed(1)}" cy="${hy.toFixed(1)}" r="${rHome}" fill="${mark}"/>`;
   g += `<circle cx="${hx.toFixed(1)}" cy="${hy.toFixed(1)}" r="${rHome * 2}" fill="none" stroke="${mark}" stroke-width="1.4"/>`;
   if (!tight) {
-    g += `<text x="${(hx + 20).toFixed(1)}" y="${(hy - 20).toFixed(1)}" font-family="var(--cred)" font-size="10" letter-spacing="1.4" fill="${mark}">SANDY, UT · 4,505 FT · ORIGIN</text>`;
+    g += `<text x="${(hx + 20).toFixed(1)}" y="${(hy - 20).toFixed(1)}" font-family="var(--cred)" font-size="10" letter-spacing="1.4" fill="${mark}" ${knock}>SANDY, UT · 4,505 FT · ORIGIN</text>`;
   }
 
   svg.setAttribute(

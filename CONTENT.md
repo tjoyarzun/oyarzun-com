@@ -376,6 +376,31 @@ the degree markings re-spaced to match. The label on the plate is the **first
 part of `location`**, not `name`: "Rome", not "Roman Holiday". A trip with no
 `lat`/`lng` is simply left off the chart; it still counts everywhere else.
 
+The window also has a minimum size — 38° of latitude and 80° of longitude —
+so the coastline stays recognisable even when every trip is clustered. Framed
+tightly to four destinations that all sit near the 40th parallel, the chart
+showed North America and Europe as unidentifiable vertical strips.
+
+### The coastline
+
+**Files:** [`public/land.json`](public/land.json) and [`scripts/gen-land.mjs`](scripts/gen-land.mjs) — not a content edit
+
+You will not need to touch this, but it is worth knowing it exists. The
+continents are 73 coastline outlines in `public/land.json`, generated from
+Natural Earth's 1:110m land data. It is committed rather than fetched from a
+package at build time, so the file is reviewable in a diff and nothing large
+lands in the JavaScript bundle — 24KB, 8KB over the wire, and only requested
+by the pages that draw a map.
+
+If it ever needs regenerating — a finer coastline, smaller islands kept:
+
+```
+node scripts/gen-land.mjs
+```
+
+The two knobs are at the top of that script: `TOL` (how much detail to keep,
+in degrees) and `MIN_AREA` (the smallest island to bother drawing).
+
 ---
 
 ## The bucket list
