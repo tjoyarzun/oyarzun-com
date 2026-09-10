@@ -9,6 +9,7 @@ import {
   skiResorts,
 } from "@/lib/data";
 import { departments } from "@/lib/copy";
+import { bucketLevels, getContributions } from "@/lib/github";
 import { fill, lines, rich } from "@/lib/thrasher/fill";
 import { GOALS, figures, pct } from "@/lib/thrasher/issue";
 
@@ -20,12 +21,14 @@ import { GOALS, figures, pct } from "@/lib/thrasher/issue";
  * here from the arrays in lib/data.ts, so a sparkline cannot disagree with the
  * figure above it.
  *
- * The one exception is the commit series, which has no server-side source —
- * it is filled by drawHeat() in lib/thrasher/behaviours.ts from the same
- * GitHub response that produces the year total, so the readout and its
- * sparkline come from one request.
+ * The commit readout and its sparkline come from lib/github.ts, fetched on
+ * the server in this component, so they are correct in the HTML rather than
+ * patched in after hydration. Every other figure is computed here from
+ * lib/data.ts at build time.
  */
-export default function Counted() {
+export default async function Counted() {
+  const gh = await getContributions(profiles.him.github ?? "");
+  const rt = { commits: gh.ok ? gh.total.toLocaleString() : "—" };
   /* Nights away by month, so the sparkline is a year and not four bars. */
   const nightsByMonth = Array.from({ length: 12 }, (_, m) =>
     adventures
@@ -45,18 +48,20 @@ export default function Counted() {
 
   return (
     <section className="dept" id="counted" data-dept={d.name} data-folio={d.folio}>
-      <DeptBar folio={d.folio} name={d.name} kicker={fill(d.deptKicker)} />
+      <DeptBar folio={d.folio} name={d.name} kicker={fill(d.deptKicker, rt)} />
 
-      <Mast kicker={d.kicker} headline={d.headline} stats={lines(d.stats)}>
+      <Mast
+        kicker={fill(d.kicker, rt)}
+        headline={fill(d.headline, rt)}
+        stats={lines(d.stats, rt)}
+      >
         {d.dek.map((para, i) => (
-          <p key={i}>{rich(para)}</p>
+          <p key={i}>{rich(para, rt)}</p>
         ))}
       </Mast>
 
       <div className="sec" id="tiles">
-        {/* data-gh-user tells drawHeat() whose commits to fetch on this
-            page — the 52-week grid that used to carry it now lives on /us. */}
-        <div className="panel" data-gh-user={profiles.him.github}>
+        <div className="panel">
           <div className="phead">
             <span>Readouts · year to date</span>
             <span className="pr2">
@@ -70,12 +75,21 @@ export default function Counted() {
                 <span>Commits</span>
                 <span className="pu">52 wk</span>
               </div>
-              <div className="pv" data-commits>
-                {figures.githubCommits.toLocaleString()}
+              <div className="pv">{gh.ok ? gh.total.toLocaleString() : "—"}</div>
+              <div className="pn2">
+                {gh.ok ? "Live · public only" : (gh.reason ?? "unavailable")}
               </div>
-              <div className="pn2">Live · public only</div>
-              {/* Filled client-side from the same GitHub response. */}
-              <div className="spark" data-commit-spark />
+              {/* Same request as the figure above it, so the readout and the
+                  line beside it always describe the same window. */}
+              <div className="spark">
+                {gh.ok ? (
+                  <Sparkline
+                    bars
+                    values={bucketLevels(gh.levels)}
+                    label="Commit activity over 52 weeks"
+                  />
+                ) : null}
+              </div>
             </div>
 
             <div className="cell">

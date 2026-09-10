@@ -4,7 +4,8 @@ import { Caption, DeptBar, Mast } from "@/components/thrasher/editorial";
 import { profiles } from "@/lib/data";
 import { departments, plates } from "@/lib/copy";
 import { fill, lines, rich } from "@/lib/thrasher/fill";
-import { axesFor, figures } from "@/lib/thrasher/issue";
+import { getContributions } from "@/lib/github";
+import { axesFor } from "@/lib/thrasher/issue";
 
 /**
  * 02 · The two of us — the teaser.
@@ -18,8 +19,10 @@ import { axesFor, figures } from "@/lib/thrasher/issue";
  * Everything here is derived, including the two "strongest" figures, so the
  * teaser cannot contradict the spread it links to.
  */
-export default function TwoOfUs() {
+export default async function TwoOfUs() {
   const { him, her } = profiles;
+  const gh = await getContributions(him.github ?? "");
+  const rt = { commits: gh.ok ? gh.total.toLocaleString() : "—" };
   const d = departments.two;
   const strongest = (who: "him" | "her") =>
     axesFor(who).reduce((a, b) => (b.value > a.value ? b : a));
@@ -34,8 +37,8 @@ export default function TwoOfUs() {
         gamma: 1.0,
       },
       facts: [
-        ["Years in field", "12"],
-        ["Commits, 12 mo", figures.githubCommits.toLocaleString()],
+        ["Years in field", String(him.yearsExperience)],
+        ["Commits, 12 mo", gh.ok ? gh.total.toLocaleString() : "—"],
         ["Strongest", `${strongest("him").skill} · ${strongest("him").value}`],
       ],
     },
@@ -44,7 +47,7 @@ export default function TwoOfUs() {
       profile: her,
       portrait: plates.portraitHer,
       facts: [
-        ["Years in field", "10"],
+        ["Years in field", String(her.yearsExperience)],
         [
           "Recognised",
           `${her.recognition?.org ?? "—"}, ${her.recognition?.year ?? ""}`,
@@ -61,11 +64,15 @@ export default function TwoOfUs() {
       data-dept="The two of us"
       data-folio="02"
     >
-      <DeptBar folio={d.folio} name={d.name} kicker={fill(d.deptKicker)} />
+      <DeptBar folio={d.folio} name={d.name} kicker={fill(d.deptKicker, rt)} />
 
-      <Mast kicker={d.kicker} headline={d.headline} stats={lines(d.stats)}>
+      <Mast
+        kicker={fill(d.kicker, rt)}
+        headline={fill(d.headline, rt)}
+        stats={lines(d.stats, rt)}
+      >
         {d.dek.map((para, i) => (
-          <p key={i}>{rich(para)}</p>
+          <p key={i}>{rich(para, rt)}</p>
         ))}
       </Mast>
 
@@ -118,13 +125,13 @@ export default function TwoOfUs() {
               {d.overlapYears.map((y, i) => (
                 <span key={i}>
                   {i > 0 ? <br /> : null}
-                  {y}
+                  {fill(y, rt)}
                 </span>
               ))}
             </div>
-            <p>{rich(d.overlapText)}</p>
+            <p>{rich(d.overlapText, rt)}</p>
             <div className="mono" style={{ textAlign: "right" }}>
-              {lines(d.overlapStats)}
+              {lines(d.overlapStats, rt)}
             </div>
           </div>
         </div>
@@ -132,7 +139,7 @@ export default function TwoOfUs() {
         <div className="teaseout">
           <div>
             <div className="kick">{d.teaseLabel}</div>
-            <p>{rich(d.teaseBlurb)}</p>
+            <p>{rich(d.teaseBlurb, rt)}</p>
           </div>
           <Link className="btn" href="/us">
             {d.teaseCta}

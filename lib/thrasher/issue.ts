@@ -16,12 +16,12 @@
 import {
   adventures,
   booksReadThisYear,
-  dashboardStats,
   goals,
   skiResorts,
   travelStats,
 } from "@/lib/data";
 import { getAllPosts } from "@/lib/posts";
+import { GALLERY_FRAMES } from "@/lib/copy";
 
 /** Days on snow, summed from the resort table rather than kept by hand. */
 export const skiDays = skiResorts.reduce((sum, r) => sum + r.days, 0);
@@ -55,8 +55,6 @@ export const GOALS = [
 export const postsGoal = target("Blog Posts", 5);
 
 export const figures = {
-  /** Seed value; the live figure comes from the GitHub API client-side. */
-  githubCommits: dashboardStats.githubCommits,
   nightsAway: travelStats.nightsAway,
   countriesVisited: travelStats.countriesVisited,
   adventuresLogged: adventures.length,
@@ -168,3 +166,75 @@ export function axesFor(who: "him" | "her"): Axis[] {
     value: mine.get(skill) ?? 0,
   }));
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   The rest of the derived figures.
+
+   Everything below was a literal somewhere — in a component, or worse, spelt
+   out in words inside a sentence in lib/copy.ts, where nothing would ever
+   catch it going stale. "19 years between us" was simply wrong: the two
+   profiles say twelve and ten.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/** Posts written but not published. Printed as "N published · M in draft". */
+export const draftCount = getAllPosts().filter((p) => p.draft).length;
+
+/** Distinct authors among the published posts. */
+export const authorCount = new Set(
+  getAllPosts()
+    .filter((p) => !p.draft)
+    .map((p) => p.author),
+).size;
+
+/** Years in the field, each and combined. */
+export const yearsHim = profiles.him.yearsExperience;
+export const yearsHer = profiles.her.yearsExperience;
+export const yearsTotal = yearsHim + yearsHer;
+
+/**
+ * Where the two careers overlap, worked out from the two `career` arrays.
+ *
+ * Was four separate literals — "2014", "–2019", "five years" and "nine
+ * years" — spread across two copy blocks, describing data that is sitting
+ * right there in lib/data.ts. Change a date on either career entry and the
+ * overlap band now follows it.
+ *
+ * `years` strings are "2014–2019" or "2025–Present"; Present means today.
+ */
+function span(years: string): [number, number] | null {
+  const m = years.match(/(\d{4})\s*[–-]\s*(\d{4}|Present)/i);
+  if (!m) return null;
+  const to =
+    m[2].toLowerCase() === "present" ? new Date().getFullYear() : Number(m[2]);
+  return [Number(m[1]), to];
+}
+
+export const overlap = (() => {
+  for (const a of profiles.him.career) {
+    const b = profiles.her.career.find((e) => e.company === a.company);
+    if (!b) continue;
+    const sa = span(a.years);
+    const sb = span(b.years);
+    if (!sa || !sb) continue;
+    const from = Math.max(sa[0], sb[0]);
+    const to = Math.min(sa[1], sb[1]);
+    if (to <= from) continue;
+    return {
+      company: a.company,
+      from,
+      to,
+      /** Years the two were there together. */
+      shared: to - from,
+      /** Her full tenure, which runs past his. */
+      herFrom: sb[0],
+      herTo: sb[1],
+      herYears: sb[1] - sb[0],
+      hisTitle: a.title,
+      herTitle: b.title,
+    };
+  }
+  return null;
+})();
+
+/** Re-exported so the token table has one import for its figures. */
+export { GALLERY_FRAMES };

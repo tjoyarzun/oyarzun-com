@@ -1,6 +1,8 @@
 import Plate from "@/components/thrasher/Plate";
 import { Caption, DeptBar, Mast } from "@/components/thrasher/editorial";
 import { departments, plates } from "@/lib/copy";
+import { profiles } from "@/lib/data";
+import { getContributions } from "@/lib/github";
 import { fill, lines, rich } from "@/lib/thrasher/fill";
 
 /**
@@ -17,17 +19,26 @@ import { fill, lines, rich } from "@/lib/thrasher/fill";
  * reproduction size throughout, so the dots read at a constant optical weight
  * whether the plate is 1200px wide or 180px.
  */
-export default function Cover() {
+export default async function Cover() {
   const c = departments.cover;
   const p = plates.cover;
+  /* One server request, deduped by React across every component that asks
+     in this render. The figure is correct in the HTML, so there is nothing
+     to patch after hydration. */
+  const gh = await getContributions(profiles.him.github ?? "");
+  const rt = { commits: gh.ok ? gh.total.toLocaleString() : "—" };
 
   return (
     <section className="dept" id="cover" data-dept={c.name} data-folio={c.folio}>
-      <DeptBar folio={c.folio} name={c.name} kicker={fill(c.deptKicker)} />
+      <DeptBar folio={c.folio} name={c.name} kicker={fill(c.deptKicker, rt)} />
 
-      <Mast kicker={c.kicker} headline={c.headline} stats={lines(c.stats)}>
+      <Mast
+        kicker={fill(c.kicker, rt)}
+        headline={fill(c.headline, rt)}
+        stats={lines(c.stats, rt)}
+      >
         {c.dek.map((para, i) => (
-          <p key={i}>{rich(para)}</p>
+          <p key={i}>{rich(para, rt)}</p>
         ))}
       </Mast>
 
@@ -71,11 +82,7 @@ export default function Cover() {
         <div className="figstrip">
           {c.figures.map((f) => (
             <div className={f.highlight ? "f hl" : "f"} key={f.label}>
-              {/* data-commits lets the live GitHub figure overwrite the
-                  build-time one; it is harmless on the others. */}
-              <div className="v" data-commits={f.value === "{commits}" ? "" : undefined}>
-                {fill(f.value)}
-              </div>
+              <div className="v">{fill(f.value, rt)}</div>
               <div className="k">{f.label}</div>
             </div>
           ))}

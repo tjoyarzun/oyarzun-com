@@ -124,7 +124,8 @@ export const issue = {
   dateline: "Sep 2026",
   /* The line in the middle of the running head on the home page. */
   strapline: "Two subjects · six departments · one issue",
-  place: "Sandy, Utah · 4,505 ft",
+  /* Written once. `place` is composed from it — they were two literals
+     carrying the same number. */
   elevation: "4,505 ft",
   domain: "oyarzun.com",
 };
@@ -191,8 +192,8 @@ export const departments: {
     /* The type reversed out over the cover photograph. Two lines. */
     coverTitle: ["Two people,", "one valley"],
     coverBlurb:
-      "Twelve years of analytics and ten of data engineering, at the bottom " +
-      "of a wall that goes up eleven thousand feet.",
+      "{YearsHimWord} years of analytics and {yearsHerWord} of data " +
+      "engineering, at the bottom of a wall that goes up eleven thousand feet.",
     /* The four figures under the cover. `value` may be a {figure} or plain
        text — "None" below is deliberately a word, not a number. */
     figures: [
@@ -207,27 +208,33 @@ export const departments: {
     folio: "02",
     name: "The two of us",
     deptKicker: "The feature · full spread at /us",
-    kicker: "Twelve years and ten years, five of them in the same building",
+    kicker:
+      "{YearsHimWord} years and {yearsHerWord} years, {overlapYearsWord} of " +
+      "them in the same building",
     headline: "The two of us",
     dek: [
-      "Twelve years of analytics and ten of data engineering. Five of those " +
-        "years were spent in the same building, on different floors, before " +
-        "either of us thought to mention it.",
+      "{YearsHimWord} years of analytics and {yearsHerWord} of data " +
+        "engineering. {OverlapYearsWord} of those years were spent in the same " +
+        "building, on different floors, before either of us thought to " +
+        "mention it.",
     ],
     stats: ["{himLine}", "{herLine}", "Both in Sandy, Utah"],
     /* The band at the foot of the teaser that sends you to /us. */
     teaseLabel: "The full spread",
     teaseBlurb:
-      "Both stacks on the same ten axes, careers in full, every project, the " +
+      "Both stacks on the same {axes} axes, careers in full, every project, the " +
       "commit year, and the certificate at reproduction size.",
     teaseCta: "Read the feature",
-    /* The vermilion band across both columns. `years` is the big figure. */
-    overlapYears: ["2014", "–2019"],
+    /* The vermilion band across both columns.
+       Derived: the years, the span and the company all come out of the two
+       `career` arrays in lib/data.ts, so correcting a date on either job
+       moves this band with it. They were four separate literals before. */
+    overlapYears: ["{overlapFrom}", "–{overlapTo}"],
     overlapText:
-      "**Same company, five years, different floors.** He was Manager of BI " +
-      "Development at Overstock.com while she was growing from BI Developer " +
-      "to Manager of Data Engineering there.",
-    overlapStats: ["Overstock.com", "Midvale, Utah", "The overlap"],
+      "**Same company, {overlapYears} years, different floors.** He was " +
+      "Manager of BI Development at {overlapCompany} while she was growing " +
+      "from BI Developer to Manager of Data Engineering there.",
+    overlapStats: ["{overlapCompany}", "Midvale, Utah", "The overlap"],
   },
 
   counted: {
@@ -289,14 +296,19 @@ export const departments: {
     folio: "06",
     name: "Written",
     deptKicker: "{posts} posts · {postsGoal} for 2026",
-    kicker: "Two posts · two authors · each with its own address",
+    kicker:
+      "{PostsWord} posts · {authorsWord} authors · each with its own address",
     headline: "Written",
     dek: [
       "{posts} posts so far against a target of {postsGoal}. Each one is its " +
         "own page with its own address, because a post you cannot link to is " +
         "not published.",
     ],
-    stats: ["{posts} published · 0 drafts", "next-mdx-remote", "/written/<slug>"],
+    stats: [
+      "{posts} published · {drafts} in draft",
+      "next-mdx-remote",
+      "/written/<slug>",
+    ],
     /* The index at the foot of the department. */
     indexTitle: "Everything written",
     emptyTitle: "Unwritten",
@@ -338,12 +350,12 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
       {
         label: "Reading",
         headline: "Do Androids Dream of Electric Sheep?",
-        text: "{books} books finished this year against a target of twenty.",
+        text: "{books} books finished this year against a target of {booksGoal}.",
       },
       {
         label: "Skiing",
-        headline: "Snowbird, mostly",
-        text: "Eighteen days there last season out of {skiDays} total.",
+        headline: "{topResort}, mostly",
+        text: "{topResortDays} days there last season out of {skiDays} total.",
       },
     ],
   },
@@ -467,6 +479,16 @@ export const plates: Record<string, PlateCopy> = {
    builds, so a rebuild never reshuffles the wall.
 
    These are placeholders — three files repeated. */
+/**
+ * How many frames the album draws. One constant, three consumers — the
+ * gallery itself, the "N photographs" credit line, and the locked headline.
+ *
+ * Declared here rather than in lib/thrasher/issue.ts because the gallery is
+ * drawn client-side and that module reaches lib/posts.ts, which uses `fs`.
+ * This file imports nothing, which is what makes it safe on both sides.
+ */
+export const GALLERY_FRAMES = 20;
+
 export const gallery: string[] = [
   "/images/switzerland-dock.jpg",
   "/images/summit-selfie.jpg",
@@ -485,12 +507,12 @@ export const family = {
     "This section is for family. Nothing behind it is indexed, nothing is " +
       "shared, and nothing on this site is measuring you.",
   ],
-  stats: ["Password required", "Twenty photographs", "noindex, nofollow"],
+  stats: ["Password required", "{frames} photographs", "noindex, nofollow"],
   gateHeadline: ["Password", "required"],
   gateText:
     "Ask either of us. There is no reset link and no account to make, " +
     "because there is no account.",
-  lockedHeadline: ["Twenty", "frames"],
+  lockedHeadline: ["{frames}", "frames"],
   lockedText:
     "Behind the gate. Nothing here is indexed and nothing is shared.",
 };
@@ -499,21 +521,28 @@ export const family = {
    The dedicated feature page. `stats` follows the same three-line house
    style as a department. */
 export const us = {
-  kicker: "Twelve years and ten years, five of them in the same building",
+  kicker:
+    "{YearsHimWord} years and {yearsHerWord} years, {overlapYearsWord} of " +
+    "them in the same building",
   headline: "The two of us",
   dek: [
-    "Twelve years of analytics and ten of data engineering. Five of those " +
-      "years were spent in the same building, on different floors, before " +
-      "either of us thought to mention it.",
-    "Both stacks below are plotted on the same ten axes, so the two shapes " +
+    "{YearsHimWord} years of analytics and {yearsHerWord} of data " +
+      "engineering. {OverlapYearsWord} of those years were spent in the same " +
+      "building, on different floors, before either of us thought to " +
+      "mention it.",
+    "Both stacks below are plotted on the same {axes} axes, so the two shapes " +
       "mean the same thing. Everything on this page comes out of one file.",
   ],
-  stats: ["{himLine}", "{herLine}", "{commits} commits · 19 years between us"],
+  stats: [
+    "{himLine}",
+    "{herLine}",
+    "{commits} commits · {yearsTotal} years between us",
+  ],
   overlapText:
-    "**Same company, five years, different floors.** He was Manager of BI " +
-    "Development at Overstock.com while she was growing from BI Developer to " +
-    "Manager of Data Engineering there. Her tenure ran to 2023 — nine years " +
-    "in all.",
-  overlapStats: ["Overstock.com", "Midvale, Utah", "The overlap"],
+    "**Same company, {overlapYears} years, different floors.** He was " +
+    "Manager of BI Development at {overlapCompany} while she was growing " +
+    "from BI Developer to Manager of Data Engineering there. Her tenure ran " +
+    "to {herTenureTo} — {herTenureYears} years in all.",
+  overlapStats: ["{overlapCompany}", "Midvale, Utah", "The overlap"],
   backLabel: "Back to the issue",
 };

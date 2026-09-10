@@ -68,6 +68,10 @@ export interface Profile {
   name: string;
   title: string;
   company: string;
+  /** Years in the field. Printed on /us and in the home-page teaser. */
+  yearsExperience: number;
+  /** Where they are based, as printed. */
+  place: string;
   bio: string;
   skills: Skill[];
   career: CareerEntry[];
@@ -165,6 +169,10 @@ export const profiles: { him: Profile; her: Profile } = {
     name: "Tommy Oyarzun",
     title: "Manager, Analytics",
     company: "Domo",
+    /** Years in the field. Was a literal in app/us/page.tsx. */
+    yearsExperience: 12,
+    /** Where this person is based, as printed. */
+    place: "Sandy, UT · 4,505 ft",
     bio: "Analytics and data leader with 12+ years building D&A organizations at consumer subscription, SaaS, and enterprise software companies. Specializes in transforming analytics teams from reporting functions into strategic partners through org design, experimentation, self-serve BI products, and AI-native workflows. Based in Sandy, UT.",
     skills: [
       { skill: "SQL", value: 95 },
@@ -256,6 +264,8 @@ export const profiles: { him: Profile; her: Profile } = {
     name: "Julia Velicev",
     title: "Data Engineer III",
     company: "SeekWell",
+    yearsExperience: 10,
+    place: "Draper, UT · hybrid",
     recognition: {
       org: "Influential Women",
       orgUrl: "https://influentialwomen.com/",
@@ -427,8 +437,17 @@ export const travelStats = {
 export const dashboardStats = {
   /** Always overridden by DashboardClient with the real post count. */
   blogPosts: 0,
-  /** Seed value shown until the live GitHub figure resolves. */
-  githubCommits: 1203,
+  /**
+   * DEAD. The commit figure comes from lib/github.ts, fetched on the server.
+   *
+   * This was 1203 and was rendered into the HTML in three places, then
+   * overwritten client-side once the real number arrived — so the page
+   * shipped 1,203 against a true figure of about 150. Kept only because
+   * components/dashboard/DashboardClient.tsx and components/home/NavGrid.tsx
+   * still read it, and both are orphaned. Zero, so that if either is ever
+   * revived the number is obviously missing rather than plausibly wrong.
+   */
+  githubCommits: 0,
   /** Fallback only — overridden with `booksReadThisYear`, derived below. */
   booksReadThisYear: 0,
   /** Fallback only — overridden with the value derived from `adventures`. */

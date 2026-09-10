@@ -651,26 +651,83 @@ site" tile on the cover and the "Not doing / Measuring you" row in Right now.
 
 ---
 
-## What updates itself
+## Every figure and where it comes from
 
-You never edit these:
+**No number is written twice anywhere on this site.** Each one has exactly one
+source, and everything that prints it reads from there — including the numbers
+spelled out inside sentences, which is where they used to hide.
 
-| Thing | How |
+### Counted from something (you never touch these)
+
+| Figure | Counted from |
 |---|---|
-| Commit count and the 52-week grid | fetched live from the GitHub API on page load |
-| The commit sparkline in the panel | same request as the count, so they always agree |
-| Nights, countries, trips | counted from `adventures` |
-| Days on snow, resort count | counted from `skiResorts` |
-| Books this year | summed from `booksPerQuarter` for the current year |
-| Posts published, slots open | counted from `content/posts/` |
-| Every goal gauge and its pace notch | derived, and the notch from today's date |
-| The route chart | drawn from the `lat`/`lng` on each trip |
-| Both spider charts | drawn from the two `skills` lists |
-| The running head and page number | follow you as you scroll |
-| Every headline's size | fitted to the width of the page |
+| Commits, and the activity grid and sparkline | the GitHub API, **on the server** |
+| Nights away | sum of `nights` across `adventures` |
+| Countries | distinct `country` in `adventures` |
+| Trips logged | number of `adventures` |
+| Days on snow | sum of `days` across `skiResorts` |
+| Resorts, and which one leads | `skiResorts` |
+| Books this year | `booksPerQuarter`, rows ending in the current year |
+| Posts published, drafts, authors | files in `content/posts/` and their `draft` flag |
+| Slots open | writing target minus posts published |
+| Years in the field, each and combined | `yearsExperience` on each profile |
+| The Overstock overlap — years, span, company | both `career` arrays, intersected |
+| Shared spider-chart axes | both `skills` arrays, combined |
+| Album frames | `GALLERY_FRAMES` in `lib/copy.ts` |
+| Every goal gauge, and its pace notch | the arrays above, and today's date |
 
-If the GitHub API is unreachable, the commit grid says so rather than drawing
-plausible-looking fake data.
+### Kept by hand, in one place each
+
+| Figure | The one place |
+|---|---|
+| Days at each resort | `skiResorts` in `lib/data.ts` |
+| Books per quarter | `booksPerQuarter` in `lib/data.ts` |
+| What you're reading, and how far in | `currentlyReading` in `lib/data.ts` |
+| Films and their ratings | `favoriteMovies` in `lib/data.ts` |
+| The 2026 targets | the `goal` field in `goals` in `lib/data.ts` |
+| Trips | `adventures` in `lib/data.ts` |
+
+Change one of those and every place that mentions it follows. Adding a single
+trip moves **eight** figures; a day at a new resort can change which resort the
+Right-now section names.
+
+### Spelled-out numbers still derive
+
+"Twelve years and ten years, five of them in the same building" is not typed
+out. It reads `{YearsHimWord} years and {yearsHerWord} years,
+{overlapYearsWord} of them…` — any token ending in `Word` prints its figure as
+a word, capitalised if you capitalise the token. So the prose keeps its words
+and the number still comes from the data.
+
+### If GitHub is unreachable
+
+The figure prints as an em dash and the caption says why. There is deliberately
+no fallback number: the previous version shipped **1,203** in three places
+against a real figure of about 150, because a seed value sat in the data file
+and was only corrected after the page had already loaded.
+
+## Checking the figures
+
+Two commands. They catch different things, and the difference matters.
+
+```bash
+npm run build && npx next start -p 3100 &
+
+npm run check:figures     # every figure on the page matches its source
+node scripts/check-literals.mjs   # no figure is hard-coded in the copy
+```
+
+`check:figures` catches **drift** — a number that has gone stale. It cannot
+catch a number that has just been typed in and happens to be right today. I
+proved that on myself: I replaced `{adventures} adventures, {countries}
+countries, {nights} nights` with the literal `4 adventures, 2 countries, 18
+nights`, and it reported all clear, because at that moment it was.
+
+`check-literals` catches that one. It reads the copy file and flags any number
+— digits or words — that equals a figure the site derives, whether or not it
+is currently correct. That is the check that would have caught the literal.
+
+Run both before merging a change to `lib/data.ts` or `lib/copy.ts`.
 
 ---
 

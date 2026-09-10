@@ -13,7 +13,7 @@
    ═══════════════════════════════════════════════════════════════════════ */
 
 import { halftone, paintAllPlates } from "./halftone";
-import { gallery } from "@/lib/copy";
+import { GALLERY_FRAMES, gallery } from "@/lib/copy";
 import { adventures } from "@/lib/data";
 
 /** Read the live design-system colours, so every drawing inverts with the page. */
@@ -131,87 +131,6 @@ export function fitMast(): void {
     }
     el.style.fontSize = Math.max(22, lo).toFixed(2) + "px";
   });
-}
-
-/* ── GitHubHeatmap ─────────────────────────────────────────────────────
-   Live from the GitHub GraphQL API via /api/github-activity, which returns
-   one level (0-4) per day for the last 52 weeks plus the year total.
-
-   No mock fallback, deliberately. The caption under this grid claims the data
-   is live, and a plausible-looking synthetic grid is the one failure mode that
-   makes the claim false without looking wrong — the design's static version
-   drew a seeded random wall and captioned it "live". If the request fails the
-   grid says so instead. */
-async function drawHeat(): Promise<void> {
-  /* Two consumers, one request: the 52-week grid on /us and the commit
-     readout plus sparkline on the home panel. Either can be absent, so the
-     guard is on having something to fill and a username to ask about — not on
-     the grid specifically, which is what made the panel's sparkline never
-     fetch on the one page that shows it. */
-  const el = document.getElementById("heat");
-  const spark = document.querySelector<HTMLElement>("[data-commit-spark]");
-  const host = document.querySelector<HTMLElement>("[data-gh-user]");
-  const user = el?.dataset.user || host?.dataset.ghUser;
-  if (!user) return;
-  if (!el && !spark) return;
-  const flag = el ?? spark!;
-  if (flag.dataset.loaded) return;
-  flag.dataset.loaded = "1";
-
-  try {
-    const res = await fetch(
-      `/api/github-activity?username=${encodeURIComponent(user)}`,
-    );
-    if (!res.ok) throw new Error(String(res.status));
-    const data: { contributions: number[]; total: number } = await res.json();
-
-    /* The API returns whole weeks ending today; the grid is 26 columns of 7,
-       so take the most recent 182 days. */
-    if (el) {
-      const days = data.contributions.slice(-26 * 7);
-      el.innerHTML = days
-        .map((lvl) => `<i class="${lvl ? "l" + lvl : ""}"></i>`)
-        .join("");
-    }
-
-    /* One live figure, written everywhere it is printed, so the cover tile and
-       the profile field cannot drift apart or from the grid above them. */
-    if (typeof data.total === "number") {
-      document
-        .querySelectorAll<HTMLElement>("[data-commits]")
-        .forEach((n) => (n.textContent = data.total.toLocaleString()));
-    }
-
-    /* The panel's commit sparkline comes from this same response rather than a
-       second request, so the readout and the line beside it cannot describe
-       different windows. Daily levels are summed into 26 fortnightly buckets —
-       366 daily points in a 200-unit-wide sparkline is noise, not a series. */
-    const spark = document.querySelector<HTMLElement>("[data-commit-spark]");
-    if (spark) {
-      const raw = data.contributions.slice(-364);
-      const B = 26, per = Math.ceil(raw.length / B);
-      const buckets = Array.from({ length: B }, (_, i) =>
-        raw.slice(i * per, (i + 1) * per).reduce((a, b) => a + b, 0));
-      const max = Math.max(...buckets, 1), W = 200, H = 26, bw = W / B;
-      spark.innerHTML =
-        `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" ` +
-        `aria-label="Commit activity over 52 weeks in fortnightly buckets">` +
-        buckets.map((v, i) => {
-          const h = Math.max(0.8, (v / max) * (H - 2));
-          return `<rect x="${(i * bw + bw * 0.16).toFixed(1)}" y="${(H - h - 1).toFixed(1)}" ` +
-                 `width="${(bw * 0.68).toFixed(1)}" height="${h.toFixed(1)}" ` +
-                 `fill="currentColor" opacity="${v ? 0.85 : 0.18}"/>`;
-        }).join("") + `</svg>`;
-    }
-  } catch {
-    flag.dataset.error = "1";
-    if (el) {
-      el.innerHTML = "";
-      const note = el.parentElement?.querySelector(".cap span");
-      if (note) note.textContent = "GitHub API unavailable — no fallback drawn";
-    }
-    if (spark) spark.innerHTML = "";
-  }
 }
 
 /* ── SkillRadar ────────────────────────────────────────────────────────
@@ -669,7 +588,7 @@ function drawGallery(): void {
     return s / 0x7fffffff;
   };
   let h = "";
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < GALLERY_FRAMES; i++) {
     const f = src[i % src.length];
     const x = (0.28 + rnd() * 0.44).toFixed(2);
     const y = (0.26 + rnd() * 0.46).toFixed(2);
@@ -730,7 +649,6 @@ function honourHash(): void {
    safe to call twice: each init either no-ops when its element is absent or
    guards against double-wiring. */
 export function boot(): void {
-  void drawHeat();
   drawRadar();
   drawBooks();
   drawMap();

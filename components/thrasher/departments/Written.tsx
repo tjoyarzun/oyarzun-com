@@ -35,7 +35,11 @@ export default function Written() {
     <section className="dept" id="written" data-dept={d.name} data-folio={d.folio}>
       <DeptBar folio={d.folio} name={d.name} kicker={fill(d.deptKicker)} />
 
-      <Mast kicker={d.kicker} headline={d.headline} stats={lines(d.stats)}>
+      <Mast
+        kicker={fill(d.kicker)}
+        headline={fill(d.headline)}
+        stats={lines(d.stats)}
+      >
         {d.dek.map((para, i) => (
           <p key={i}>{rich(para)}</p>
         ))}

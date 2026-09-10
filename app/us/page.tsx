@@ -10,8 +10,10 @@ import {
   SectionHead,
 } from "@/components/thrasher/editorial";
 import { profiles } from "@/lib/data";
+import CommitGrid from "@/components/thrasher/CommitGrid";
 import { plates, us as copy } from "@/lib/copy";
-import { lines, rich } from "@/lib/thrasher/fill";
+import { getContributions } from "@/lib/github";
+import { fill, lines, rich } from "@/lib/thrasher/fill";
 import { figures } from "@/lib/thrasher/issue";
 
 /**
@@ -32,8 +34,10 @@ export const metadata: Metadata = {
     "Tommy Oyarzun, Manager of Analytics at Domo, and Julia Velicev, Data Engineer III at SeekWell — twelve years and ten years, five of them in the same building.",
 };
 
-export default function Us() {
+export default async function Us() {
   const { him, her } = profiles;
+  const gh = await getContributions(him.github ?? "");
+  const rt = { commits: gh.ok ? gh.total.toLocaleString() : "—" };
 
   return (
     <>
@@ -46,12 +50,12 @@ export default function Us() {
       <main id="main" className="spread">
         <Mast
           tight={false}
-          kicker={copy.kicker}
-          headline={copy.headline}
-          stats={lines(copy.stats)}
+          kicker={fill(copy.kicker, rt)}
+          headline={fill(copy.headline, rt)}
+          stats={lines(copy.stats, rt)}
         >
           {copy.dek.map((para, i) => (
-            <p key={i}>{rich(para)}</p>
+            <p key={i}>{rich(para, rt)}</p>
           ))}
         </Mast>
 
@@ -61,18 +65,15 @@ export default function Us() {
               who="him"
               profile={him}
               portrait={plates.portraitHim}
-              years={12}
-              place="Sandy, UT · 4,505 ft"
               extraFields={[
-                { label: "Commits, 12 mo", value: figures.githubCommits.toLocaleString() },
+                {
+                  label: "Commits, 12 mo",
+                  value: gh.ok ? gh.total.toLocaleString() : "—",
+                },
               ]}
             >
               <h4 className="blk">Commits · 52 weeks</h4>
-              <div className="heat" id="heat" data-user={him.github} />
-              <Caption
-                left="Live from the GitHub GraphQL API · public contributions only"
-                right="Vermilion = top decile"
-              />
+              <CommitGrid data={gh} />
             </ProfileColumn>
 
             <div className="div" />
@@ -81,8 +82,6 @@ export default function Us() {
               who="her"
               profile={her}
               portrait={plates.portraitHer}
-              years={10}
-              place="Draper, UT · hybrid"
               extraFields={[
                 { label: "Books, 2026", value: String(figures.booksReadThisYear) },
               ]}
@@ -90,13 +89,13 @@ export default function Us() {
 
             <div className="overlap" id="overlap">
               <div className="big">
-                2014
+                {fill("{overlapFrom}")}
                 <br />
-                –2019
+                –{fill("{overlapTo}")}
               </div>
-              <p>{rich(copy.overlapText)}</p>
+              <p>{rich(copy.overlapText, rt)}</p>
               <div className="mono" style={{ textAlign: "right" }}>
-                {lines(copy.overlapStats)}
+                {lines(copy.overlapStats, rt)}
               </div>
             </div>
           </div>

@@ -18,11 +18,11 @@ const OVERLAP_COMPANY = "Overstock.com";
 
 export interface ProfileColumnProps {
   who: "him" | "her";
+  /** Everything printed here comes off this object — including the years in
+   *  the field and the place, which used to be passed in as literals. */
   profile: Profile;
   /** Portrait plate. Same-origin, or the halftone engine cannot screen it. */
   portrait: { src: string; crop: string; gamma?: number };
-  years: number;
-  place: string;
   /** Extra field rows for whatever the data does not model. */
   extraFields?: { label: string; value: string; wide?: boolean }[];
   /** Rendered under the career block — his commit grid. */
@@ -33,12 +33,11 @@ export default function ProfileColumn({
   who,
   profile,
   portrait,
-  years,
-  place,
   extraFields = [],
   children,
 }: ProfileColumnProps) {
   const axes = axesFor(who);
+  const place = profile.place;
   const [first, ...rest] = profile.name.split(" ");
   const rec = profile.recognition;
   const top = axes.reduce((a, b) => (b.value > a.value ? b : a));
@@ -66,7 +65,7 @@ export default function ProfileColumn({
       <dl className="fld">
         <div className="fr2">
           <dt>Years in field</dt>
-          <dd>{years}</dd>
+          <dd>{profile.yearsExperience}</dd>
         </div>
         <div className="fr2">
           <dt>Based</dt>

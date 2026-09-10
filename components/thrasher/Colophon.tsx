@@ -18,7 +18,7 @@ export default function Colophon() {
       <div className="mono" style={{ textAlign: "right" }}>
         {lines([
           `Issue ${issue.number} · ${issue.dateline}`,
-          issue.place,
+          `Sandy, Utah · ${issue.elevation}`,
           issue.domain,
         ])}
       </div>

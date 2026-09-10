@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Caption, SectionHead } from "@/components/thrasher/editorial";
 import { mountAlbum } from "@/lib/thrasher/behaviours";
-import { family as copy } from "@/lib/copy";
 
 /**
  * The gate and the album.
@@ -23,7 +22,22 @@ import { family as copy } from "@/lib/copy";
  * The album is rendered on demand rather than mounted-and-hidden so the
  * twenty screens are not paid for by a visitor who never gets in.
  */
-export default function FamilyAlbum() {
+/**
+ * Copy arrives already filled, from the server.
+ *
+ * This is a client component — the gate has state — and fill() cannot be
+ * imported here: it reaches lib/posts.ts, which uses `fs`. So app/family
+ * resolves the {tokens} and passes the strings down. Doing it the other way
+ * round leaked {frames} onto the page verbatim.
+ */
+export interface FamilyAlbumCopy {
+  gateHeadline: string[];
+  gateText: string;
+  lockedHeadline: string[];
+  lockedText: string;
+}
+
+export default function FamilyAlbum({ copy }: { copy: FamilyAlbumCopy }) {
   const [open, setOpen] = useState(false);
 
   /* The album container does not exist until this renders, so the twenty
