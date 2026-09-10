@@ -136,8 +136,29 @@ the text understands — no HTML, no links.
 
 **File:** [`lib/copy.ts`](lib/copy.ts) → the `departments` block — GitHub web editor ✓
 
-The home page is one long scroll of six **departments**. Each has its own
-block in `departments`, and every visible word in it is a field you can edit:
+The home page is one long scroll of six **departments**, in this order:
+
+| Folio | Department | What it is |
+|---|---|---|
+| 01 | Cover | the masthead and four figures |
+| 02 | The two of us | a teaser; the full spread is at `/us` |
+| 03 | Counted | the instrument panel |
+| 04 | Fernweh | trips, the route chart, the log |
+| 05 | Written | the posts index |
+| 06 | Right now | what is true this month |
+
+**Right now sits last on purpose.** It is the only department that goes stale
+by design — everything above it is a record, that one is a snapshot with a
+date on it — so it closes the issue where a colophon would.
+
+To reorder them you change two things together: the order of the components in
+[`app/page.tsx`](app/page.tsx), and the `folio` numbers in `departments` below.
+The nav in [`Nav.tsx`](components/thrasher/Nav.tsx) lists them in reading order
+too, and a post's page number is its department's plus a letter — Written is
+05, so a post is `05b`.
+
+Each department has its own block in `departments`, and every visible word in
+it is a field you can edit:
 
 ```ts
 counted: {
@@ -666,15 +687,14 @@ or set `draft: true`, which keeps the text for later.
 **File:** [`lib/copy.ts`](lib/copy.ts) → `colophon` — GitHub web editor ✓
 
 The long paragraph at the bottom of every page, describing how the site is
-made.
+made — the faces, the halftone screening, the Negative button.
 
-**⚠️ It ends with "No analytics, no newsletter, nothing here is measuring
-you."** That sentence is only true while the analytics package stays out of
-`app/layout.tsx`. If analytics is ever added back, this sentence has to change
-in the same commit — and so do two readouts, the "None / Analytics on this
-site" tile on the cover and the "Not doing / Measuring you" row in Right now.
+It describes the printing and makes no claim about the reader. The site used
+to end this paragraph on a line about not tracking anyone, with a matching
+cover tile and a Right-now row saying the same thing. All three are gone by
+choice, so nothing in the copy has to be kept in step with what
+`app/layout.tsx` mounts.
 
----
 
 ## Every figure and where it comes from
 

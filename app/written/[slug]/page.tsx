@@ -184,7 +184,7 @@ export default function WrittenPost({ params }: Props) {
         </article>
       </main>
 
-      <Folio n="06b" />
+      <Folio n="05b" />
     </>
   );
 }

@@ -83,7 +83,7 @@ export default async function Cover() {
           {c.figures.map((f) => (
             <div className={f.highlight ? "f hl" : "f"} key={f.label}>
               <div className="v">{fill(f.value, rt)}</div>
-              <div className="k">{f.label}</div>
+              <div className="k">{fill(f.label, rt)}</div>
             </div>
           ))}
         </div>

@@ -133,9 +133,10 @@ export const issue = {
 /* ── The foot of every page ─────────────────────────────────────────────
    A magazine states how it was made. Long on purpose.
 
-   NOTE: the last sentence claims no analytics. That is only true if
-   @vercel/analytics stays out of app/layout.tsx. If you add analytics
-   back, change this sentence in the same commit. */
+   It describes the printing and nothing else. It used to end on a claim
+   about not measuring the reader; that whole line of copy is gone from the
+   site by choice, so nothing here has to be kept in step with what
+   app/layout.tsx does or does not mount. */
 export const colophon =
   "Oyarzun.com, Issue {issueNumber}. Set in Big Shoulders Display, Archivo " +
   "Narrow and Anonymous Pro. Every photograph on this site is screened by " +
@@ -143,8 +144,7 @@ export const colophon =
   "it, black plate at forty-five degrees, screen ruling keyed to " +
   "reproduction size. The site is printed in one ink; the photographs are " +
   "not, and clicking any of them shows you the difference. Negative in the " +
-  "top bar runs the whole issue as a photocopier would, and it remembers. " +
-  "No analytics, no newsletter, nothing here is measuring you.";
+  "top bar runs the whole issue as a photocopier would, and it remembers.";
 
 /* ── The departments ────────────────────────────────────────────────────
    One entry per section of the one scroll, in reading order.
@@ -187,7 +187,7 @@ export const departments: {
     stats: [
       "Issue {issueNumber} · {dateline}",
       "{elevation} above sea level",
-      "Nothing here is measuring you",
+      "Printed in one ink",
     ],
     /* The type reversed out over the cover photograph. Two lines. */
     coverTitle: ["Two people,", "one valley"],
@@ -200,7 +200,9 @@ export const departments: {
       { value: "{commits}", label: "Github commits" },
       { value: "{nights}", label: "Nights away, 2026" },
       { value: "{skiDays}", label: "Days on snow" },
-      { value: "None", label: "Analytics on this site", highlight: true },
+      /* The highlighted tile. Was "None / Analytics on this site"; now a
+         fourth real figure, derived like the other three. */
+      { value: "{books}", label: "Books read, {year}", highlight: true },
     ],
   },
 
@@ -277,7 +279,10 @@ export const departments: {
   },
 
   now: {
-    folio: "05",
+    /* Last in the issue. It closes the scroll because it is the only
+       department that is deliberately short-lived — everything above it is a
+       record, and this is a snapshot with a date on it. */
+    folio: "06",
     name: "Right now",
     /* Change this date whenever you change the rows in `nowRows` below. It
        is the whole point of a /now page that the date is honest. */
@@ -293,7 +298,7 @@ export const departments: {
   },
 
   written: {
-    folio: "06",
+    folio: "05",
     name: "Written",
     deptKicker: "{posts} posts · {postsGoal} for 2026",
     kicker:
@@ -403,13 +408,6 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
         headline: "{posts} of {postsGoal}",
         text: "{posts} posts published against the 2026 goal. {slotsOpen} slots open.",
       },
-      {
-        label: "Not doing",
-        headline: "Measuring you",
-        text:
-          "No analytics, no newsletter, no cookie banner, because there is " +
-          "nothing to consent to.",
-      },
     ],
   },
 };
@@ -504,8 +502,8 @@ export const family = {
   kicker: "For family · not indexed, not shared",
   headline: "Private",
   dek: [
-    "This section is for family. Nothing behind it is indexed, nothing is " +
-      "shared, and nothing on this site is measuring you.",
+    "This section is for family. Nothing behind it is indexed and nothing " +
+      "is shared.",
   ],
   stats: ["Password required", "{frames} photographs", "noindex, nofollow"],
   gateHeadline: ["Password", "required"],

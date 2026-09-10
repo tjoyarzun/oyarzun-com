@@ -29,8 +29,8 @@ const ITEMS: Item[] = [
   { kind: "go", href: "/us", label: "The two of us" },
   { kind: "jump", id: "counted", label: "Counted" },
   { kind: "jump", id: "away", label: "Fernweh" },
-  { kind: "jump", id: "now", label: "Right now" },
   { kind: "jump", id: "written", label: "Written" },
+  { kind: "jump", id: "now", label: "Right now" },
 ];
 
 export default function Nav() {

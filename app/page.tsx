@@ -12,8 +12,10 @@ import { Folio, RunningHead } from "@/components/thrasher/editorial";
  * Six departments in a fixed order, and the order is the argument: the reader
  * meets the two of us before the figures, because the figures only mean
  * something once you know whose they are. Cover, then the feature, then what
- * was counted, then where we went, then what is true this month, then what we
- * wrote.
+ * was counted, then where we went, then what we wrote — and Right now last,
+ * because it is the only department that goes stale on purpose. Everything
+ * above it is a record; that one is a snapshot with a date on it, and it
+ * belongs at the end where a colophon would sit.
  *
  * The running head and the folio advance as you scroll — the scroll-spy in
  * lib/thrasher/behaviours.ts picks the topmost department above the fold line
@@ -36,8 +38,8 @@ export default function Home() {
         <TwoOfUs />
         <Counted />
         <Away />
-        <RightNow />
         <Written />
+        <RightNow />
       </main>
       <Folio live n="01" />
     </>

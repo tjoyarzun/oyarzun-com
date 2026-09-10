@@ -4,11 +4,9 @@ import { fill, lines } from "@/lib/thrasher/fill";
 /**
  * The colophon. A magazine states how it was made; so does this.
  *
- * The text lives in `colophon` in lib/copy.ts.
- *
- * NOTE — it claims no analytics. That is only true while @vercel/analytics
- * stays out of app/layout.tsx. The claim and the dependency have to move
- * together, which is why the copy file says so next to the sentence.
+ * The text lives in `colophon` in lib/copy.ts. It describes the printing and
+ * makes no claim about the reader, so nothing here has to be kept in step
+ * with what app/layout.tsx mounts.
  */
 export default function Colophon() {
   return (
