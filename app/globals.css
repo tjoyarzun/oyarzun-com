@@ -96,7 +96,20 @@ a{color:inherit}
 .nav ul a.jump[aria-current="true"]{opacity:1;color:#fff;background:var(--red)}
 .nav ul li.split{width:1px;align-self:stretch;margin:0 9px;background:#ffffff40;flex:0 0 1px}
 .nav ul a.go{opacity:.72}
-.nav ul a.go::after{content:"›";margin-left:6px;opacity:.75;font-size:12px;line-height:1}
+/* The departure chevron is DRAWN, not typed.
+   It used to be content:"›" (U+203A). That character is a single right-
+   pointing angle QUOTATION mark, not an arrow — and Anonymous Pro draws it
+   the way a quote mark should be drawn: small, and sitting near the baseline.
+   Beside 10px caps it read as a comma: "THE TWO OF US ,".
+
+   Faces where U+203A happens to look like a chevron are what make it a
+   common substitute, so the glyph's appearance is a property of the font
+   rather than of the character. Two borders rotated 45° depend on no font at
+   all, inherit currentColor, and sit where they are put — the anchor is
+   already a flex container, so the pseudo-element centres itself. */
+.nav ul a.go::after{content:"";width:4px;height:4px;margin-left:7px;flex:0 0 auto;
+  border-right:1.5px solid currentColor;border-top:1.5px solid currentColor;
+  transform:rotate(45deg);opacity:.75}
 .nav ul a.go:hover{opacity:1}
 .nav .neg{background:none;border:none;border-left:1px solid #ffffff2e;color:var(--paper);
   font-family:inherit;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
