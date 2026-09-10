@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { boot, fitMast, repaint } from "@/lib/thrasher/behaviours";
+import { boot, refit, repaint } from "@/lib/thrasher/behaviours";
 
 /**
  * Runs the issue's client behaviour: the halftone screens, the four drawings,
@@ -42,14 +42,16 @@ export default function Behaviours() {
     repaint();
   }, [resolvedTheme]);
 
-  /* The headline size is a function of the measure, so it is recomputed
-     whenever the measure changes. Debounced: a resize drag fires continuously
-     and each fit is 28 layout-forcing iterations. */
+  /* Several things are functions of the width rather than merely scaled by
+     it — the headline size, the route chart's type and label density, and the
+     halftone screen ruling. All three are recomputed on resize. Debounced,
+     because a resize drag fires continuously and each headline fit is 28
+     layout-forcing iterations. */
   useEffect(() => {
     let t: ReturnType<typeof setTimeout>;
     const onResize = () => {
       clearTimeout(t);
-      t = setTimeout(fitMast, 140);
+      t = setTimeout(refit, 160);
     };
     addEventListener("resize", onResize);
     return () => {

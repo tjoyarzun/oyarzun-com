@@ -366,8 +366,15 @@ A value of 90 or more is printed in vermilion.
 8. the Adventures goal gauge
 
 The route chart is drawn from `lat` and `lng`, so a new destination appears on
-the map with an arc from Sandy. Get the coordinates from Google Maps — right-
-click a spot and the first pair of numbers is `lat, lng`.
+the map with its own arc from Sandy. Get the coordinates from Google Maps —
+right-click a spot and the first pair of numbers is `lat, lng`.
+
+The map's window is worked out from the trips themselves, so a destination
+further afield than anything already on it widens the whole chart rather than
+falling off the edge — add Tokyo and the plate re-spans to 120°W–120°E, with
+the degree markings re-spaced to match. The label on the plate is the **first
+part of `location`**, not `name`: "Rome", not "Roman Holiday". A trip with no
+`lat`/`lng` is simply left off the chart; it still counts everywhere else.
 
 ---
 
