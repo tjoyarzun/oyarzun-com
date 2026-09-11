@@ -423,24 +423,105 @@ export const adventures: Adventure[] = [
 /** The year the site is reporting on. */
 export const CURRENT_YEAR = new Date().getFullYear();
 
-/**
- * The year a trip belongs to, from the leading four characters of `date`.
- *
- * Deliberately string slicing rather than `new Date(a.date).getFullYear()`:
- * a bare "YYYY-MM-DD" is parsed as UTC midnight, so west of Greenwich
- * `getFullYear()` returns the PREVIOUS year for any 1 January trip. The
- * string already carries the year unambiguously.
- */
-export const tripYear = (a: Adventure): number => Number(a.date.slice(0, 4));
+/** Today, as "YYYY-MM-DD", so dates compare as strings throughout. */
+const TODAY = (() => {
+  const d = new Date();
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+})();
 
-/** Trips in the year being reported on, oldest first. */
+/**
+ * Parse a trip date, strictly.
+ *
+ * Deliberately not `new Date(a.date)`: a bare "YYYY-MM-DD" is parsed as UTC
+ * midnight, so west of Greenwich `getFullYear()` returns the PREVIOUS year
+ * for any 1 January trip, and `getMonth()` slides a 1st-of-the-month trip
+ * into the month before.
+ *
+ * And deliberately not bare slicing either, which is what it used to be:
+ * `"2026-3-14".slice(5, 7)` is `"3-"`, and `Number("3-")` is NaN — so an
+ * unpadded month passed the year filter and then matched no month bucket,
+ * silently vanishing from the sparkline while still counting in the figure
+ * printed directly above it. A malformed date now returns null and is
+ * reported rather than half-counted.
+ */
+export function parseTripDate(
+  date: string,
+): { year: number; month: number; day: number } | null {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec((date ?? "").trim());
+  if (!m) return null;
+  const [, y, mo, d] = m;
+  const year = Number(y);
+  const month = Number(mo);
+  const day = Number(d);
+  if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+  return { year, month, day };
+}
+
+/** The year a trip belongs to, or NaN if its date is malformed. */
+export const tripYear = (a: Adventure): number =>
+  parseTripDate(a.date)?.year ?? NaN;
+
+/** The month a trip belongs to, 1–12, or NaN if its date is malformed. */
+export const tripMonth = (a: Adventure): number =>
+  parseTripDate(a.date)?.month ?? NaN;
+
+/**
+ * A trip's country, as written, with blanks treated as missing.
+ *
+ * `a.country ?? "USA"` only catches null and undefined — an empty string or
+ * a stray space slips straight through `??` and becomes its own country,
+ * inflating the count and printing a blank name with a dangling separator.
+ */
+export const countryName = (a: Adventure): string =>
+  (a.country ?? "").trim() || "USA";
+
+/**
+ * The distinct countries in a list, in first-seen order.
+ *
+ * ONE function, so the count and the printed list cannot disagree. They did:
+ * the count normalised case (`.trim().toUpperCase()`) while both places that
+ * printed the names only trimmed, so a single trip written `country: "usa"`
+ * produced "2 countries" sitting beside a three-name list reading
+ * "Italy · USA · usa" — on the same screen, inside the same element.
+ *
+ * Deduped case-insensitively but DISPLAYED as first written, so the reader
+ * sees "Italy", not "ITALY".
+ */
+export function countriesIn(list: Adventure[]): string[] {
+  const seen = new Map<string, string>();
+  for (const a of list) {
+    const name = countryName(a);
+    const key = name.toUpperCase();
+    if (!seen.has(key)) seen.set(key, name);
+  }
+  return Array.from(seen.values());
+}
+
+/** Trips in the reporting year that have already happened, oldest first. */
 export const adventuresThisYear: Adventure[] = adventures
-  .filter((a) => tripYear(a) === CURRENT_YEAR)
+  .filter((a) => tripYear(a) === CURRENT_YEAR && a.date <= TODAY)
   .sort((a, b) => a.date.localeCompare(b.date));
 
-/** Trips outside it. Counted separately so nothing is silently dropped. */
+/**
+ * Trips dated later this year — booked, not taken.
+ *
+ * Excluded from every figure, because the copy beside them says "already
+ * this year" and "so far this year". Counted here so a planned trip is
+ * reported rather than silently absent.
+ */
+export const adventuresUpcoming: Adventure[] = adventures
+  .filter((a) => tripYear(a) === CURRENT_YEAR && a.date > TODAY)
+  .sort((a, b) => a.date.localeCompare(b.date));
+
+/** Trips from other years. Counted separately so nothing is silently dropped. */
 export const adventuresOtherYears: Adventure[] = adventures.filter(
-  (a) => tripYear(a) !== CURRENT_YEAR,
+  (a) => Number.isFinite(tripYear(a)) && tripYear(a) !== CURRENT_YEAR,
+);
+
+/** Trips whose `date` does not parse at all. Surfaced, never counted. */
+export const adventuresUndated: Adventure[] = adventures.filter(
+  (a) => !Number.isFinite(tripYear(a)),
 );
 
 /**
@@ -457,11 +538,9 @@ export function tripStats(list: Adventure[]) {
       list.filter((a) => a.type === "ski").map((a) => a.location),
     ).size,
     nightsAway: list.reduce((sum, a) => sum + a.nights, 0),
-    /* Countries are normalised before counting, or "USA" and " usa " count
-       twice and the figure quietly inflates. */
-    countriesVisited: new Set(
-      list.map((a) => (a.country ?? "USA").trim().toUpperCase()),
-    ).size,
+    /* Counted through the same helper that prints them, so the figure and
+       the list can never disagree. */
+    countriesVisited: countriesIn(list).length,
   };
 }
 

@@ -1,6 +1,13 @@
 import Plate from "@/components/thrasher/Plate";
 import { Caption, DeptBar, Mast, SectionHead } from "@/components/thrasher/editorial";
-import { adventuresThisYear, adventuresOtherYears, bucketListItems } from "@/lib/data";
+import {
+  adventuresOtherYears,
+  adventuresThisYear,
+  adventuresUndated,
+  adventuresUpcoming,
+  bucketListItems,
+  countriesIn,
+} from "@/lib/data";
 import { departments, plates } from "@/lib/copy";
 import { fill, lines, rich } from "@/lib/thrasher/fill";
 import { dateline, figures } from "@/lib/thrasher/issue";
@@ -22,9 +29,10 @@ export default function Away() {
      so one is visibly excluded rather than quietly missing. */
   const log = adventuresThisYear;
   const earlier = adventuresOtherYears.length;
-  const countries = Array.from(
-    new Set(adventuresThisYear.map((a) => (a.country ?? "USA").trim())),
-  );
+  /* countriesIn(), not a second hand-rolled Set — see lib/data.ts. */
+  const countries = countriesIn(adventuresThisYear);
+  const upcoming = adventuresUpcoming.length;
+  const undated = adventuresUndated.length;
   const d = departments.away;
 
   return (
@@ -94,13 +102,20 @@ export default function Away() {
           {/* Trips outside the reporting year are excluded from this table and
               from every figure beside it. Saying so is the difference between
               a scoped figure and a missing row. */}
+          {/* Everything excluded is named. A trip can fall out of these
+              figures three ways — another year, a date still in the future,
+              or a date that does not parse — and all three are silent
+              unless the caption says so. */}
           <Caption
-            left={
-              earlier
-                ? `${log.length} in ${fill("{year}")} · ${earlier} logged in other years, not counted here`
-                : `${log.length} trips · every figure on this page counts ${fill("{year}")} only`
-            }
-            right={`${figures.nightsAway} nights`}
+            left={[
+              `${log.length} taken in ${fill("{year}")}`,
+              earlier ? `${earlier} in other years` : null,
+              upcoming ? `${upcoming} booked, not yet taken` : null,
+              undated ? `${undated} with an unreadable date` : null,
+            ]
+              .filter(Boolean)
+              .join(" · ")}
+            right={`${figures.nightsAway} nights counted`}
           />
         </div>
 

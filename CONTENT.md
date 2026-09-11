@@ -388,10 +388,22 @@ nights pushed that figure from 18 to 27, moved the Adventures gauge to 5/20
 under a heading reading "AGAINST THE 2026 TARGETS", and put a 2025 row in a
 log headed 2026.
 
-So a trip outside the current year is **excluded from the figures and named in
-the caption** — "4 in 2026 · 1 logged in other years, not counted here" —
-rather than either inflating a year total or vanishing. Keep old trips in the
-array; they simply stop counting when the year turns.
+A trip can fall out of the figures three ways, and **all three are named in
+the log caption** rather than vanishing:
+
+| The trip | What happens | Caption says |
+|---|---|---|
+| dated another year | not counted | "1 in other years" |
+| dated later this year | not counted — the copy says "already this year" | "1 booked, not yet taken" |
+| `date` not `YYYY-MM-DD` | not counted at all | "1 with an unreadable date" |
+
+Keep old trips in the array; they simply stop counting when the year turns.
+Book a trip in advance and it starts counting on the day it happens.
+
+**Write the date padded** — `2026-03-14`, not `2026-3-14`. An unpadded month
+used to pass the year filter and then match no month, so the trip counted in
+the headline figure and silently vanished from the sparkline beside it. It is
+now rejected outright and reported in the caption.
 
 Two things follow:
 
@@ -708,7 +720,7 @@ spelled out inside sentences, which is where they used to hide.
 |---|---|
 | Commits, and the activity grid and sparkline | the GitHub API, **on the server** |
 | Nights away | sum of `nights` across this year's `adventures` |
-| Countries | distinct `country` in this year's `adventures`, ignoring case and spacing |
+| Countries | distinct `country` in this year's `adventures`, ignoring case and spacing — the count and the printed list come from one helper, so they cannot disagree |
 | Trips logged | this year's `adventures` |
 | Trips excluded | `adventures` dated outside this year, named in the log caption |
 | Days on snow | sum of `days` across `skiResorts` |

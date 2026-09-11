@@ -459,7 +459,11 @@ function drawMap(): void {
     const y = Y(a);
     if (y < 12 || y > H - 12) continue;
     g += `<line x1="0" y1="${y.toFixed(1)}" x2="${W}" y2="${y.toFixed(1)}" stroke="${mark}1f" stroke-width="1"/>`;
-    g += `<text x="8" y="${(y - 5).toFixed(1)}" font-family="var(--cred)" font-size="${fGrat}" letter-spacing="1" fill="${mark}8c" ${knock}>${Math.round(a)}°N</text>`;
+    /* Hemisphere from the sign, not assumed. It was hard-coded "°N", so a
+       trip south of the equator would have labelled the plate "-20°N". */
+    const lat = Math.round(a);
+    const hemi = lat < 0 ? "S" : lat > 0 ? "N" : "";
+    g += `<text x="8" y="${(y - 5).toFixed(1)}" font-family="var(--cred)" font-size="${fGrat}" letter-spacing="1" fill="${mark}8c" ${knock}>${Math.abs(lat)}°${hemi}</text>`;
   }
 
   const hx = X(HOME.lng);
@@ -488,6 +492,8 @@ function drawMap(): void {
       return { ...d, anchor, lx: d.x + off, ly: d.y };
     });
   const block = lineH + (showDates ? fMeta + 4 : 0) + 6;
+  /* Keep the whole label — headline plus its meta line — inside the plate. */
+  const floorY = H - (showDates ? fMeta + 8 : 6);
   for (let i = 1; i < placed.length; i++) {
     const prev = placed[i - 1];
     const cur = placed[i];
@@ -495,6 +501,17 @@ function drawMap(): void {
     if (Math.abs(cur.x - prev.x) < W * 0.24 && cur.ly - prev.ly < block) {
       cur.ly = prev.ly + block;
     }
+    /* The walk pushed each colliding label down by a fixed block with no
+       clamp, so a cluster of destinations marched its labels off the bottom
+       of the viewBox. Clamped here, and anything that hits the floor is
+       nudged UP instead so it stays legible rather than stacking. */
+    if (cur.ly > floorY) {
+      cur.ly = floorY;
+      if (Math.abs(cur.x - prev.x) < W * 0.24 && Math.abs(cur.ly - prev.ly) < block) {
+        prev.ly = Math.max(lineH, cur.ly - block);
+      }
+    }
+    cur.ly = Math.max(lineH, cur.ly);
   }
 
   placed.forEach((d) => {

@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import {
   CURRENT_YEAR,
   adventuresThisYear,
+  adventuresUpcoming,
+  countriesIn,
   goals,
   profiles,
   skiResorts,
@@ -42,11 +44,10 @@ const goalOf = (label: string, fallback: number) =>
 
 function tokens(): Record<string, string> {
   const { him, her } = profiles;
-  /* The reporting year's countries, in the order first visited, printed as
-     the credit line under the Fernweh masthead. */
-  const countries = Array.from(
-    new Set(adventuresThisYear.map((a) => (a.country ?? "USA").trim())),
-  );
+  /* Through countriesIn(), the same helper the COUNT uses. Deriving the
+     list separately is what let "2 countries" print beside a three-name
+     list when one entry was written "usa". */
+  const countries = countriesIn(adventuresThisYear);
   const topResort = [...skiResorts].sort((a, b) => b.days - a.days)[0];
   return {
     /* Placeholder only. Every page that prints {commits} passes the real
@@ -96,6 +97,13 @@ function tokens(): Record<string, string> {
     himLine: `${him.name} · ${him.title}, ${him.company}`,
     herLine: `${her.name} · ${her.title}, ${her.company}`,
     countryList: countries.join(" · "),
+    /* The places visited this year, so a sentence naming them cannot be
+       overtaken by a fifth trip. The trip name is the headline; the first
+       part of `location` is the place. */
+    tripCities: adventuresThisYear
+      .map((a) => (a.location || a.name).split(",")[0].trim())
+      .join(", "),
+    upcoming: String(adventuresUpcoming.length),
     year: String(CURRENT_YEAR),
     earlier: String(figures.adventuresEarlier),
 

@@ -99,13 +99,44 @@ const unit = JSON.parse(
     [
       "tsx",
       "-e",
-      `import { tripStats, tripYear, CURRENT_YEAR } from "./lib/data";
+      `import { tripStats, tripYear, tripMonth, parseTripDate, countriesIn, CURRENT_YEAR } from "./lib/data";
        const mk = (o) => ({ id: 1, name: "x", location: "A, B", lat: 0, lng: 0,
          type: "sightseeing", who: "Just Us", nights: 1, emoji: "x",
          description: "", imageUrl: "", ...o });
        const y = CURRENT_YEAR;
        process.stdout.write(JSON.stringify({
          year: y,
+         /* The count and the printed list must come from one helper. They
+            did not: the count uppercased before de-duping and both list
+            sites only trimmed, so one entry written "usa" produced
+            "2 countries" beside a three-name list. Asserting the count
+            alone is exactly what missed it, so this asserts BOTH. */
+         casingCount: tripStats([
+           mk({ date: y + "-01-02", country: "Italy" }),
+           mk({ date: y + "-01-03", country: " usa " }),
+           mk({ date: y + "-01-04", country: "USA" }),
+         ]).countriesVisited,
+         casingList: countriesIn([
+           mk({ date: y + "-01-02", country: "Italy" }),
+           mk({ date: y + "-01-03", country: " usa " }),
+           mk({ date: y + "-01-04", country: "USA" }),
+         ]),
+         /* An empty country slips past the nullish fallback: ?? only
+            catches null and undefined, never "" — so a blank became its own
+            country. NOTE: no backticks in here, the whole block is a JS
+            template literal and one would end it early. */
+         blankCountry: countriesIn([
+           mk({ date: y + "-01-02", country: "" }),
+           mk({ date: y + "-01-03", country: "   " }),
+           mk({ date: y + "-01-04" }),
+         ]),
+         /* A malformed date is surfaced, not half-counted: it used to pass
+            the year filter by slicing and then match no month bucket. */
+         /* Reported as a string: JSON.stringify turns NaN into null, so
+            asserting Number.isNaN on the far side always fails. */
+         unpaddedMonth: String(tripMonth(mk({ date: y + "-3-14" }))),
+         paddedMonth: tripMonth(mk({ date: y + "-03-14" })),
+         badDate: parseTripDate(y + "-13-01"),
          /* the year a trip belongs to comes from the string, not a Date, so a
             1 January trip cannot slide into the previous year west of UTC */
          jan1: tripYear(mk({ date: y + "-01-01" })),
@@ -140,6 +171,13 @@ const unitCheck = (label, actual, expected) => {
 };
 unitCheck("1 Jan belongs to its own year", unit.jan1, unit.year);
 unitCheck("31 Dec belongs to its own year", unit.dec31, unit.year);
+unitCheck("two spellings of one country count once", unit.casingCount, 2);
+unitCheck("and the printed LIST agrees with that count", unit.casingList.length, unit.casingCount);
+unitCheck("the list displays the first spelling seen", unit.casingList, ["Italy", "usa"]);
+unitCheck("blank and missing countries collapse to one", unit.blankCountry, ["USA"]);
+unitCheck("an unpadded month is rejected, not mis-bucketed", unit.unpaddedMonth, "NaN");
+unitCheck("a padded month parses", unit.paddedMonth, 3);
+unitCheck("month 13 is rejected", unit.badDate, null);
 unitCheck("three spellings of one country count once", unit.countryCasing, 1);
 unitCheck("missing country counts as one", unit.countryMissing, 1);
 unitCheck("a zero-night trip still counts as a trip", unit.zeroNights.adventuresLogged, 1);

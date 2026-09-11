@@ -399,9 +399,10 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
       {
         label: "Travelling",
         headline: "Nothing booked",
-        text:
-          "{nights} nights away already this year — Rome, Sicily, San " +
-          "Francisco, Las Vegas.",
+        /* The places are derived too. Naming them by hand meant a fifth
+           trip made the sentence wrong beside a correct {nights}, and no
+           check could see it — city names are not numbers. */
+        text: "{nights} nights away already this year — {tripCities}.",
       },
       {
         label: "Writing",

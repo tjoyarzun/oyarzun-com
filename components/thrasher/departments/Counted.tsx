@@ -3,6 +3,7 @@ import { Caption, DeptBar, Mast } from "@/components/thrasher/editorial";
 import { profiles } from "@/lib/data";
 import {
   adventuresThisYear,
+  tripMonth,
   booksPerQuarter,
   currentlyReading,
   favoriteMovies,
@@ -36,7 +37,7 @@ export default async function Counted() {
      no timezone can shift a trip into the neighbouring month. */
   const nightsByMonth = Array.from({ length: 12 }, (_, m) =>
     adventuresThisYear
-      .filter((a) => Number(a.date.slice(5, 7)) === m + 1)
+      .filter((a) => tripMonth(a) === m + 1)
       .reduce((sum, a) => sum + a.nights, 0),
   );
   const books = booksPerQuarter.map((q) => q.books);
