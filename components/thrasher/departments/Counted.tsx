@@ -47,8 +47,14 @@ export default async function Counted() {
   const dayOfYear = Math.ceil(
     (now.getTime() - Date.UTC(now.getUTCFullYear(), 0, 1)) / 86400000,
   );
-  /* Where a linear pace would have you today — the notch on each goal gauge. */
-  const paceMark = (dayOfYear / 365) * 100;
+  /* Where a linear pace would have you today — the notch on each goal gauge.
+     Days in THIS year, not a literal 365: 2028 has 366 and a fixed divisor
+     would put the notch a day ahead all year and never reach the end of the
+     track on 31 December. */
+  const y = now.getUTCFullYear();
+  const daysInYear =
+    (Date.UTC(y + 1, 0, 1) - Date.UTC(y, 0, 1)) / 86400000;
+  const paceMark = (dayOfYear / daysInYear) * 100;
   const d = departments.counted;
 
   return (
@@ -70,7 +76,7 @@ export default async function Counted() {
           <div className="phead">
             <span>Readouts · year to date</span>
             <span className="pr2">
-              Day {dayOfYear} of 365 · {Math.round(paceMark)}% elapsed
+              Day {dayOfYear} of {daysInYear} · {Math.round(paceMark)}% elapsed
             </span>
           </div>
 

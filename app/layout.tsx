@@ -53,6 +53,23 @@ export const metadata: Metadata = {
   title: "Oyarzun · Issue 04",
   description:
     "Tommy Oyarzun and Julia Velicev — analytics and data engineering in Sandy, Utah.",
+  /* Shared links had no picture and no site name — a bare URL in a message.
+     The cover photograph is the share image because it is the cover; if that
+     plate changes, this should change with it.
+
+     Deliberately NOT set on /family: that page is unlisted, and an OG image is
+     a copy of the picture served to anyone who gets hold of the link, cached
+     by whoever renders the preview. The album should not travel that way. */
+  openGraph: {
+    type: "website",
+    siteName: "Oyarzun",
+    title: "Oyarzun · Issue 04",
+    description:
+      "Tommy Oyarzun and Julia Velicev — analytics and data engineering in Sandy, Utah.",
+    url: "/",
+    images: [{ url: "/images/costa_rica.jpg", width: 2000, height: 1500 }],
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({

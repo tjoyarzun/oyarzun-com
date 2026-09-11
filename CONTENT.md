@@ -26,62 +26,34 @@ Two more places, for two specific things:
 
 ---
 
-## Read this before you edit anything ⚠️
+## Every file you can see is a file that runs ⚠️
 
-**There are 39 files in `components/` that look editable and are not.**
+This used to be a warning. Until the redesign shipped there were 39 files in
+`components/` that looked editable and were not — nothing imported them, so
+editing one changed nothing, with no error and no way to tell from the file
+itself. There were two dead JSON files and seven dead blocks inside
+`lib/data.ts` as well, and `familyPhotos` was the worst of them: twenty real
+entries with captions that looked exactly like the album at `/family` and were
+read by nothing.
 
-The site was redesigned. The old components were left on disk on purpose —
-they are useful reference until the redesign reaches production — but **nothing
-imports them.** If you edit one, the site does not change, no error appears,
-and there is no way to tell from the file itself.
+**They are all deleted.** Everything under `components/` is now reachable from
+a page, every export in `lib/data.ts` is read by something, and there is
+nothing on disk that quietly does not count. Git still has all of it if any of
+it is ever wanted back.
 
-The dead ones are every file under:
+Two things are deliberately kept that do nothing, and both say so where they
+sit:
 
-- `components/blog/`
-- `components/dashboard/`
-- `components/family/`
-- `components/home/`
-- `components/layout/`
-- `components/profiles/`
-- `components/shared/`
-- `components/travels/`
-
-**Everything live is under `components/thrasher/`** — plus one file,
-`components/providers.tsx`, which is wiring for the Negative button and holds
-no content. If a path in an older note or an older version of this guide
-points anywhere else under `components/`, it is out of date.
-
-The count is exact as of this writing: **39 dead, 17 live.**
-
-Two data files are dead the same way:
-
-- `content/now.json` — the "Right now" content moved to `nowRows` in
-  `lib/copy.ts`
-- `content/memory.json` — the Memory-of-the-Day feature no longer exists
-
-**And seven blocks inside `lib/data.ts` are dead**, which is harder to see
-because the file around them is live. Nothing the site renders imports any of
-these; they were read only by components in the list above:
-
-| Block | Was |
-|---|---|
-| `familyPhotos` (20 entries) | the old album — the live one is `gallery` in `lib/copy.ts` |
-| `familyFeedPosts` (5) | the old family feed |
-| `recentActivities` (5) | a home-page widget |
-| `upcomingEvents` (3) | a home-page widget |
-| `hikingData` (12) | an old chart |
-| `dashboardStats` (4 keys) | superseded — every one of those figures now derives |
-| `goalsYear` | superseded by `CURRENT_YEAR` |
-
-Editing any of them changes nothing on the site, silently. **`familyPhotos` is
-the trap**: it is twenty real entries with captions, it looks exactly like the
-album you see at `/family`, and it is not.
-
----
+- **`type`, `emoji` and `imageUrl` on a trip.** All three are live on *bucket
+  list* items, which is why they look functional on a trip. They are not. See
+  [Trips](#trips).
+- **`bucketUintas`** in `plates` still points at a stand-in photograph
+  (`summit-selfie.jpg`), marked `placeholder: true`. It is the last
+  placeholder image on the site.
 
 ## Table of contents
 
-- [Read this before you edit anything ⚠️](#read-this-before-you-edit-anything)
+- [Every file you can see is a file that runs ⚠️](#every-file-you-can-see-is-a-file-that-runs)
 - [If you are rewriting all the words: start here](#if-you-are-rewriting-all-the-words-start-here)
   - [The home page, top to bottom](#the-home-page-top-to-bottom)
   - [`/us` — the full spread](#us--the-full-spread)
@@ -446,8 +418,7 @@ recognition: {
   award: "Verified",
   tagline: "Amplifying the achievements and influence of women who…",
   year: "2026",
-  badgeUrl: "/images/badge.png",
-  certificateUrl: "/images/Julia_Velicev.png",
+  certificateUrl: "/images/Julia_Velicev.png",   // screened into the column
   certificateAlt: "Influential Women recognition certificate for…",
   blurb: "She advanced from Analyst to Data Engineer III through…",
   videoId: "1221262818",      // optional Vimeo id → "Watch the film" button
@@ -670,21 +641,23 @@ used any more. Harmless; leave them.
 
 **File:** [`lib/data.ts`](lib/data.ts) → `goals` — GitHub web editor ✓
 
-**Edit only the `goal` number.**
+This array holds the **target only**. Where you actually are is counted from
+the lists above.
 
 ```ts
 export const goals = [
-  { label: "Adventures", current: 0, goal: 20, pct: 0 },
-  { label: "Ski Days",   current: 0, goal: 40, pct: 0 },
-  { label: "Books Read", current: 8, goal: 20, pct: 40 },
-  { label: "Blog Posts", current: 3, goal: 5,  pct: 60 },
+  { label: "Adventures", goal: 20 },
+  { label: "Ski Days",   goal: 40 },
+  { label: "Books Read", goal: 20 },
+  { label: "Blog Posts", goal: 5 },
 ];
 ```
 
-`current` and `pct` are **ignored**, and they are deliberately left wrong so
-nobody trusts them. Where you actually are is counted from the lists above —
-which is the point, because this array used to claim 0 adventures against four
-logged and 3 posts against two files, and the site printed both.
+Each entry used to carry `current` and `pct` as well. They were read by nothing
+and had drifted — 0 adventures against four logged, 3 posts against two files —
+so the file offered two numbers for the same thing and the wrong one looked
+editable. They are gone. Raising `goal` is the only edit here, and every
+figure, gauge and "slots open" count follows it.
 
 Each gauge in the Counted panel also carries a **notch** showing where a
 steady pace would have you today. Ahead of the notch fills vermilion, behind
@@ -1157,8 +1130,9 @@ A quick checklist after an edit:
 - [ ] If you swapped a photograph, does the crop still frame it? Check on a
       phone as well — the plates are cropped to the same fractions at every
       size but the frame shape changes.
-- [ ] If you edited something and nothing changed, check you were not in one
-      of the [39 dead files](#read-this-before-you-edit-anything).
+- [ ] If you edited something and nothing changed, check the value is not
+      **derived**. A figure computed from a list ignores anything you type at
+      it — see [Every figure and where it comes from](#every-figure-and-where-it-comes-from).
 
 ### If a build fails
 

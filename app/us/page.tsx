@@ -10,6 +10,7 @@ import {
   SectionHead,
 } from "@/components/thrasher/editorial";
 import { profiles } from "@/lib/data";
+import { overlap, yearsHer, yearsHim } from "@/lib/thrasher/issue";
 import CommitGrid from "@/components/thrasher/CommitGrid";
 import { plates, us as copy } from "@/lib/copy";
 import { getContributions } from "@/lib/github";
@@ -28,10 +29,28 @@ import { figures } from "@/lib/thrasher/issue";
  * `.spread` on the wrapper steps every reading size up one notch — same
  * components as the scroll, more generous setting.
  */
+/* Derived, not written. This description carried "twelve years and ten years,
+   five of them" as words, beside three figures the site computes from the
+   career arrays — and metadata is the one place the literals guard does not
+   look, because it only reads what the page renders. */
+const description =
+  `${profiles.him.name}, ${profiles.him.title} at ${profiles.him.company}, and ` +
+  `${profiles.her.name}, ${profiles.her.title} at ${profiles.her.company} — ` +
+  `${yearsHim} years and ${yearsHer} years` +
+  /* overlap is derived by intersecting both career arrays, so it is null if
+     they ever stop sharing an employer. The sentence has to end either way. */
+  (overlap ? `, ${overlap.shared} of them in the same building.` : ".");
+
 export const metadata: Metadata = {
   title: "The two of us · Oyarzun",
-  description:
-    "Tommy Oyarzun, Manager of Analytics at Domo, and Julia Velicev, Data Engineer III at SeekWell — twelve years and ten years, five of them in the same building.",
+  description,
+  openGraph: {
+    type: "profile",
+    title: "The two of us · Oyarzun",
+    description,
+    url: "/us",
+    images: [{ url: "/images/tommy_amsterdam.jpg" }],
+  },
 };
 
 export default async function Us() {

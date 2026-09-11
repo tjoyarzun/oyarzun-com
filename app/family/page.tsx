@@ -17,6 +17,17 @@ export const metadata: Metadata = {
   title: "Private · Oyarzun",
   description: "A gated family album. Not indexed.",
   robots: { index: false, follow: false },
+  /* Stated rather than inherited, and with an empty image list on purpose.
+     Without this the page took the root card — the cover photograph, the home
+     page's title, and an og:url of "/", which is not this page. An OG image is
+     a copy of the picture handed to anyone who has the link and cached by
+     whatever renders the preview, so an unlisted album should not ship one. */
+  openGraph: {
+    title: "Private · Oyarzun",
+    description: "A gated family album. Not indexed.",
+    url: "/family",
+    images: [],
+  },
 };
 
 export default function Family() {
