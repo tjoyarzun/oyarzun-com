@@ -50,10 +50,22 @@ export default async function Cover() {
             detail={p.detail}
             label="Show the cover photograph in colour"
             pitch={5.0}
-            gamma={1.02}
+            /* Normal polarity, and no crush.
+               This plate used to be reversed out — light ink on a dark
+               ground — which suited the high-contrast summit photograph that
+               stood in here. On a warm indoor portrait of two people it
+               renders a photographic negative: dark faces, bright eyes,
+               ghoulish. And the duotone crush, which pushes shadows to solid
+               and highlights to paper, blew both faces to flat white with
+               black blotches where the eyes should be.
+               Ordinary ink on paper with a straight tone curve reads as a
+               photograph, and the picture's own dark background does the job
+               the reversed ground was there for. It also means the plate now
+               inverts with Negative like every other one, instead of being
+               pinned. */
+            gamma={1.0}
             ar={2.35}
-            ink="#dcd9d0"
-            paper="#141414"
+            crush={false}
             crop={p.crop}
           />
           <div className="ov">
@@ -69,10 +81,13 @@ export default async function Cover() {
           </div>
         </div>
         <Caption
+          /* The caption describes whatever `plates.cover` currently is. It
+             used to name the summit photograph outright, so swapping the
+             picture left a caption describing the old one. */
           left={
             p.placeholder
               ? "Placeholder cover — swap `plates.cover.src` in lib/copy.ts"
-              : "Cover · the ridge above Little Cottonwood"
+              : `Cover · ${p.title ?? "photograph"}`
           }
           right="Screen 5.0px · 45°"
         />

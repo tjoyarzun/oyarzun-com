@@ -491,7 +491,14 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
    the measure and pinning the rail puts the left and right edges back on the
    full-width masthead rule above them, which is how a magazine sets a text
    page with a marginal column. */
-.artgrid{display:grid;grid-template-columns:minmax(0,66ch) 1fr 232px;gap:44px;
+/* The measure is set in rem, not ch.
+   `ch` is the width of the "0" glyph, and in a condensed face that is very
+   narrow — 66ch measured 451px here, which is only about 49 characters a
+   line, well under the comfortable band and visibly thin beside a full-width
+   masthead. 36rem lands around 71 characters, inside the comfortable band; 40rem
+   overshot to 79. Anything expressed in ch will keep lying as long as the body face is
+   condensed. */
+.artgrid{display:grid;grid-template-columns:minmax(0,36rem) 1fr 232px;gap:44px;
   align-items:start;margin-top:26px}
 .artgrid > .marg{grid-column:3}
 .marg{position:sticky;top:56px}
@@ -506,7 +513,7 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
 .article h1{font-family:var(--disp);font-weight:900;font-size:clamp(32px,5.4vw,74px);margin:10px 0 0;
   line-height:.84;letter-spacing:-.03em;text-transform:uppercase;max-width:26ch}
 .article .byl{display:flex;flex-wrap:wrap;gap:0 22px;margin-top:14px}
-.article .body{max-width:66ch;margin:0;font-size:17px;line-height:1.62}
+.article .body{max-width:36rem;margin:0;font-size:17px;line-height:1.62}
 .article .body > p:first-of-type{font-size:20px;line-height:1.46}
 /* ::first-letter takes exactly one letter, so a paragraph opening on an
    acronym gets it split: "AI will not eliminate work" sets as a boxed A
@@ -542,7 +549,7 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
   border-bottom:3px solid var(--ink);padding:14px 0}
 .article .body blockquote p{font-family:var(--disp);font-weight:900;font-size:clamp(22px,2.8vw,34px);
   line-height:.98;text-transform:uppercase;letter-spacing:-.018em;margin:0}
-.article .end{max-width:66ch;margin-top:26px;border-top:1px solid var(--ink);padding-top:12px}
+.article .end{max-width:36rem;margin-top:26px;border-top:1px solid var(--ink);padding-top:12px}
 
 /* ── TRAVELS ───────────────────────────────────────────────────────── */
 /* FIXED POLARITY. The route chart is printed as a reversed-out plate — light

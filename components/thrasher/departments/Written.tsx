@@ -79,13 +79,13 @@ export default function Written() {
                 pitch={3.4}
                 gamma={1.06}
                 ar={1.5}
-                crop="0.5,0.36,0.7"
+                crop="0.5,0.4,1.0"
               />
               <Caption
                 left={
                   cover.placeholder
-                    ? "Stand-in cover — real cover is remote"
-                    : "Cover image"
+                    ? "Stand-in — this post's cover is on another server and cannot be screened"
+                    : `Cover · ${featured.title}`
                 }
                 right="Screen 3.4px"
               />

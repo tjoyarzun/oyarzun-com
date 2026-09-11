@@ -435,33 +435,30 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
    halftone engine read pixels it fetched from another domain. */
 export const plates: Record<string, PlateCopy> = {
   cover: {
-    src: "/images/summit-selfie.jpg",
-    title: "Top of the ridge, Little Cottonwood",
-    detail: "Self-timer · 2026",
-    crop: "0.44,0.58,0.90",
-    /* PLACEHOLDER — a real cover photograph goes here. */
-    placeholder: true,
+    src: "/images/tommy_and_julia.jpg",
+    title: "Tommy and Julia",
+    detail: "The two of us · 2026",
+    crop: "0.5,0.55,1.0",
+    placeholder: false,
   },
   portraitHim: {
-    src: "/images/summit-selfie.jpg",
-    detail: "Self-timer · 2026",
-    crop: "0.24,0.45,0.40",
-    /* PLACEHOLDER — the summit photograph standing in for a portrait. */
-    placeholder: true,
+    src: "/images/tommy_glasses.jpg",
+    detail: "Tommy Oyarzun · 2026",
+    crop: "0.5,0.38,1.0",
+    placeholder: false,
   },
   portraitHer: {
-    src: "/images/Julia_Velicev.png",
-    detail: "Influential Women certificate · 2026",
-    crop: "0.70,0.30,0.38",
-    gamma: 1.06,
+    src: "/images/julia_smile.jpg",
+    detail: "Julia Velicev · 2026",
+    crop: "0.5,0.5,1.0",
     placeholder: false,
   },
   bucketTahiti: {
-    src: "/images/switzerland-dock.jpg",
+    src: "/images/tahiti.jpg",
     title: "Tahiti · French Polynesia",
     detail: "On the list · we do love beaches",
-    crop: "0.5,0.3,0.5",
-    placeholder: true,
+    crop: "0.5,0.5,1.0",
+    placeholder: false,
   },
   bucketUintas: {
     src: "/images/summit-selfie.jpg",

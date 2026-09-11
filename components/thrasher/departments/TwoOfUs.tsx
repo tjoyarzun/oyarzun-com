@@ -31,11 +31,7 @@ export default async function TwoOfUs() {
     {
       who: "him" as const,
       profile: him,
-      portrait: {
-        src: "/images/summit-selfie.jpg",
-        crop: "0.24,0.44,0.34",
-        gamma: 1.0,
-      },
+      portrait: plates.portraitHim,
       facts: [
         ["Years in field", String(him.yearsExperience)],
         ["Commits, 12 mo", gh.ok ? gh.total.toLocaleString() : "—"],

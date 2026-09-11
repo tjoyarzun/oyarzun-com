@@ -552,6 +552,18 @@ Every photograph on this site is **screened** — printed as halftone dots, the
 way a magazine prints a photograph, with the dot size worked out from the
 brightness of the picture underneath. Clicking one shows the real colour.
 
+### HEIC will not work
+
+iPhone photos are often `.heic`, which browsers cannot display at all.
+Convert before adding one:
+
+```bash
+sips -s format jpeg -s formatOptions 88 -Z 2000 Photo.HEIC --out photo.jpg
+```
+
+`-Z 2000` also caps the long edge at 2000px. A 4032px original is four times
+larger than anything the site draws, and every visitor would download it.
+
 ### Swapping a picture
 
 1. Upload the file to `public/images/` (in GitHub: **Add file → Upload files**).
@@ -573,9 +585,10 @@ halftone works by reading the individual pixels of the picture, and browsers
 refuse to let a page read pixels from an image it fetched off another domain.
 There is no way around it — the file has to be in `public/images/`.
 
-Two blog covers are remote today and fall back to a stand-in plate. Download
-them into `public/images/` and set `coverImage` in the post to that path, and
-they will screen properly.
+One blog cover is still remote — `ai-and-work-from-a-skeptic.mdx` points at
+deepdreamgenerator.com — so it falls back to a stand-in plate and the caption
+says so. Download it into `public/images/`, point `coverImage` at that path,
+and it will screen like the other one.
 
 ### `crop` is not a one-line edit
 
