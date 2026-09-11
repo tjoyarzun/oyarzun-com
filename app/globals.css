@@ -505,6 +505,10 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
 .feat .ft a:hover{color:var(--red)}
 .feat p{margin:12px 0 0;font-size:14.5px;line-height:1.48;color:var(--ink70);max-width:46ch}
 .bcard{border-top:1px solid var(--ink);padding-top:10px}
+/* A card with no photograph. It sits in the same grid as cards that have one,
+   so it gets a heavier rule and a little air to read as a deliberate entry
+   rather than a picture that failed to load. */
+.bnoimg .bcard{border-top-width:3px;padding-bottom:4px}
 .bcard .bh{font-family:var(--disp);font-weight:800;font-size:17px;text-transform:uppercase;
   line-height:1.02;margin:8px 0 0}
 .bcard .bh a{text-decoration:none}

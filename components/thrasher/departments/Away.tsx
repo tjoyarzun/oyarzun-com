@@ -132,8 +132,6 @@ export default function Away() {
 
         <div id="list">
           <SectionHead lite no="03" title="On the list" right="Not yet taken" />
-          {/* bucketTahiti is a real photograph; bucketUintas is still a
-              stand-in (summit-selfie, marked placeholder in copy.ts). */}
           {/* Rendered from `bucketListItems` in lib/data.ts — add an entry
               there and a card appears. The plate falls back to a stand-in
               from `plates` in lib/copy.ts, because a photograph on someone
@@ -141,26 +139,33 @@ export default function Away() {
               pixels off a canvas, and the browser refuses that for an image
               fetched cross-origin. */}
           <div className="two" style={{ gap: 16 }}>
-            {bucketListItems.map((b, i) => {
-              const stand = i % 2 === 0 ? plates.bucketTahiti : plates.bucketUintas;
-              const remote = /^https?:\/\//.test(b.imageUrl ?? "");
+            {bucketListItems.map((b) => {
+              /* Named, not indexed. An item without a `plate` gets no
+                 photograph rather than the previous item's — see the comment
+                 on BucketListItem in lib/data.ts. */
+              const plate = b.plate ? plates[b.plate] : undefined;
               return (
-                <div key={b.id}>
-                  <Plate
-                    full={remote || !b.imageUrl ? stand.src : b.imageUrl}
-                    title={`${b.name} · ${b.state}`}
-                    detail={b.description}
-                    cta="Color"
-                    pitch={2.6}
-                    ar={1.3}
-                    /* crush off: it pushes shadows to solid and highlights to
-                       paper, which suits a high-contrast subject and turns a
-                       landscape into a silhouette. */
-                    crush={false}
-                    gamma={stand.gamma ?? 1.0}
-                    crop={stand.crop}
-                  />
-                  <div className="bcard" style={{ marginTop: 8, paddingTop: 8 }}>
+                <div key={b.id} className={plate ? undefined : "bnoimg"}>
+                  {plate ? (
+                    <Plate
+                      full={plate.src}
+                      title={`${b.name} · ${b.state}`}
+                      detail={b.description}
+                      cta="Color"
+                      pitch={2.6}
+                      ar={1.3}
+                      /* crush off: it pushes shadows to solid and highlights
+                         to paper, which suits a high-contrast subject and
+                         turns a landscape into a silhouette. */
+                      crush={false}
+                      gamma={plate.gamma ?? 1.0}
+                      crop={plate.crop}
+                    />
+                  ) : null}
+                  <div
+                    className="bcard"
+                    style={plate ? { marginTop: 8, paddingTop: 8 } : undefined}
+                  >
                     <div className="bh" style={{ fontSize: 15, margin: 0 }}>
                       {b.name}
                     </div>
@@ -171,6 +176,12 @@ export default function Away() {
                       {b.state}
                       {b.type ? ` · ${b.type}` : ""}
                     </div>
+                    {/* The reason it is on the list. It was passed to the
+                        plate as its lightbox caption and never printed on the
+                        card, so a card with no photograph said nothing at
+                        all — and .bcard p already existed in the stylesheet
+                        waiting for it. */}
+                    {b.description ? <p>{b.description}</p> : null}
                   </div>
                 </div>
               );

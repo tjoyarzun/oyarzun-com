@@ -503,13 +503,6 @@ export const plates: Record<string, PlateCopy> = {
     crop: "0.5,0.5,1.0",
     placeholder: false,
   },
-  bucketUintas: {
-    src: "/images/summit-selfie.jpg",
-    title: "The Uintas · Utah",
-    detail: "On the list",
-    crop: "0.68,0.5,0.5",
-    placeholder: true,
-  },
 };
 
 /* ── The family album ───────────────────────────────────────────────────

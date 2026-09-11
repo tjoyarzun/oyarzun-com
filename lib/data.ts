@@ -128,8 +128,23 @@ interface BucketListItem {
   id: number;
   name: string;
   state: string;
+  /** One line, printed on the card. This is the reason it is on the list. */
   description: string;
-  imageUrl: string;
+  /**
+   * Optional. The key of an entry in `plates` (lib/copy.ts) — the photograph
+   * for THIS place.
+   *
+   * It used to be an `imageUrl`, with the card falling back to one of two
+   * stand-in photographs chosen by array index when the URL was remote. Every
+   * item past the second therefore showed a picture of somewhere else: with
+   * seven entries, four cards carried a Tahitian palm and three a Utah ridge,
+   * and Namibia was illustrated by the palm.
+   *
+   * Leave it out and the card is set as type, with no photograph. A list of
+   * places you have not been to yet is allowed to have no picture; it is not
+   * allowed to have the wrong one.
+   */
+  plate?: string;
   type: AdventureType;
 }
 
@@ -590,7 +605,7 @@ export const bucketListItems: BucketListItem[] = [
     name: "Tahiti",
     state: "French Polynesia",
     description: "We do love beaches.",
-    imageUrl: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmf1TxV0qVIdSl9gDC4jqB_1ToUKiKYyzKfViU0bbI0lnnKFqB6iwoNWlCPmQGLBGG8x-kqQiE0wrLftPV-6CPfV7_KTKalZnhOjz5sj4XtgRf5ECW9YbrHEj16uEpmIsYFknHuQw=w426-h240-k-no",
+    plate: "bucketTahiti",
     type: "beach",
   },
 ];

@@ -47,9 +47,6 @@ sit:
 - **`type`, `emoji` and `imageUrl` on a trip.** All three are live on *bucket
   list* items, which is why they look functional on a trip. They are not. See
   [Trips](#trips).
-- **`bucketUintas`** in `plates` still points at a stand-in photograph
-  (`summit-selfie.jpg`), marked `placeholder: true`. It is the last
-  placeholder image on the site.
 
 ## Table of contents
 
@@ -586,20 +583,51 @@ in degrees) and `MIN_AREA` (the smallest island to bother drawing).
 
 ```ts
 {
-  id: 1,
-  name: "Tahiti",
-  state: "French Polynesia",
-  description: "We do love beaches.",
-  imageUrl: "…",
-  type: "beach",
+  id: 2,                       // any number not already used
+  name: "Hokkaido",            // THE CARD'S HEADING
+  state: "Japan",              // the red line under it
+  description: "Powder in Niseko, then an onsen.",   // one line, on the card
+  type: "sightseeing",         // printed after the place
+  // plate: "bucketHokkaido",  // optional — see below
 },
 ```
 
-Add an entry and a card appears under "On the list". There is one entry today,
-so there is one card.
+Add an entry and a card appears under "On the list", two to a row on a
+computer and one on a phone. **Add as many as you like** — the list is a grid
+and it reflows; an odd number leaves the last row half empty, which is what a
+list of an odd number of things looks like.
 
-**About `imageUrl`:** if it points at another website, the card falls back to a
-stand-in photograph. See [Photographs](#photographs) for why.
+**Most entries should have no photograph, and that is the design.**
+
+Leave `plate` out and the card is set as type: the name, the place, and your
+one line. A list of places you have not been to yet is allowed to have no
+picture. What it is not allowed to have is the *wrong* picture — and it used
+to: the card fell back to one of two stand-in photographs chosen by position
+in the array, so with seven entries four carried a Tahitian palm and three a
+Utah ridge, and Namibia was illustrated by the palm.
+
+**To give one a real photograph,** two steps:
+
+1. Add the picture to `plates` in [`lib/copy.ts`](lib/copy.ts), the same way
+   as any other — see [Photographs](#photographs). The frame is **1.3**.
+2. Put that entry's key in the item's `plate` field.
+
+```ts
+// lib/copy.ts
+bucketHokkaido: {
+  src: "/images/niseko.jpg",
+  title: "Niseko · Hokkaido",
+  detail: "On the list",
+  crop: "0.5,0.5,1.0",
+  placeholder: false,
+},
+
+// lib/data.ts
+{ id: 2, name: "Hokkaido", state: "Japan", plate: "bucketHokkaido", … }
+```
+
+A `plate` naming an entry that does not exist is not an error — the card is
+simply set as type, as though you had left it out.
 
 ---
 
@@ -718,8 +746,7 @@ decides which part of `crop` does anything (see below).
 | `cover` | the cover, top of the home page | 2.35 (1.6 on a phone) |
 | `portraitHim` | Tommy, on `/us` and the teaser | 1.28 |
 | `portraitHer` | Julia, same two places | 1.28 |
-| `bucketTahiti` | "On the list", in Andança | 1.3 |
-| `bucketUintas` | "On the list", in Andança | 1.3 — still a stand-in photograph |
+| `bucketTahiti` | "On the list", in Andança | 1.3 — one per item, named by its `plate` field |
 | blog cover | the newest post only | 1.9 |
 | family album | `/family`, 20 frames | square |
 
