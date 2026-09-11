@@ -132,9 +132,8 @@ export default function Away() {
 
         <div id="list">
           <SectionHead lite no="03" title="On the list" right="Not yet taken" />
-          {/* PLACEHOLDER PLATES — both screens point at stand-in photographs.
-              Swap the `full`/`src` paths when the real ones land; the crop
-              values will need re-tuning per image and nothing else. */}
+          {/* bucketTahiti is a real photograph; bucketUintas is still a
+              stand-in (summit-selfie, marked placeholder in copy.ts). */}
           {/* Rendered from `bucketListItems` in lib/data.ts — add an entry
               there and a card appears. The plate falls back to a stand-in
               from `plates` in lib/copy.ts, because a photograph on someone
@@ -154,6 +153,11 @@ export default function Away() {
                     cta="Color"
                     pitch={2.6}
                     ar={1.3}
+                    /* crush off: it pushes shadows to solid and highlights to
+                       paper, which suits a high-contrast subject and turns a
+                       landscape into a silhouette. */
+                    crush={false}
+                    gamma={stand.gamma ?? 1.0}
                     crop={stand.crop}
                   />
                   <div className="bcard" style={{ marginTop: 8, paddingTop: 8 }}>

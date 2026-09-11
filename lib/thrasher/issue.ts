@@ -126,10 +126,10 @@ export function longDate(iso: string): string {
  * /_next/image on our own origin, but the plate is a <canvas> drawing a raw
  * <img>, not a next/image, so the optimiser never enters the picture.
  *
- * Both blog covers in content/posts/*.mdx are currently remote (unsplash and
- * deepdreamgenerator). Until they are downloaded into public/images/ this
- * substitutes a same-origin stand-in and reports that it did, so the gap is
- * visible in the page rather than silently blank.
+ * Every cover in content/posts/*.mdx is same-origin today, so nothing hits
+ * this path. It stays because the failure it guards is silent: a remote cover
+ * screens as nothing at all, and the substitution reports itself so the gap
+ * shows in the page instead of appearing as a blank plate.
  */
 const PLATE_STANDIN = "/images/switzerland-dock.jpg";
 

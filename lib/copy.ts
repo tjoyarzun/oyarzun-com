@@ -490,7 +490,14 @@ export const plates: Record<string, PlateCopy> = {
     placeholder: false,
   },
   bucketTahiti: {
-    src: "/images/tahiti.jpg",
+    /* Replaces a file named 22Trav-Tahiti-mediumSquareAt3X.jpg, which is a
+       news-outlet CMS naming pattern and of unclear provenance. */
+    src: "/images/tahiti_beach.jpg",
+    /* A saturated sky and dark foliage have low LUMINANCE, so they lay down
+       nearly full ink — with the duotone crush on top, the mountain, palms
+       and sky all crushed into one black mass. Raising gamma lightens, because
+       the number is ink coverage rather than darkness. */
+    gamma: 1.5,
     title: "Tahiti · French Polynesia",
     detail: "On the list · we do love beaches",
     crop: "0.5,0.5,1.0",

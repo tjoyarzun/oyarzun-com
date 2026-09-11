@@ -745,8 +745,8 @@ decides which part of `crop` does anything (see below).
 | `cover` | the cover, top of the home page | 2.35 (1.6 on a phone) |
 | `portraitHim` | Tommy, on `/us` and the teaser | 1.28 |
 | `portraitHer` | Julia, same two places | 1.28 |
-| `bucketTahiti` | "On the list", in Andança | 1.5 |
-| `bucketUintas` | "On the list", in Andança | 1.5 |
+| `bucketTahiti` | "On the list", in Andança | 1.3 |
+| `bucketUintas` | "On the list", in Andança | 1.3 — still a stand-in photograph |
 | blog cover | the newest post only | 1.9 |
 | family album | `/family`, 20 frames | square |
 
@@ -828,10 +828,10 @@ halftone works by reading the individual pixels of the picture, and browsers
 refuse to let a page read pixels from an image it fetched off another domain.
 There is no way around it — the file has to be in `public/images/`.
 
-One blog cover is still remote — `ai-and-work-from-a-skeptic.mdx` points at
-deepdreamgenerator.com — so it falls back to a stand-in plate and the caption
-says so. Download it into `public/images/`, point `coverImage` at that path,
-and it will screen like the other one.
+Both blog covers are local now, so nothing is standing in. If you ever paste a
+remote URL into a `coverImage`, the site substitutes a stand-in plate and the
+caption says it did — the picture will not simply be missing, but it will not
+be your picture either.
 
 ### The cover is framed twice
 
