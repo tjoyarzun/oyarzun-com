@@ -237,8 +237,12 @@ export const profiles: { him: Profile; her: Profile } = {
         embed: {
           url: "https://dimple-dell-3d.vercel.app",
           poster: "/images/dimple-dell-3d.jpg",
+          /* Recaptured from the live model, 2026-09-11. The previous alt text
+             described "an L-shaped single-storey house"; the model has two
+             levels stepping down a slope, so the description was wrong as
+             well as the picture being old. */
           posterAlt:
-            "Isometric render of the Dimple Dell Residence — an L-shaped single-storey house with a flat roof and a long deck.",
+            "Aerial three-quarter view of the Dimple Dell Residence — two levels stepping down a slope under flat roofs, with a deck and external stair on the downhill side.",
           cta: "Launch the walkthrough",
           note: "Orbit with drag. Click to enter first person, then WASD to move, Shift to run, Esc to exit.",
         },

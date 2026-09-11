@@ -211,6 +211,35 @@ export default function ProfileColumn({
             </div>
             {rec.tagline ? <p>“{rec.tagline}”</p> : null}
             <p>{rec.blurb}</p>
+            {/* The certificate itself, which used to be a full-width section
+                of its own below both columns — so the recognition was
+                described in one place and shown in another, a screen apart.
+                It reproduces at almost exactly the width it did there (627px
+                in this column against ~640 in the old band), so the screen
+                ruling and the crop carry over untouched.
+
+                gamma 0.72 rather than 1: this is a near-white document, and
+                a straight tone curve laid down so little ink that the plate
+                read as blank paper. */}
+            {rec.certificateUrl ? (
+              <div style={{ marginTop: 12 }}>
+                <Plate
+                  full={rec.certificateUrl}
+                  title={`${rec.org} recognition certificate`}
+                  detail={`${profile.name} · ${profile.title}, ${profile.company} · ${rec.year}`}
+                  label="Show the certificate in color"
+                  gamma={0.72}
+                  ar={1.09}
+                  crush={false}
+                  crop="0.5,0.5,1.0"
+                  cta="Color"
+                />
+                <Caption
+                  left="The certificate · verified"
+                  right="Color reveals the IW pink"
+                />
+              </div>
+            ) : null}
             <div
               style={{
                 display: "flex",

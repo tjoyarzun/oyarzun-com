@@ -223,7 +223,29 @@ function drawRadar(): void {
     }
     if (axes.length < 3) return;
 
-    const W = 340, H = 260, cx = W / 2, cy = 118, R = 84;
+    /* Drawn at the container's real pixel size, not into a fixed viewBox.
+       
+       This used to be viewBox="0 0 340 260" scaled to whatever width the
+       column happened to be — 627px on /us, a factor of 1.84. Every number
+       below is in user units, so the whole drawing was multiplied by it: the
+       10px axis labels rendered at 18.4px and the 13px values at 24px, larger
+       than this site's body text and far outside its caption scale, and the
+       1px grid lines came out at nearly 2px.
+       
+       Same fault the route chart had and the same fix. The geometry stays
+       proportional, so the drawing is identical in shape and the laid-out box
+       does not move; the type is now stated in real pixels and matches the
+       10.5px mono captions used everywhere else. */
+    const W = Math.round(svg.clientWidth || 340);
+    if (!W) return;
+    const H = Math.round((W * 260) / 340);
+    const cx = W / 2;
+    const cy = (H * 118) / 260;
+    const R = (W * 84) / 340;
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    /* Type and the marks that carry it are fixed, not scaled. */
+    const fLabel = 10.5;
+    const fValue = 13;
     const pt = (i: number, r: number) => {
       const a = -Math.PI / 2 + (i / axes.length) * Math.PI * 2;
       return [cx + Math.cos(a) * R * r, cy + Math.sin(a) * R * r];
@@ -255,12 +277,12 @@ function drawRadar(): void {
         g += `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="2.6" fill="${t.red}"/>`;
       /* Labels are placed by quadrant so they never overrun the drawing:
          anchored away from the center, nudged clear of the vertex. */
-      const [lx, ly] = pt(i, 1.13);
+      const [lx, ly] = pt(i, 1.1);
       const dx = lx - cx;
-      const anchor = Math.abs(dx) < 6 ? "middle" : dx > 0 ? "start" : "end";
-      const dy = ly < cy ? -1 : 9;
-      g += `<text x="${lx.toFixed(1)}" y="${(ly + dy).toFixed(1)}" text-anchor="${anchor}" font-family="var(--cred)" font-size="10" letter-spacing=".7" fill="${t.cap}">${d.skill.toUpperCase()}</text>`;
-      g += `<text x="${lx.toFixed(1)}" y="${(ly + dy + 11).toFixed(1)}" text-anchor="${anchor}" font-family="var(--disp)" font-weight="800" font-size="13" fill="${d.value >= 90 ? t.redTx : t.ink70}">${d.value}</text>`;
+      const anchor = Math.abs(dx) < 8 ? "middle" : dx > 0 ? "start" : "end";
+      const dy = ly < cy ? -2 : fLabel;
+      g += `<text x="${lx.toFixed(1)}" y="${(ly + dy).toFixed(1)}" text-anchor="${anchor}" font-family="var(--cred)" font-size="${fLabel}" letter-spacing=".7" fill="${t.cap}">${d.skill.toUpperCase()}</text>`;
+      g += `<text x="${lx.toFixed(1)}" y="${(ly + dy + fValue).toFixed(1)}" text-anchor="${anchor}" font-family="var(--disp)" font-weight="800" font-size="${fValue}" fill="${d.value >= 90 ? t.redTx : t.ink70}">${d.value}</text>`;
     });
     svg.innerHTML = g;
   });
@@ -787,6 +809,9 @@ export function repaint(): void {
 export function refit(): void {
   fitMast();
   drawMap();
+  /* Added when the radar stopped being a scaled viewBox: its type is now in
+     real pixels, so a width change is a redraw, not a rescale. */
+  drawRadar();
   paintAllPlates();
 }
 
