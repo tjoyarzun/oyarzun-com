@@ -63,6 +63,7 @@ Two data files are dead the same way:
 
 ## Table of contents
 
+- [Read this before you edit anything ⚠️](#read-this-before-you-edit-anything)
 - [If you are rewriting all the words: start here](#if-you-are-rewriting-all-the-words-start-here)
   - [The home page, top to bottom](#the-home-page-top-to-bottom)
   - [`/us` — the full spread](#us--the-full-spread)
@@ -98,6 +99,7 @@ Two data files are dead the same way:
 - [The family album](#the-family-album)
   - [The password box checks nothing — read this](#the-password-box-checks-nothing--read-this)
 - [Publishing a blog post](#publishing-a-blog-post)
+  - [The "Unwritten" slots](#the-unwritten-slots)
 - [The footer](#the-footer)
 - [Every figure and where it comes from](#every-figure-and-where-it-comes-from)
   - [Counted from something (you never touch these)](#counted-from-something-you-never-touch-these)
@@ -872,8 +874,18 @@ which is a developer task.
 
 **Folder:** [`content/posts/`](content/posts) — GitHub web editor ✓
 
-This is unchanged from before. One Markdown file per post; the filename is the
-web address.
+One file per post; the filename is the web address.
+
+**They are Markdown — the extension is `.mdx`.** MDX is Markdown that *also*
+accepts React components. You never have to use that; write plain Markdown and
+it behaves exactly like a `.md` file. The extension has to be `.mdx` because
+that is what the site looks for, and a file saved as `.md` is simply not
+found — no error, no post.
+
+One consequence of MDX worth knowing: a stray `<` followed by a letter is read
+as the start of a component and will fail the build. Writing `<` on its own —
+`x < 10` — is fine; `<div` or `<3` is not. If a build fails on a post, this is
+almost always why.
 
 1. **Add file → Create new file** in `content/posts/`
 2. Name it `my-new-post.mdx` — lowercase, hyphens, no spaces. It becomes
@@ -906,11 +918,6 @@ More text. **Bold** and *italic* work, and so do lists:
 
 **The fields:**
 
-**On a phone the margin rail collapses.** Author, date, read time and tags
-already appear in the header, so those blocks are hidden below 860px and only
-"Next" survives, set large as a hand-off to the following post. Nothing is
-lost — it was all duplicated.
-
 | Field | Notes |
 |---|---|
 | `author` | `"him"`, `"her"` or `"both"` — sets the byline and the profile link |
@@ -921,11 +928,40 @@ lost — it was all duplicated.
 | `coverImage` | put the file in `public/images/` and use `/images/name.jpg` |
 | `draft` | `true` hides it from the site completely |
 
-**Two things happen on their own when you publish:**
+**On a phone the margin rail collapses.** Author, date, read time and tags
+already appear in the header, so those blocks are hidden below 860px and only
+"Next" survives, set large as a hand-off to the following post. Nothing is
+lost — it was all duplicated.
 
-- The post appears in the numbered index, and one "Unwritten" slot disappears.
-- Every `{posts}` and `{slotsOpen}` figure across the site updates — the
-  Counted panel, the Written goal gauge, the standfirst, the Right-now row.
+### The "Unwritten" slots
+
+Under the published posts the index prints three grey bands reading
+**UNWRITTEN**, numbered on from the real ones — today 03, 04 and 05, with
+"Slot open" where the byline goes. They are not posts and they are not
+placeholders you fill in. **There is no file behind them and nothing to edit.**
+
+They are drawn arithmetic:
+
+```
+slots = Blog Posts goal − published posts
+      = 5 − 2
+      = 3
+```
+
+The goal is `Blog Posts` in `goals` in [`lib/data.ts`](lib/data.ts); published
+means files in `content/posts/` with `draft: false`. So **publish a post and
+one band disappears by itself** — the count is never typed anywhere. Raise the
+goal to 8 and six bands appear. Hit the goal and they all go; overshoot it and
+you get none rather than a negative number.
+
+The first band carries a sentence, `emptyFirstBlurb` in `lib/copy.ts`, and the
+rest are deliberately bare. The word on them is `emptyTitle`. They are
+`aria-hidden`, so a screen reader skips them entirely — they are a graphic
+about a gap, not content.
+
+**Publishing also updates everything else on its own:** every `{posts}` and
+`{slotsOpen}` figure across the site — the Counted panel, the Written goal
+gauge, the standfirst, the Right-now row.
 
 **The first letter of your first paragraph** is set as a large initial in a
 vermilion box. If your post opens on an acronym — "AI will not…" — the site
