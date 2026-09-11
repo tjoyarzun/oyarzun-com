@@ -593,11 +593,59 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
 .gallery{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
 
 /* ── COLOPHON ──────────────────────────────────────────────────────── */
-.colo{margin-top:54px;padding:18px var(--m) 52px;border-top:5px solid var(--ink);
-  display:grid;grid-template-columns:auto 1.6fr auto;gap:28px;align-items:start}
-.colo .lg{font-family:var(--disp);font-weight:900;font-size:25px;line-height:.86;
-  text-transform:uppercase;letter-spacing:-.026em}
-.colo p{margin:0;font-size:13px;line-height:1.52;color:var(--ink70)}
+/* ── THE FOOT OF THE PAGE ──────────────────────────────────────────────
+   A contents list, where to find us, and the family's other sites.
+
+   It used to be one long paragraph about how the halftone engine worked.
+   That is an essay, not a footer — a footer's job is to get the reader
+   somewhere, and the paragraph went nowhere. Reversed out, because the
+   issue should close on ink the way it opens on it. */
+.colo{margin-top:54px;border-top:5px solid var(--ink);background:var(--ink);
+  color:var(--paper)}
+.colgrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:34px;
+  padding:30px var(--m) 26px;align-items:start}
+.colo .lg{font-family:var(--disp);font-weight:900;font-size:30px;line-height:.86;
+  text-transform:uppercase;letter-spacing:-.026em;color:var(--paper)}
+.cbrand p{margin:12px 0 0;font-size:13.5px;line-height:1.5;color:#dcd9d0b3;max-width:34ch}
+.cbrand .mono{margin-top:12px;font-family:var(--cred);font-size:10.5px;
+  letter-spacing:.13em;text-transform:uppercase;color:#dcd9d08c}
+
+.ccol h4{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;
+  text-transform:uppercase;color:#dcd9d08c;margin:0 0 12px;font-weight:400;
+  padding-bottom:7px;border-bottom:1px solid #dcd9d033}
+.ccol ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.ccol a{display:flex;align-items:baseline;gap:9px;text-decoration:none;
+  font-size:14px;color:#dcd9d0e0;line-height:1.2}
+.ccol a:hover{color:var(--paper)}
+/* The folio number, so the footer reads as a contents page rather than a
+   pile of links — the departments really are numbered. */
+.ccol a b{font-family:var(--cred);font-size:10.5px;font-weight:700;
+  letter-spacing:.1em;color:var(--red);min-width:17px}
+.ccol a:hover b{color:#fff}
+/* The outbound mark, drawn rather than typed — U+2197 and friends are
+   quotation-family glyphs in this face and set far too low. */
+.ccol a .ext{width:5px;height:5px;flex:0 0 auto;align-self:center;
+  border-top:1.5px solid currentColor;border-right:1.5px solid currentColor;
+  transform:rotate(45deg);opacity:.6}
+
+.cicons a{align-items:center;gap:10px}
+.cicons i{display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  width:26px;height:26px;border:1px solid #dcd9d040}
+.cicons a:hover i{background:var(--red);border-color:var(--red);color:#fff}
+.cicons svg{width:14px;height:14px;fill:currentColor;display:block}
+
+.cbar{display:flex;justify-content:space-between;align-items:center;gap:16px;
+  flex-wrap:wrap;padding:12px var(--m);border-top:1px solid #dcd9d033;
+  font-family:var(--cred);font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase;color:#dcd9d08c}
+
+@media (max-width:860px){
+  .colgrid{grid-template-columns:1fr 1fr;gap:26px}
+  .cbrand{grid-column:1 / -1}
+}
+@media (max-width:480px){
+  .colgrid{grid-template-columns:1fr}
+}
 .folio{padding:0 var(--m);display:flex;justify-content:flex-end}
 .folio span{font-family:var(--disp);font-weight:900;font-size:15px;color:var(--red-tx)}
 

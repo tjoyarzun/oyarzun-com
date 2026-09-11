@@ -78,6 +78,8 @@ export interface Profile {
   projects: Project[];
   github?: string;
   linkedin: string;
+  /** Handle only, not a URL. Renders a footer icon when present. */
+  letterboxd?: string;
   resume?: string;
   recognition?: Recognition;
 }
@@ -258,6 +260,7 @@ export const profiles: { him: Profile; her: Profile } = {
     ],
     github: "tjoyarzun",
     linkedin: "tom-oyarzun",
+    letterboxd: "toyarzun",
     resume: "/documents/tommy_oyarzun_resume_2026.pdf",
   },
   her: {

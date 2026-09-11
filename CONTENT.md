@@ -722,18 +722,46 @@ or set `draft: true`, which keeps the text for later.
 
 ---
 
-## The colophon at the foot
+## The footer
 
-**File:** [`lib/copy.ts`](lib/copy.ts) → `colophon` — GitHub web editor ✓
+**File:** [`lib/copy.ts`](lib/copy.ts) → `footer` and `runningOrder` — GitHub web editor ✓
 
-The long paragraph at the bottom of every page, describing how the site is
-made — the faces, the halftone screening, the Negative button.
+Four columns: the wordmark and a one-line description, a numbered contents
+list, where to find you, and the family's other sites.
 
-It describes the printing and makes no claim about the reader. The site used
-to end this paragraph on a line about not tracking anyone, with a matching
-cover tile and a Right-now row saying the same thing. All three are gone by
-choice, so nothing in the copy has to be kept in step with what
-`app/layout.tsx` mounts.
+It used to be a single long paragraph about how the halftone engine worked.
+That is an essay, not a footer — a footer's job is to get the reader
+somewhere, and it went nowhere.
+
+**Three of the four columns build themselves:**
+
+| Column | Comes from |
+|---|---|
+| Contents | `runningOrder` in `lib/copy.ts`, with folio numbers from `departments` |
+| Connect | the `github`, `linkedin` and `letterboxd` handles on each profile in `lib/data.ts` |
+| Bottom bar | the current year, and the issue number and dateline |
+
+`runningOrder` is the same list the nav at the top of the page reads. They
+were two separate arrays once, which is how a nav and a footer quietly stop
+agreeing about what a site contains.
+
+**The one you edit by hand** is `footer` in `lib/copy.ts`:
+
+```ts
+export const footer = {
+  blurb: "Personal site for Tommy Oyarzun and Julia Velicev. …",
+  place: "Sandy, Utah",
+  family: [
+    { label: "Tomas Oyarzun", href: "https://tomas.oyarzun.com" },
+    { label: "The Housekeeper", href: "https://www.thehousekeeper.biz" },
+  ],
+  rights: "All rights reserved",
+};
+```
+
+Add an entry to `family` and a row appears. To add a social link, add the
+handle to the profile in `lib/data.ts` — the footer composes the URL, so the
+handle and the link can never disagree.
 
 
 ## Every figure and where it comes from

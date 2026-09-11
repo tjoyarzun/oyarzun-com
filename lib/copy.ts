@@ -116,8 +116,8 @@ interface PlateCopy {
 }
 
 /* ── The issue itself ───────────────────────────────────────────────────
-   Shown in the running head at the top of every page, and in the colophon
-   at the foot. Bump `number` when the design changes enough to be a new
+   Shown in the running head at the top of every page and in the bar at
+   the foot of it. Bump `number` when the design changes enough to be a new
    issue; bump `dateline` whenever you like. */
 export const issue = {
   number: "04",
@@ -128,23 +128,9 @@ export const issue = {
      carrying the same number. */
   elevation: "4,505 ft",
   domain: "oyarzun.com",
+  /** The copyright year. Computed, so the footer never needs editing. */
+  year: new Date().getFullYear(),
 };
-
-/* ── The foot of every page ─────────────────────────────────────────────
-   A magazine states how it was made. Long on purpose.
-
-   It describes the printing and nothing else. It used to end on a claim
-   about not measuring the reader; that whole line of copy is gone from the
-   site by choice, so nothing here has to be kept in step with what
-   app/layout.tsx does or does not mount. */
-export const colophon =
-  "Oyarzun.com, Issue {issueNumber}. Set in Big Shoulders Display, Archivo " +
-  "Narrow and Anonymous Pro. Every photograph on this site is screened by " +
-  "hand — dot radius computed from the luminance of the pixel underneath " +
-  "it, black plate at forty-five degrees, screen ruling keyed to " +
-  "reproduction size. The site is printed in one ink; the photographs are " +
-  "not, and clicking any of them shows you the difference. Negative in the " +
-  "top bar runs the whole issue as a photocopier would, and it remembers.";
 
 /* ── The departments ────────────────────────────────────────────────────
    One entry per section of the one scroll, in reading order.
@@ -321,6 +307,45 @@ export const departments: {
       "Next up. The slots are drawn so the gap to the 2026 goal is part of " +
       "the list rather than a claim above it.",
   },
+};
+
+/* ── The issue's running order ──────────────────────────────────────────
+   ONE list, read by the nav at the top and the sitemap in the footer. They
+   were separate arrays, which is how a nav and a footer quietly stop
+   agreeing about what the site contains.
+
+   `jump` scrolls down the one scroll; `go` leaves for a real route. Folio
+   numbers come from `departments` above rather than being repeated here. */
+export interface SiteMapEntry {
+  key: keyof typeof departments;
+  kind: "jump" | "go";
+  /** "#counted" for a jump, "/us" for a route. */
+  href: string;
+}
+
+export const runningOrder: SiteMapEntry[] = [
+  { key: "cover", kind: "jump", href: "#cover" },
+  { key: "two", kind: "go", href: "/us" },
+  { key: "counted", kind: "jump", href: "#counted" },
+  { key: "away", kind: "jump", href: "#away" },
+  { key: "written", kind: "jump", href: "#written" },
+  { key: "now", kind: "jump", href: "#now" },
+];
+
+/* ── The footer ─────────────────────────────────────────────────────────
+   Links out, and the two family sites. Edit these freely; the sitemap
+   column builds itself from `runningOrder` above. */
+export const footer = {
+  blurb:
+    "Personal site for Tommy Oyarzun and Julia Velicev. Data, mountains and " +
+    "family life in the Wasatch.",
+  place: "Sandy, Utah",
+  /** External family sites. Add an entry and a row appears. */
+  family: [
+    { label: "Tomas Oyarzun", href: "https://tomas.oyarzun.com" },
+    { label: "The Housekeeper", href: "https://www.thehousekeeper.biz" },
+  ],
+  rights: "All rights reserved",
 };
 
 /* ── Right now: the rows ────────────────────────────────────────────────
