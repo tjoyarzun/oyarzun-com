@@ -45,6 +45,11 @@ const cred = Anonymous_Pro({
 });
 
 export const metadata: Metadata = {
+  /* Without this, Next resolves a relative share image against whatever host
+     it is running on — in production that is the per-deployment Vercel URL, so
+     a shared post's picture pointed at a build rather than at the site. Every
+     relative URL in metadata is resolved against this. */
+  metadataBase: new URL("https://www.oyarzun.com"),
   title: "Oyarzun · Issue 04",
   description:
     "Tommy Oyarzun and Julia Velicev — analytics and data engineering in Sandy, Utah.",
