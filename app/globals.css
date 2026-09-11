@@ -615,9 +615,51 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
 #lb button:hover{background:#dd2f1c;border-color:#dd2f1c}
 
 @media (max-width:1000px){
-  .artgrid{grid-template-columns:1fr;gap:26px}
+  /* ── The article, on a phone ──────────────────────────────────────────
+     `grid-column:3` on the rail is declared outside this block and kept
+     applying, so placing it in column 3 of a ONE-column grid created two
+     implicit auto tracks. The rail's content sized column 3 to ~180px and
+     the 1fr body got whatever was left: 117px on a 390px phone — thirteen
+     characters a line. Resetting the placement is the actual fix; the
+     single-column template alone never took effect. */
+  .artgrid{grid-template-columns:minmax(0,1fr);gap:22px}
+  .artgrid > .marg{grid-column:1}
   .marg{position:static}
+  .article .body{max-width:none}
+
+  /* The rail repeats the header: author, date, read time and tags are all
+     in the kicker and byline a screen above. Repeating them under the
+     article is noise on a phone, so only "Next" — the one thing the header
+     does not carry — survives, and it gets the width to read as a real
+     hand-off rather than a footnote. */
+  .marg .mb.author,
+  .marg .mb.published,
+  .marg .mb.tags{display:none}
+  .marg .mb.next{border-top-width:4px;padding-top:12px;margin-bottom:0}
+  .marg .mb.next .mv{font-family:var(--disp);font-weight:800;
+    font-size:clamp(19px,5.4vw,26px);line-height:1.02;text-transform:uppercase;
+    letter-spacing:-.018em}
+  .marg .mb.next .mv a{text-decoration:none}
+
+  /* ── The sticky department bar ────────────────────────────────────────
+     Its third track was `auto`, so the kicker — "4 adventures · 2 countries
+     · 18 nights" at its longest — sized itself to its content and pushed the
+     bar 14px past a 390px viewport, which is what was making the whole page
+     scroll sideways. The bar is sticky and 39px tall, and the folio offsets
+     and scroll-margins are measured against that, so it must not wrap: the
+     kicker shrinks and ellipses instead. It repeats what the standfirst
+     immediately below says anyway. */
+  .deptbar{grid-template-columns:auto auto minmax(0,1fr);gap:10px}
+  .deptbar .dk{min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:right}
+
   .pair{grid-template-columns:1fr;gap:32px}
+  /* The teaser places its second column explicitly at track 3 for the
+     desktop `1fr 1px 1fr`. Left alone here it conjured implicit tracks and
+     split a 390px phone into 103px and 183px columns, overflowing the page
+     by 14px. Both columns are full width now and the hairline divider,
+     which is the middle track, has nothing to divide. */
+  .pair > .who{grid-column:1 !important}
+  .pair > .div{display:none}
   .pair .div{display:none}
   .two,.three,.four,.feat,.grid6,.figstrip{grid-template-columns:1fr 1fr}
   .mast .dek,.colo,.overlap,.rec{grid-template-columns:1fr;gap:14px}

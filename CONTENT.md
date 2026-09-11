@@ -583,14 +583,24 @@ they will screen properly.
 full-frame. `0.24,0.44,0.34` is 24% across, 44% down, at a 34% zoom.
 
 **You cannot get this right by reading it.** Change it, let Vercel build the
-preview, look, nudge, repeat. Two quirks that will otherwise waste your time:
+preview, look, nudge, repeat. Three things that will otherwise waste your time:
 
-- When the frame is **wider** than the photograph, the *across* value does
-  nothing at all. Only *down* and *zoom* move the picture.
-- `gamma` is the tone curve and it works backwards from what you would guess:
-  **raising it makes a dark-on-light picture lighter,** because the number
-  controls how much ink is laid down rather than how dark the result is. Leave
-  it at 1 unless a plate looks muddy.
+- **Zoom is backwards.** A *smaller* third number is more zoomed IN, because
+  it takes a smaller piece of the photograph. `0.34` is tighter than `0.46`.
+- **At zoom 1, one of the two position values does nothing.** Which one
+  depends on the photograph: if it is wider than the frame, *across* is
+  ignored; if it is taller, *down* is. Below zoom 1 both usually work, so this
+  only bites when you are framing a whole picture. (An earlier version of this
+  guide said *across* never works — that was only ever true at zoom 1.)
+- `gamma` is the tone curve and it works backwards too: **raising it makes a
+  dark-on-light picture lighter,** because the number controls how much ink is
+  laid down rather than how dark the result is. Leave it at 1 unless a plate
+  looks muddy.
+
+**To make two portraits match,** adjust the zoom until each head takes up a
+similar share of its frame — the two photographs are different shapes, so the
+same numbers will not give the same result. Tommy's plate and Julia's fit on
+opposite dimensions, which is why their crop values look nothing alike.
 
 ### Negative
 
@@ -667,6 +677,11 @@ More text. **Bold** and *italic* work, and so do lists:
 ```
 
 **The fields:**
+
+**On a phone the margin rail collapses.** Author, date, read time and tags
+already appear in the header, so those blocks are hidden below 860px and only
+"Next" survives, set large as a hand-off to the following post. Nothing is
+lost — it was all duplicated.
 
 | Field | Notes |
 |---|---|

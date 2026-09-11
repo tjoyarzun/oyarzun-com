@@ -42,14 +42,24 @@ export default function Behaviours() {
     repaint();
   }, [resolvedTheme]);
 
-  /* Several things are functions of the width rather than merely scaled by
+  /* Several things are functions of the WIDTH rather than merely scaled by
      it — the headline size, the route chart's type and label density, and the
-     halftone screen ruling. All three are recomputed on resize. Debounced,
-     because a resize drag fires continuously and each headline fit is 28
-     layout-forcing iterations. */
+     halftone screen ruling — so they are recomputed when the width changes.
+     Debounced, because a desktop resize drag fires continuously and each
+     headline fit is 28 layout-forcing iterations.
+     
+     Width only, and that is the whole point. A phone fires `resize` every
+     time its URL bar slides away, which is a HEIGHT change and happens
+     constantly while scrolling. Refitting on those meant six binary-searched
+     mastheads, a redrawn route chart and five re-screened plates running
+     mid-scroll, over and over — measured, and it is what made scrolling on
+     mobile feel jumpy. Nothing here depends on viewport height. */
   useEffect(() => {
     let t: ReturnType<typeof setTimeout>;
+    let lastWidth = window.innerWidth;
     const onResize = () => {
+      if (window.innerWidth === lastWidth) return;
+      lastWidth = window.innerWidth;
       clearTimeout(t);
       t = setTimeout(refit, 160);
     };

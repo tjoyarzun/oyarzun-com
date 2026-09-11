@@ -141,14 +141,20 @@ export default function WrittenPost({ params }: Props) {
             </div>
 
             <aside className="marg">
-              <div className="mb">
+              {/* The header already carries the author, the date, the read
+                  time and the tags. On a phone the rail repeats all four
+                  below the article, so those three blocks are hidden there
+                  and only "Next" survives — see the 860px block in
+                  globals.css. Classed rather than conditionally rendered, so
+                  the markup is identical at every width. */}
+              <div className="mb author">
                 <h5>Author</h5>
                 <div className="mv">
                   <b>{author.name}</b>
                   {author.title}, {author.company}
                 </div>
               </div>
-              <div className="mb">
+              <div className="mb published">
                 <h5>Published</h5>
                 <div className="mv">
                   {longDate(post.date)}
@@ -156,7 +162,7 @@ export default function WrittenPost({ params }: Props) {
                   {post.readTime} minute read
                 </div>
               </div>
-              <div className="mb">
+              <div className="mb tags">
                 <h5>Tags</h5>
                 <div className="tl2">
                   {post.tags.map((t) => (
@@ -167,7 +173,7 @@ export default function WrittenPost({ params }: Props) {
                 </div>
               </div>
               {next ? (
-                <div className="mb">
+                <div className="mb next">
                   <h5>Next</h5>
                   <div className="mv">
                     <Link

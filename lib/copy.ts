@@ -445,14 +445,14 @@ export const plates: Record<string, PlateCopy> = {
   portraitHim: {
     src: "/images/summit-selfie.jpg",
     detail: "Self-timer · 2026",
-    crop: "0.24,0.44,0.34",
+    crop: "0.24,0.45,0.40",
     /* PLACEHOLDER — the summit photograph standing in for a portrait. */
     placeholder: true,
   },
   portraitHer: {
     src: "/images/Julia_Velicev.png",
     detail: "Influential Women certificate · 2026",
-    crop: "0.70,0.30,0.44",
+    crop: "0.70,0.30,0.38",
     gamma: 1.06,
     placeholder: false,
   },
