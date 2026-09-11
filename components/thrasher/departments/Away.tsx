@@ -88,6 +88,14 @@ export default function Away() {
                 </span>
                 <span className="aw">{a.who}</span>
                 <span className="ann">{a.nights}</span>
+                {/* Written for every trip since the array existed and drawn
+                    nowhere until now. On its own row from column 2 to the
+                    end rather than under the name, because the name's column
+                    is 126px on a phone and an eighty-character sentence sets
+                    seven lines in it. */}
+                {a.description ? (
+                  <span className="ax">{a.description}</span>
+                ) : null}
               </div>
             ))}
             <div className="ar tot">

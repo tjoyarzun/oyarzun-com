@@ -596,12 +596,23 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
   outline:1px solid var(--ink22);outline-offset:-1px}
 .map svg{display:block;width:100%;height:auto}
 .alog{border-top:2px solid var(--ink)}
-.alog .ar{display:grid;grid-template-columns:112px 1fr auto auto;gap:14px;padding:9px 0;
+/* column-gap only. `gap` applied between rows as well, and the row below
+   the first is now the trip's description — 14px of grid gap plus its own
+   margin set the sentence adrift from the row it belongs to. */
+.alog .ar{display:grid;grid-template-columns:112px 1fr auto auto;
+  column-gap:14px;row-gap:0;padding:9px 0;
   border-bottom:1px solid var(--ink12);align-items:baseline}
 .alog .ad{font-family:var(--cred);font-size:11px;letter-spacing:.06em;color:var(--cap);
   white-space:nowrap}
 .alog .an{font-family:var(--disp);font-weight:800;font-size:15px;text-transform:uppercase;line-height:1}
-.alog .al{font-size:11.5px;color:var(--ink70)}
+/* The place is a label; the sentence below it is the content. They were the
+   same size and the same ink, so they read as one wrapped line. */
+.alog .al{font-size:11.5px;color:var(--cap)}
+/* Column 2 to the end, on its own row. `2 / -1` lands inside the four tracks
+   the row already declares, so no implicit column is created — which is the
+   fault that once squeezed the article body to 117px. */
+.alog .ax{grid-column:2 / -1;font-size:12.5px;line-height:1.45;
+  color:var(--ink70);margin-top:6px;max-width:74ch}
 .alog .aw{font-family:var(--cred);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--cap)}
 .alog .ann{font-family:var(--disp);font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
 .alog .tot{border-bottom:none;border-top:2px solid var(--ink);margin-top:3px;padding-top:9px}

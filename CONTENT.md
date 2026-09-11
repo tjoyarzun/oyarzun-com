@@ -464,20 +464,36 @@ A value of 90 or more is printed in vermilion.
 ```ts
 {
   id: 5,                       // any number not already used
-  name: "Roman Holiday",
-  location: "Rome, Italy",
+  name: "Roman Holiday",       // THE LOG'S HEADING
+  location: "Rome, Italy",     // the line under it
   country: "Italy",            // used to count countries — spell it consistently
   lat: 41.8881,                // decimal degrees; negative lng = west
   lng: 12.4792,
-  date: "2026-05-23",          // YYYY-MM-DD
+  date: "2026-05-23",          // YYYY-MM-DD — and it decides the year, see below
+  who: "Just Us",              // "Just Us" · "Family" · "Solo"
+  nights: 2,                   // counted into every nights figure on the site
+  description:                 // ONE SENTENCE, printed under the location
+    "A few days sightseeing Rome with the whole family, then headed to Sicily.",
+
+  // These three are read by nothing. See below before you spend time on them.
   type: "sightseeing",
-  who: "Just Us",
-  nights: 2,
   emoji: "🏛️",
-  description: "…",
   imageUrl: "https://picsum.photos/seed/rome/400/250",
 },
 ```
+
+**`description` is the one sentence in the log.** It sits under the place, in
+the reading face rather than the label face, and it is the only free prose a
+trip has — so it is where the trip actually gets described. One sentence is
+the house style; it sets on one line on a computer and two on a phone. There
+is no length limit, but the column is about 74 characters wide and a paragraph
+will look like a paragraph in a table.
+
+**Three fields go nowhere.** `type`, `emoji` and `imageUrl` are read by no
+part of the site. `type` and `imageUrl` exist on **bucket list** items, where
+they are both used, which is why they look live here — but on a trip they are
+inert. Leaving them costs nothing; filling them in carefully is wasted work.
+If you want a trip to say more, the sentence is `description`.
 
 ### Trips count for the year they happened
 
