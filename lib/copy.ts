@@ -149,7 +149,7 @@ export const issue = {
 
    A note on `headline`: keep a live {figure} OUT of it. A headline that
    changes value re-fits the type and re-flows the whole department every
-   time the number moves — which is why 04 is "Fernweh" and not "18
+   time the number moves — which is why 04 is "Andança" and not "18
    nights". Put the count in `deptKicker` instead, where it can grow
    without moving anything. */
 export const departments: {
@@ -247,13 +247,14 @@ export const departments: {
 
   away: {
     folio: "04",
-    name: "Fernweh",
+    name: "Andança",
     deptKicker: "{adventures} adventures · {countries} countries · {nights} nights",
-    kicker: "Fernweh · the ache to be somewhere far off",
-    headline: "Fernweh",
+    kicker: "Andança · a wandering, and the going itself",
+    headline: "Andança",
     dek: [
-      "German. The ache to be somewhere far off — the opposite of " +
-        "homesickness, and the more honest word for what a route chart is for.",
+      "Portuguese, from **andar**, to walk. A wandering — the going itself " +
+        "rather than the arriving. Julia is Brazilian, and it is a better " +
+        "word than any English one for what a route chart is a record of.",
       "{adventures} adventures, {countries} countries, {nights} nights so " +
         "far this year. Every figure derived from the log below, so adding a " +
         "trip updates all of them.",

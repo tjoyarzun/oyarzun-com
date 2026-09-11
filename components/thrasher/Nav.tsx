@@ -28,7 +28,7 @@ const ITEMS: Item[] = [
   { kind: "jump", id: "cover", label: "Cover" },
   { kind: "go", href: "/us", label: "The two of us" },
   { kind: "jump", id: "counted", label: "Counted" },
-  { kind: "jump", id: "away", label: "Fernweh" },
+  { kind: "jump", id: "away", label: "Andança" },
   { kind: "jump", id: "written", label: "Written" },
   { kind: "jump", id: "now", label: "Right now" },
 ];

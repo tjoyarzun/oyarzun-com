@@ -144,7 +144,7 @@ The home page is one long scroll of six **departments**, in this order:
 | 01 | Cover | the masthead and four figures |
 | 02 | The two of us | a teaser; the full spread is at `/us` |
 | 03 | Counted | the instrument panel |
-| 04 | Fernweh | trips, the route chart, the log |
+| 04 | Andança | trips, the route chart, the log |
 | 05 | Written | the posts index |
 | 06 | Right now | what is true this month |
 
@@ -187,7 +187,7 @@ size. One or two words is the house style; four is the practical limit.
 
 **Do not put a `{token}` in it.** A headline that changes value re-sizes the
 type and re-flows the whole department every time the number moves. That is
-why department 04 is headlined **Fernweh** rather than "18 nights" — the count
+why department 04 is headlined **Andança** rather than "18 nights" — the count
 sits in `deptKicker`, where it can grow without moving anything.
 
 ### Adding a paragraph
@@ -418,8 +418,8 @@ Two things follow:
 1. the nights figure on the cover
 2. the nights readout in the Counted panel, and its by-month sparkline
 3. the trips-and-countries line under it
-4. the Fernweh department bar
-5. both paragraphs of the Fernweh standfirst
+4. the Andança department bar
+5. both paragraphs of the Andança standfirst
 6. the country list in its credit column
 7. the log table and its total
 8. the Adventures goal gauge
@@ -598,8 +598,8 @@ decides which part of `crop` does anything (see below).
 | `cover` | the cover, top of the home page | 2.35 (1.6 on a phone) |
 | `portraitHim` | Tommy, on `/us` and the teaser | 1.28 |
 | `portraitHer` | Julia, same two places | 1.28 |
-| `bucketTahiti` | "On the list", in Fernweh | 1.5 |
-| `bucketUintas` | "On the list", in Fernweh | 1.5 |
+| `bucketTahiti` | "On the list", in Andança | 1.5 |
+| `bucketUintas` | "On the list", in Andança | 1.5 |
 | blog cover | the newest post only | 1.9 |
 | family album | `/family`, 20 frames | square |
 

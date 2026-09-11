@@ -31,6 +31,11 @@ function tokens() {
        and needs them for the same reason the CSS labels do; ink45 measured
        2.80:1 and every axis label in every drawing was using it. */
     cap: v("--cap", "#545350"),
+    /* The same correction for a REVERSED-OUT ground — the route chart, whose
+       ground is the ink. Its small labels were the mark at 55% alpha, which
+       measures fine on the dark side and fails AA on the light one, because
+       alpha does not survive an inversion evenly. */
+    capRev: v("--cap-rev", "#8f8d88"),
     redTx: v("--red-tx", "#a62315"),
     ink22: v("--ink22", "#14141438"),
     ink12: v("--ink12", "#1414141f"),
@@ -130,7 +135,64 @@ export function fitMast(): void {
       else lo = mid;
     }
     el.style.fontSize = Math.max(22, lo).toFixed(2) + "px";
+
+    /* Reserve whatever hangs below the line box.
+       
+       The mastheads are set at line-height .82, which deliberately crops the
+       em box tight to the capitals — every headline here is upper case and
+       upper case has no descenders. Except Ç: "ANDANÇA" dropped its cedilla
+       straight through the 5px rule under the standfirst.
+       
+       Measured rather than guessed, so this is automatic for any word set
+       later and costs the other five mastheads nothing — they measure zero
+       and get no padding. actualBoundingBoxDescent is the ink below the
+       baseline; half-leading plus the font's own descent is where the line
+       box ends. The difference is the overhang. */
+    el.style.paddingBottom = "0px";
+    const over = descenderOverhang(el);
+    if (over > 0.5) el.style.paddingBottom = over.toFixed(1) + "px";
   });
+}
+
+/* One canvas for every measurement, rather than one per headline per resize. */
+let measureCtx: CanvasRenderingContext2D | null = null;
+
+/** How far the glyphs' ink falls below the element's line box, in px. */
+function descenderOverhang(el: HTMLElement): number {
+  const raw = el.textContent ?? "";
+  if (!raw.trim()) return 0;
+  if (!measureCtx) measureCtx = document.createElement("canvas").getContext("2d");
+  if (!measureCtx) return 0;
+
+  const cs = getComputedStyle(el);
+  const size = parseFloat(cs.fontSize);
+  if (!size) return 0;
+
+  /* Measure what is DRAWN, not what is in the DOM. These mastheads are
+     text-transform:uppercase and canvas does not apply that, so measuring
+     textContent measured the y in "Oyarzun" and the g in "Right now" —
+     descenders that are never rendered — and reserved 78px and 59px of empty
+     space under two headlines that needed none. */
+  const text =
+    cs.textTransform === "uppercase"
+      ? raw.toUpperCase()
+      : cs.textTransform === "lowercase"
+        ? raw.toLowerCase()
+        : raw;
+
+  measureCtx.font = `${cs.fontStyle} ${cs.fontWeight} ${size}px ${cs.fontFamily}`;
+  const m = measureCtx.measureText(text);
+
+  const ink = m.actualBoundingBoxDescent;
+  const ascent = m.fontBoundingBoxAscent;
+  const descent = m.fontBoundingBoxDescent;
+  if (!Number.isFinite(ink) || !Number.isFinite(ascent)) return 0;
+
+  /* `normal` resolves to a number here because the stylesheet sets .82. */
+  const line = parseFloat(cs.lineHeight);
+  if (!Number.isFinite(line)) return 0;
+  const halfLeading = (line - (ascent + descent)) / 2;
+  return Math.max(0, ink - (halfLeading + descent));
 }
 
 /* ── SkillRadar ────────────────────────────────────────────────────────
@@ -379,10 +441,20 @@ function drawMap(): void {
   const X = (l: number) => ((l - LON0) / (LON1 - LON0)) * W;
   const Y = (a: number) => ((LAT0 - a) / (LAT0 - LAT1)) * H;
 
-  /* Fixed polarity: a reversed-out plate in both themes, so its marks come
-     from the pair that does not invert. */
+  /* The chart inverts with the issue, like everything else.
+     
+     It used to be pinned: a dark ground with light marks in both themes, on
+     the reasoning that a printed chart is a printed chart. In Negative that
+     put it at exactly the page colour, so it dissolved into the page and lost
+     its edge entirely — and it was the one element that did not turn over
+     when the reader pressed the button.
+     
+     `mark` is the paper and the ground is the ink, which is the same
+     relationship the footer has. Both tokens are 6-digit hex, which matters:
+     the alpha suffixes below (`${mark}1f`, `${mark}8c`) are string
+     concatenation, and an rgb() token would silently produce nothing. */
   const t = tokens();
-  const mark = "#dcd9d0";
+  const mark = t.paper;
 
   /* Type and density step with the reproduction size. Below 560px the date
      line is dropped entirely rather than set at an unreadable size — fewer
@@ -392,7 +464,7 @@ function drawMap(): void {
      dashed vermilion arc straight through it — and paint-order lets one
      <text> paint a ground-colored stroke first and the glyph on top, which
      is a halo without a second element or a filter. */
-  const knock = `stroke="#141414" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke"`;
+  const knock = `stroke="${t.ink}" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke"`;
   const tight = W < 560;
   const fCity = tight ? 13 : 21;
   const fMeta = tight ? 9 : 11;
@@ -453,7 +525,7 @@ function drawMap(): void {
   for (let l = Math.ceil(LON0 / lonStep) * lonStep; l <= LON1; l += lonStep) {
     const x = X(l).toFixed(1);
     g += `<line x1="${x}" y1="0" x2="${x}" y2="${H}" stroke="${mark}1f" stroke-width="1"/>`;
-    g += `<text x="${x}" y="${H - 7}" text-anchor="middle" font-family="var(--cred)" font-size="${fGrat}" letter-spacing="1" fill="${mark}8c" ${knock}>${Math.abs(Math.round(l))}°${l < 0 ? "W" : l > 0 ? "E" : ""}</text>`;
+    g += `<text x="${x}" y="${H - 7}" text-anchor="middle" font-family="var(--cred)" font-size="${fGrat}" letter-spacing="1" fill="${t.capRev}" ${knock}>${Math.abs(Math.round(l))}°${l < 0 ? "W" : l > 0 ? "E" : ""}</text>`;
   }
   for (let a = Math.floor(LAT0 / latStep) * latStep; a >= LAT1; a -= latStep) {
     const y = Y(a);
@@ -463,7 +535,7 @@ function drawMap(): void {
        trip south of the equator would have labelled the plate "-20°N". */
     const lat = Math.round(a);
     const hemi = lat < 0 ? "S" : lat > 0 ? "N" : "";
-    g += `<text x="8" y="${(y - 5).toFixed(1)}" font-family="var(--cred)" font-size="${fGrat}" letter-spacing="1" fill="${mark}8c" ${knock}>${Math.abs(lat)}°${hemi}</text>`;
+    g += `<text x="8" y="${(y - 5).toFixed(1)}" font-family="var(--cred)" font-size="${fGrat}" letter-spacing="1" fill="${t.capRev}" ${knock}>${Math.abs(lat)}°${hemi}</text>`;
   }
 
   const hx = X(HOME.lng);
@@ -522,7 +594,7 @@ function drawMap(): void {
     }
     g += `<text x="${d.lx.toFixed(1)}" y="${d.ly.toFixed(1)}" text-anchor="${d.anchor}" font-family="var(--disp)" font-weight="800" font-size="${fCity}" fill="${mark}" letter-spacing="-.2" ${knock}>${d.place.toUpperCase()}</text>`;
     if (showDates) {
-      g += `<text x="${d.lx.toFixed(1)}" y="${(d.ly + fMeta + 3).toFixed(1)}" text-anchor="${d.anchor}" font-family="var(--cred)" font-size="${fMeta}" letter-spacing="1.1" fill="${mark}8c" ${knock}>${d.d} · ${d.n} NIGHTS</text>`;
+      g += `<text x="${d.lx.toFixed(1)}" y="${(d.ly + fMeta + 3).toFixed(1)}" text-anchor="${d.anchor}" font-family="var(--cred)" font-size="${fMeta}" letter-spacing="1.1" fill="${t.capRev}" ${knock}>${d.d} · ${d.n} NIGHTS</text>`;
     }
   });
 
