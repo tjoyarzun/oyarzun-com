@@ -78,8 +78,9 @@ Two data files are dead the same way:
 - [Photographs](#photographs)
 - [The family album](#the-family-album)
 - [Publishing a blog post](#publishing-a-blog-post)
-- [The colophon at the foot](#the-colophon-at-the-foot)
-- [What updates itself](#what-updates-itself)
+- [The footer](#the-footer)
+- [Every figure and where it comes from](#every-figure-and-where-it-comes-from)
+- [Checking the figures](#checking-the-figures)
 - [What still needs a developer](#what-still-needs-a-developer)
 - [Checking your work](#checking-your-work)
 
@@ -586,19 +587,92 @@ It turns the pixels the right way up and drops the tag, so nothing can
 disagree about it later. `costa_rica.jpg` went through this; the others did
 not need it.
 
+### The seven plates, and what shape each frame is
+
+Every photograph on the site is one entry in `plates` in `lib/copy.ts`. The
+**frame** column is the shape the site prints it at, and it is the number that
+decides which part of `crop` does anything (see below).
+
+| Entry | Where it appears | Frame |
+|---|---|---|
+| `cover` | the cover, top of the home page | 2.35 (1.6 on a phone) |
+| `portraitHim` | Tommy, on `/us` and the teaser | 1.28 |
+| `portraitHer` | Julia, same two places | 1.28 |
+| `bucketTahiti` | "On the list", in Fernweh | 1.5 |
+| `bucketUintas` | "On the list", in Fernweh | 1.5 |
+| blog cover | the newest post only | 1.9 |
+| family album | `/family`, 20 frames | square |
+
+Blog covers are not in `plates` — they live in each post's own file, as
+`coverImage`. Only the **newest** post's cover is ever shown.
+
 ### Swapping a picture
 
-1. Upload the file to `public/images/` (in GitHub: **Add file → Upload files**).
-2. In `lib/copy.ts`, find the entry in `plates` and change `src`:
+1. **Get the file ready.** JPEG, long edge 2000px, no rotation tag. The two
+   commands above do both; run the Python one even for a `.jpg`, since it is
+   the one that strips the rotation tag.
+2. **Upload it** to `public/images/` — in GitHub, **Add file → Upload files**,
+   drag it in, **Commit changes**.
+3. **Point the plate at it.** In `lib/copy.ts`, find the entry and change two
+   lines:
 
 ```ts
 portraitHim: {
-  src: "/images/summit-selfie.jpg",   // ← change this
-  detail: "Self-timer · 2026",        // the caption in the colour view
-  crop: "0.24,0.44,0.34",
-  placeholder: true,                  // set to false once it is the real one
+  src: "/images/tommy_amsterdam.jpg",  // ← the file you just uploaded
+  detail: "Amsterdam · 2026",          // ← the caption in the colour view
+  crop: "0.5,0.20,0.72",               // ← see below; start at "0.5,0.5,1.0"
+  placeholder: false,                  // false once it is a real photograph
 },
 ```
+
+4. **Commit, and wait for the preview.** Vercel builds it in about a minute and
+   comments the link on the commit.
+5. **Look at it, and fix the crop.** Almost never right first time. The loop is
+   in the next section.
+
+### Working out a crop without guessing blind
+
+`crop` is `across,down,zoom`, all fractions. `0.5,0.5,1` is centred and
+full-frame. Three things decide whether you spend five minutes on this or an
+hour:
+
+**Only one of `across` and `down` does anything, and the frame decides which.**
+This is the single biggest time-waster. Compare your photograph's shape to the
+frame's number in the table above:
+
+- Photograph **wider** than the frame → it is trimmed left and right, so
+  **`across` aims it** and `down` does nothing.
+- Photograph **taller** than the frame → trimmed top and bottom, so **`down`
+  aims it** and `across` does nothing.
+
+A phone photo held upright is 0.75. A phone photo held sideways is 1.33. So an
+upright photo in the 1.28 portrait frame is aimed with **`down`**; a sideways
+one in the same frame is aimed with **`across`**. Nudging the number that does
+nothing, three deploys in a row, is the classic way to lose an afternoon.
+
+(Once `zoom` drops below 1 both numbers usually work, because the frame no
+longer spans the whole picture.)
+
+**Zoom is backwards.** A *smaller* third number is more zoomed IN — it takes a
+smaller piece of the photograph. `0.34` is much tighter than `0.72`.
+
+**`gamma` is backwards too,** on the rare plate that sets one: *raising* it
+makes a dark-on-light picture *lighter*, because the number controls how much
+ink goes down rather than how dark the result is. Leave it alone unless a plate
+looks muddy.
+
+**The loop, in practice.** Start at `0.5,0.5,1.0`. Deploy, look. Then change
+*one* number per deploy — whichever of the first two is the live one, or the
+zoom — and halve your step each time: if 0.5 is too low and 0.2 too high, try
+0.35. Four rounds gets you there. Changing two numbers at once means you learn
+nothing from the result.
+
+**To make two portraits match,** do not copy one crop to the other — the
+photographs are different shapes, so the same numbers give different results.
+Tommy's and Julia's are aimed on opposite dimensions for exactly this reason:
+his photograph is upright and hers is sideways. Match the *share of the frame
+each head takes up* by eye, using zoom, and look at the two side by side on
+`/us` rather than one at a time.
 
 ### The picture must live in this repo
 
@@ -611,31 +685,6 @@ One blog cover is still remote — `ai-and-work-from-a-skeptic.mdx` points at
 deepdreamgenerator.com — so it falls back to a stand-in plate and the caption
 says so. Download it into `public/images/`, point `coverImage` at that path,
 and it will screen like the other one.
-
-### `crop` is not a one-line edit
-
-`crop` is `across,down,zoom` as fractions. `0.5,0.5,1` is centred and
-full-frame. `0.24,0.44,0.34` is 24% across, 44% down, at a 34% zoom.
-
-**You cannot get this right by reading it.** Change it, let Vercel build the
-preview, look, nudge, repeat. Three things that will otherwise waste your time:
-
-- **Zoom is backwards.** A *smaller* third number is more zoomed IN, because
-  it takes a smaller piece of the photograph. `0.34` is tighter than `0.46`.
-- **At zoom 1, one of the two position values does nothing.** Which one
-  depends on the photograph: if it is wider than the frame, *across* is
-  ignored; if it is taller, *down* is. Below zoom 1 both usually work, so this
-  only bites when you are framing a whole picture. (An earlier version of this
-  guide said *across* never works — that was only ever true at zoom 1.)
-- `gamma` is the tone curve and it works backwards too: **raising it makes a
-  dark-on-light picture lighter,** because the number controls how much ink is
-  laid down rather than how dark the result is. Leave it at 1 unless a plate
-  looks muddy.
-
-**To make two portraits match,** adjust the zoom until each head takes up a
-similar share of its frame — the two photographs are different shapes, so the
-same numbers will not give the same result. Tommy's plate and Julia's fit on
-opposite dimensions, which is why their crop values look nothing alike.
 
 ### The cover is framed twice
 

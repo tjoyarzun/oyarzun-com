@@ -472,9 +472,14 @@ export const plates: Record<string, PlateCopy> = {
     placeholder: false,
   },
   portraitHim: {
-    src: "/images/tommy_glasses.jpg",
-    detail: "Tommy Oyarzun · 2026",
-    crop: "0.5,0.38,1.0",
+    src: "/images/tommy_amsterdam.jpg",
+    detail: "Amsterdam · 2026",
+    /* Matched to hers by eye, not by arithmetic: the two photographs are
+       different shapes, so the same numbers give different results. What is
+       matched is the share of the frame each head takes up. The frame is
+       1.28:1 and the source is 3:4, so the crop is vertical — the middle
+       number aims it and the first one does nothing at this zoom. */
+    crop: "0.5,0.20,0.72",
     placeholder: false,
   },
   portraitHer: {
