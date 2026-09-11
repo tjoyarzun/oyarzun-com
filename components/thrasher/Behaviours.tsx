@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { useTheme } from "next-themes";
 import { boot, refit, repaint } from "@/lib/thrasher/behaviours";
 
 /**
@@ -18,7 +17,6 @@ import { boot, refit, repaint } from "@/lib/thrasher/behaviours";
  */
 export default function Behaviours() {
   const pathname = usePathname();
-  const { resolvedTheme } = useTheme();
 
   /* Boot on mount and after every client navigation. Waiting on document.fonts
      matters: the type fitter measures text, and measuring before the display
@@ -37,10 +35,35 @@ export default function Behaviours() {
   }, [pathname]);
 
   /* Negative flips ink and paper, so the screens and the drawings both have to
-     be redrawn — a canvas keeps no relationship to the CSS that framed it. */
+     be redrawn — a canvas keeps no relationship to the CSS that framed it.
+     
+     Watch the class on <html>, NOT next-themes' resolvedTheme. This used to
+     be `useEffect(repaint, [resolvedTheme])`, which repainted every plate in
+     the WRONG polarity, one toggle behind, for as long as the toggle existed.
+     
+     Why: next-themes writes the class from its own effect, and this component
+     is a descendant of its provider. React runs effects child-first, so this
+     effect ran while <html> still carried the previous theme — and the engine
+     reads its ink and paper off the computed style, so it painted the old
+     one. Toggling to Negative left photographs on a light ground over a dark
+     page; toggling back rendered them as actual negatives on paper.
+     
+     The class is what decides the colours, so the class is what to watch. A
+     MutationObserver fires after the attribute is written, which is the only
+     moment the computed style is the one the canvas should be painted in. It
+     is also independent of how next-themes is wired, so this cannot silently
+     regress if that changes. */
   useEffect(() => {
-    repaint();
-  }, [resolvedTheme]);
+    const root = document.documentElement;
+    let last = root.className;
+    const obs = new MutationObserver(() => {
+      if (root.className === last) return;
+      last = root.className;
+      repaint();
+    });
+    obs.observe(root, { attributes: true, attributeFilter: ["class"] });
+    return () => obs.disconnect();
+  }, []);
 
   /* Several things are functions of the WIDTH rather than merely scaled by
      it — the headline size, the route chart's type and label density, and the

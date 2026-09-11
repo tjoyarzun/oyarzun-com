@@ -705,9 +705,17 @@ photograph is 4:3, and a frame wider than that crops top-and-bottom, so the
 
 ### Negative
 
-The button in the top bar runs the whole site as a photocopier would, and it
-remembers your choice. Every photograph is re-screened inverted. You do not
-have to do anything for a new picture to work in it.
+The site prints on paper by default. The button in the top bar runs the whole
+thing as a photocopier would — dark ground, and **every photograph re-screened
+as an actual negative** — and it remembers your choice. You do not have to do
+anything for a new picture to work in it.
+
+Which one is the default is one word, `defaultTheme`, in
+[`components/providers.tsx`](components/providers.tsx). Everything else follows
+it: the button's label and its pressed state are both derived, so there is no
+second place that assumes which way round it is. Note that changing it only
+moves people who have never pressed the button — anyone who has chosen keeps
+their choice, so test it in a private window.
 
 ---
 

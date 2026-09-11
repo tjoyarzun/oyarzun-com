@@ -3,7 +3,7 @@
 import { ThemeProvider } from "next-themes";
 
 /**
- * The issue prints dark. Negative flips it onto paper.
+ * The issue prints on paper. Negative flips it to ink.
  *
  * `defaultTheme` is the ink the site is printed in when nobody has expressed
  * a preference; the top-bar button is the inverse of it, whichever way round
@@ -23,7 +23,7 @@ import { ThemeProvider } from "next-themes";
  */
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
       {children}
     </ThemeProvider>
   );
