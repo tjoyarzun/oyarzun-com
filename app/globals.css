@@ -642,6 +642,27 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
 @media (max-width:860px){
   .colgrid{grid-template-columns:1fr 1fr;gap:26px}
   .cbrand{grid-column:1 / -1}
+  /* The cover is a 2.35:1 letterbox. At 390px that leaves 149px of picture and
+     the reversed-out type needs 119px of it, so the photograph was effectively
+     invisible on a phone. Two changes, and the second is the one that matters.
+
+     A taller frame alone does not fix it: the type needs ~45% of the height
+     and a face occupies ~43% of the source, and there is no vertical band that
+     fits both. So on a phone the type comes out of the picture and sits under
+     it, as a caption in ink on paper — which is also why the colours flip.
+
+     1.6 keeps the frame wider than the 4:3 source, so the crop stays vertical
+     and the `cy` in the plate's crop string still aims it. Go below ~1.34 and
+     the crop flips to horizontal, cy goes inert, and the whole jungle comes
+     back into frame with the faces shrunk into a corner. */
+  .cover .plate canvas{--plate-ar:1.6;--plate-pitch:2.8}
+  /* The type moves under the picture, but stays on .cover's dark ground, so
+     it stays reversed out. The scrim exists only to darken what sits behind
+     the type; with nothing behind it any more, it just greys the photograph. */
+  .cover .ov{position:static;padding:14px 22px 20px;left:auto;right:auto;bottom:auto}
+  .cover::after{display:none}
+  .cover .ov h2{font-size:clamp(28px,8.2vw,44px)}
+  .cover .ov p{font-size:14px;max-width:42ch;margin-top:8px}
 }
 @media (max-width:480px){
   .colgrid{grid-template-columns:1fr}

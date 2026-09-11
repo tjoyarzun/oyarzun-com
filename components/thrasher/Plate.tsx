@@ -1,3 +1,4 @@
+import type * as React from "react";
 /**
  * A screened photograph.
  *
@@ -81,7 +82,16 @@ export default function Plate({
            shoves the content below it downwards as it resolves — which
            shifts the text a reader is already looking at, and moves an
            anchor out from under a link that had just scrolled to it. */
-        style={{ aspectRatio: String(ar) }}
+        /* `--ar` is the default proportion; `--plate-ar` is the override a
+           media query can set (see the cover in globals.css). The engine
+           reads the resulting height, so changing it in CSS changes the
+           crop, not just the box. */
+        style={
+          {
+            "--ar": String(ar),
+            aspectRatio: "var(--plate-ar, var(--ar))",
+          } as React.CSSProperties
+        }
         data-src={src ?? full}
         data-pitch={pitch}
         data-angle={angle}

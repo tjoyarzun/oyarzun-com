@@ -564,6 +564,28 @@ sips -s format jpeg -s formatOptions 88 -Z 2000 Photo.HEIC --out photo.jpg
 `-Z 2000` also caps the long edge at 2000px. A 4032px original is four times
 larger than anything the site draws, and every visitor would download it.
 
+### Phone photos remember which way up they were
+
+A phone does not rotate the picture when you turn it sideways — it writes the
+pixels in one order and adds a tag saying "now turn this 180°". Browsers obey
+the tag; the halftone engine reads raw pixels and does not. A photo with that
+tag screens upside down while previewing right way up everywhere else, which is
+a genuinely confusing ten minutes.
+
+The `sips` line above does not strip it. This does:
+
+```bash
+python3 -c "
+from PIL import Image, ImageOps
+im = ImageOps.exif_transpose(Image.open('photo.jpg')).convert('RGB')
+im.thumbnail((2000, 2000))
+im.save('photo.jpg', 'JPEG', quality=88, optimize=True)"
+```
+
+It turns the pixels the right way up and drops the tag, so nothing can
+disagree about it later. `costa_rica.jpg` went through this; the others did
+not need it.
+
 ### Swapping a picture
 
 1. Upload the file to `public/images/` (in GitHub: **Add file → Upload files**).
@@ -614,6 +636,23 @@ preview, look, nudge, repeat. Three things that will otherwise waste your time:
 similar share of its frame — the two photographs are different shapes, so the
 same numbers will not give the same result. Tommy's plate and Julia's fit on
 opposite dimensions, which is why their crop values look nothing alike.
+
+### The cover is framed twice
+
+The cover photograph is a 2.35:1 letterbox on a computer with the headline
+reversed out over the bottom-left of it. On a phone that frame is about 150px
+tall and the headline needs 120px of it, so the picture was very nearly
+invisible. There is no crop that fixes this — the type wants about 45% of the
+height and a face takes up about as much of the photograph.
+
+So below 860px the cover uses a squarer frame and the headline sits *under*
+the picture instead of on it. Both are set in `app/globals.css`, in the
+`@media (max-width:860px)` block, as `--plate-ar` and `--plate-pitch`.
+
+One thing to know if you ever change `--plate-ar`: keep it **above 1.34**. The
+photograph is 4:3, and a frame wider than that crops top-and-bottom, so the
+*down* number in `crop` aims it. Go below and the crop flips to left-and-right,
+*down* stops doing anything, and the faces shrink into a corner.
 
 ### Negative
 

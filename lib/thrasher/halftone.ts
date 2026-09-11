@@ -34,7 +34,17 @@ export function halftone(cv: HTMLCanvasElement): void {
   const src = cv.dataset.src;
   if (!src) return;
 
-  const pitch = parseFloat(cv.dataset.pitch || "") || 5;
+  /* Screen ruling. `data-pitch` is the default; a `--plate-pitch` custom
+     property overrides it, which is how the cover drops to a finer screen on
+     a phone. A fixed 5px ruling on a 350px-wide plate is a 70-dot-wide
+     picture — coarse enough that two faces stop being faces. */
+  const cssPitch = parseFloat(
+    getComputedStyle(cv).getPropertyValue("--plate-pitch"),
+  );
+  const pitch =
+    (Number.isFinite(cssPitch) && cssPitch > 0 ? cssPitch : 0) ||
+    parseFloat(cv.dataset.pitch || "") ||
+    5;
   const ang = ((parseFloat(cv.dataset.angle || "") || 45) * Math.PI) / 180;
   const gm = parseFloat(cv.dataset.gamma || "") || 1.3;
   const ar = parseFloat(cv.dataset.ar || "") || 1.3;
@@ -47,7 +57,14 @@ export function halftone(cv: HTMLCanvasElement): void {
   img.onload = () => {
     const W = Math.round(cv.clientWidth || 600);
     if (!W) return;
-    const H = Math.round(W / ar);
+    /* Follow the box CSS actually laid out, and fall back to `ar` only if
+       there isn't one yet. The inline `aspect-ratio` on the canvas gives it a
+       height before the photograph loads, so clientHeight is normally real —
+       and reading it is what lets a media query change a plate's proportions.
+       Deriving H from data-ar instead made the frame unchangeable from the
+       stylesheet, which is how the cover ended up letterboxed to 149px on a
+       phone with its caption covering 80% of it. */
+    const H = Math.round(cv.clientHeight || W / ar);
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     cv.width = W * dpr;
     cv.height = H * dpr;

@@ -164,11 +164,12 @@ export const departments: {
     folio: "01",
     name: "Cover",
     deptKicker: "Issue {issueNumber} · {dateline}",
-    kicker: "Two subjects · one valley · Sandy, Utah",
+    kicker: "Tommy and Julia · Sandy, Utah",
     headline: "Oyarzun",
     dek: [
-      "He runs analytics at Domo. She engineers data at SeekWell. They met " +
-        "at Overstock and never left Utah. Everything here was counted by hand.",
+      "Tommy runs analytics at Domo. Julia engineers data at SeekWell. We met " +
+        "at Overstock and never left Utah. Everything on this page was " +
+        "counted, not guessed at.",
     ],
     stats: [
       "Issue {issueNumber} · {dateline}",
@@ -176,10 +177,10 @@ export const departments: {
       "Printed in one ink",
     ],
     /* The type reversed out over the cover photograph. Two lines. */
-    coverTitle: ["Two people,", "one valley"],
+    coverTitle: ["Two of us,", "mostly outside"],
     coverBlurb:
-      "{YearsHimWord} years of analytics and {yearsHerWord} of data " +
-      "engineering, at the bottom of a wall that goes up eleven thousand feet.",
+      "We both work with data and live at the bottom of the Wasatch. The rest " +
+      "of the time we are somewhere else, and we write down where.",
     /* The four figures under the cover. `value` may be a {figure} or plain
        text — "None" below is deliberately a word, not a number. */
     figures: [
@@ -460,10 +461,14 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
    halftone engine read pixels it fetched from another domain. */
 export const plates: Record<string, PlateCopy> = {
   cover: {
-    src: "/images/tommy_and_julia.jpg",
-    title: "Tommy and Julia",
-    detail: "The two of us · 2026",
-    crop: "0.5,0.55,1.0",
+    src: "/images/costa_rica.jpg",
+    title: "Tommy and Julia, Costa Rica",
+    detail: "Rio Celeste, Costa Rica · 2026",
+    /* Both faces sit in the upper-left of this frame, which is where they
+       have to be: the type block reverses out over the lower-left third.
+       cy 0.72 lifts them clear of it. The source is 4:3 and the plate is
+       2.35:1, so the crop is vertical only — cx does nothing here. */
+    crop: "0.5,0.72,1.0",
     placeholder: false,
   },
   portraitHim: {
