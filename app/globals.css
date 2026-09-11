@@ -63,7 +63,7 @@
   --m:clamp(20px,3.4vw,52px);
   --measure:68ch;
 }
-html.dark{--paper:#141414;--ink:#dcd9d0;
+html.dark{--map-bg:#090909;--paper:#141414;--ink:#dcd9d0;
   --ink70:#dcd9d0b3;--ink45:#dcd9d073;--ink22:#dcd9d038;--ink12:#dcd9d01f;
   --cap:#888681;--red-tx:#e45949}
 *{box-sizing:border-box}
@@ -337,10 +337,22 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
   letter-spacing:-.024em;text-transform:uppercase}
 .rec .tl{font-style:italic;font-size:15px;line-height:1.42;color:var(--ink70);margin:11px 0 0}
 .rec p{margin:11px 0 0;font-size:13.5px;line-height:1.48;color:var(--ink70)}
-.heat{display:grid;grid-template-columns:repeat(26,1fr);gap:2px;margin-top:2px}
+/* Columns are weeks, rows are weekdays, and grid-auto-flow:column is what
+   makes a column fill top-to-bottom before moving right. Without it the
+   cells run in reading order and the calendar means nothing. */
+/* minmax(0,1fr), not 1fr. A bare `1fr` track cannot shrink below its
+   content's min-content width, and each cell carries aspect-ratio:1 against
+   the row height — so the columns floored at 23px apiece and the grid
+   demanded 670px inside a 350px column, taking the whole page 280px wide.
+   minmax(0,1fr) removes the floor; the cells then take their width from the
+   container and their height from the aspect ratio. */
+.heat{display:grid;grid-auto-flow:column;
+  grid-template-columns:repeat(26,minmax(0,1fr));
+  grid-template-rows:repeat(7,auto);gap:2px;margin-top:2px}
 .heat i{aspect-ratio:1;background:var(--ink12);display:block}
 .heat i.l1{background:var(--ink22)}.heat i.l2{background:var(--ink45)}
 .heat i.l3{background:var(--ink70)}.heat i.l4{background:var(--red)}
+.heat i.pad{background:none}
 
 /* ── THE WRITTEN INDEX ─────────────────────────────────────────────────
    Full-width numbered bands rather than a card grid. A three-column card
@@ -557,7 +569,12 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
    `var(--ink)` inverts, so under Negative this ground went light while the
    chart's marks stayed light, and the whole map disappeared: all 43 SVG
    elements present, none of them visible. */
-.map{position:relative;background:#141414;overflow:hidden;
+/* The route chart is always a dark block with light land on it, in both
+   themes — it is a printed chart, not a surface that inverts. Its ground is
+   pinned to a token rather than a literal so that in Negative, where the page
+   itself is #141414, the chart does not dissolve into it: same picture, one
+   step denser than the paper it sits on, which is what gives it an edge. */
+.map{position:relative;background:var(--map-bg,#141414);overflow:hidden;
   outline:1px solid var(--ink22);outline-offset:-1px}
 .map svg{display:block;width:100%;height:auto}
 .alog{border-top:2px solid var(--ink)}

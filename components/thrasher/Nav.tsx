@@ -45,7 +45,11 @@ export default function Nav() {
    */
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-  const negative = mounted && resolvedTheme === "dark";
+  /* Negative means "the inverse of how the issue normally prints", and the
+     issue now prints dark. So the button is pressed when the reader is on
+     paper, not when they are on ink — otherwise arriving at the default would
+     show a control that is already switched on. */
+  const negative = mounted && resolvedTheme === "light";
 
   return (
     <nav className="nav" aria-label="Main">
@@ -87,7 +91,7 @@ export default function Nav() {
         className="neg"
         type="button"
         aria-pressed={negative}
-        onClick={() => setTheme(negative ? "light" : "dark")}
+        onClick={() => setTheme(negative ? "dark" : "light")}
       >
         Negative
       </button>

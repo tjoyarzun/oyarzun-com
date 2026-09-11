@@ -148,6 +148,25 @@ export default function ProfileColumn({
               </span>
             ))}
           </div>
+          {/* The poster has been in the data since the embed was written and
+              was never drawn — a project you can walk through in 3D was
+              represented by a line of text and a button. Screened like every
+              other photograph so it belongs to the page rather than sitting
+              on it as a web screenshot. */}
+          {p.embed?.poster ? (
+            <div style={{ marginTop: 11 }}>
+              <Plate
+                full={p.embed.poster}
+                title={p.title}
+                detail={p.embed.posterAlt ?? p.title}
+                label={`Show the render for ${p.title} in colour`}
+                pitch={2.4}
+                ar={1.72}
+                crush={false}
+                cta="Colour"
+              />
+            </div>
+          ) : null}
           {p.embed || p.liveUrl || p.githubUrl ? (
             <div
               style={{
@@ -158,8 +177,9 @@ export default function ProfileColumn({
               }}
             >
               {p.embed ? (
-                /* TODO: ProjectEmbed's click-to-load iframe has no screened
-                   treatment yet, so this is a link out for now. */
+                /* Still a link out rather than an inline iframe: a WebGL
+                   walkthrough embedded in a profile column would download a
+                   scene nobody asked for. The poster above is the preview. */
                 <a className="btn alt" href={p.embed.url}>
                   {p.embed.cta}
                 </a>

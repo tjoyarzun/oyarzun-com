@@ -3,20 +3,27 @@
 import { ThemeProvider } from "next-themes";
 
 /**
- * Negative is a deliberate act, not a reflection of the reader's OS.
+ * The issue prints dark. Negative flips it onto paper.
  *
- * `enableSystem` is off on purpose: the issue is printed on paper, and a
- * visitor arriving with a dark OS should still land on paper and choose
- * Negative from the top bar if they want it. next-themes persists that choice
- * to localStorage, so it survives navigation and return visits — which is
- * what makes it a site setting rather than a per-page toggle.
+ * `defaultTheme` is the ink the site is printed in when nobody has expressed
+ * a preference; the top-bar button is the inverse of it, whichever way round
+ * that is. Nav derives its label and pressed state from this, so changing the
+ * word here is the whole change — there is no second place that assumes which
+ * one is "normal".
  *
- * If we decide the OS preference should win after all, this is a one-word
- * change; nothing in the design system depends on it.
+ * `enableSystem` is off on purpose: which way the issue prints is a property
+ * of the issue, not of the reader's operating system. A visitor who wants the
+ * other one chooses it from the top bar, and next-themes persists that choice
+ * to localStorage, so it survives navigation and return visits — which is what
+ * makes it a site setting rather than a per-page toggle.
+ *
+ * Note for testing: anyone who has already chosen a theme keeps it. Changing
+ * the default only affects visitors with nothing in localStorage, so check
+ * this in a fresh browser profile, not in the tab you have been using.
  */
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
       {children}
     </ThemeProvider>
   );

@@ -178,15 +178,15 @@ export const profiles: { him: Profile; her: Profile } = {
     bio: "Analytics and data leader with 12+ years building D&A organizations at consumer subscription, SaaS, and enterprise software companies. Specializes in transforming analytics teams from reporting functions into strategic partners through org design, experimentation, self-serve BI products, and AI-native workflows. Based in Sandy, UT.",
     skills: [
       { skill: "SQL", value: 95 },
-      { skill: "Python", value: 75 },
+      { skill: "Python", value: 85 },
       { skill: "dbt", value: 75 },
       { skill: "Apache Spark", value: 30 },
-      { skill: "Airflow", value: 50 },
-      { skill: "Tableau/Looker", value: 82 },
+      { skill: "Airflow", value: 75 },
+      { skill: "Tableau/Looker", value: 85 },
       { skill: "Data Modeling", value: 90 },
-      { skill: "Cloud (Databricks/GCP)", value: 75 },
+      { skill: "Cloud (Databricks/GCP)", value: 90 },
       { skill: "Domo", value: 95 },
-      { skill: "AI (Cluade/Gemini)", value: 75 },
+      { skill: "AI (Claude/Gemini)", value: 80 },
     ],
     career: [
       {
@@ -292,11 +292,15 @@ export const profiles: { him: Profile; her: Profile } = {
       { skill: "Python", value: 90 },
       { skill: "dbt", value: 65 },
       { skill: "Apache Spark", value: 85 },
-      { skill: "Airflow", value: 88 },
-      { skill: "Tableau/Looker", value: 70 },
+      { skill: "Airflow", value: 90 },
+      { skill: "Tableau/Looker", value: 85 },
       { skill: "Data Modeling", value: 90 },
       { skill: "Cloud (Databricks/GCP)", value: 95 },
-      { skill: "AI (Cluade/Gemini)", value: 70 },
+      /* Added, not edited: she had no Domo entry at all. The charts plot the
+         union of both lists, so the axis was already there and drawing her at
+         zero — which read as "scores nothing" rather than "not listed". */
+      { skill: "Domo", value: 25 },
+      { skill: "AI (Claude/Gemini)", value: 85 },
     ],
     career: [
       {
