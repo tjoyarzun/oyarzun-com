@@ -288,57 +288,6 @@ function drawRadar(): void {
   });
 }
 
-/* ── BooksChart — a line, because it is a time series ────────────────── */
-function drawBooks(): void {
-  const svg = document.getElementById("books");
-  if (!svg) return;
-  const t = tokens();
-  const D: [string, number][] = [
-    ["Q2 25", 0],
-    ["Q3 25", 0],
-    ["Q4 25", 0],
-    ["Q1 26", 0],
-    ["Q2 26", 4],
-    ["Q3 26", 4],
-  ];
-  const W = 320,
-    H = 168,
-    L = 26,
-    R = 26,
-    T = 18,
-    B = 32,
-    max = 5;
-  const X = (i: number) => L + (i / (D.length - 1)) * (W - L - R);
-  const Y = (v: number) => T + (1 - v / max) * (H - T - B);
-  let g = "";
-  for (let v = 0; v <= max; v++) {
-    const y = Y(v).toFixed(1);
-    g += `<line x1="${L}" y1="${y}" x2="${W - R}" y2="${y}" stroke="${v === 0 ? t.ink : t.ink12}" stroke-width="1"/>`;
-    g += `<text x="${L - 6}" y="${(+y + 3).toFixed(1)}" text-anchor="end" font-family="var(--cred)" font-size="10" fill="${t.cap}">${v}</text>`;
-  }
-  D.forEach((d, i) => {
-    g += `<text x="${X(i).toFixed(1)}" y="${H - B + 15}" text-anchor="middle" font-family="var(--cred)" font-size="10" letter-spacing=".6" fill="${t.cap}">${d[0].toUpperCase()}</text>`;
-  });
-  const pts = D.map((d, i) => [X(i), Y(d[1])]);
-  const fz = D.findIndex((d) => d[1] > 0);
-  const seg = (a: number, b: number) =>
-    pts.slice(a, b + 1).map((p) => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
-  /* Dashed while the series is flat at zero, solid once it moves: the gap is
-     real data, not missing data, and the two are drawn differently. */
-  g += `<polyline points="${seg(0, fz - 1)}" fill="none" stroke="${t.ink45}" stroke-width="1.6" stroke-dasharray="4 3"/>`;
-  g += `<polyline points="${seg(fz - 1, D.length - 1)}" fill="none" stroke="${t.red}" stroke-width="2.4"/>`;
-  pts.forEach((p, i) => {
-    const v = D[i][1];
-    g +=
-      v > 0
-        ? `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="4" fill="${t.red}"/>`
-        : `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.6" fill="${t.paper}" stroke="${t.ink45}" stroke-width="1.2"/>`;
-    if (v > 0)
-      g += `<text x="${p[0].toFixed(1)}" y="${(p[1] - 10).toFixed(1)}" text-anchor="middle" font-family="var(--disp)" font-weight="800" font-size="16" fill="${t.ink}">${v}</text>`;
-  });
-  svg.innerHTML = g;
-}
-
 /* ── AdventureMap — a route chart on a real graticule ────────────────── */
 /* ── the coastline ───────────────────────────────────────────────────────
    The route chart used to be a graticule with arcs on it and nothing else,
@@ -764,7 +713,6 @@ function honorHash(): void {
    guards against double-wiring. */
 export function boot(): void {
   drawRadar();
-  drawBooks();
   drawMap();
   drawGallery();
   initDepartments();
@@ -792,7 +740,6 @@ export function mountAlbum(): void {
 /** Re-screen the plates and redraw the charts for the polarity now on screen. */
 export function repaint(): void {
   drawRadar();
-  drawBooks();
   drawMap();
   paintAllPlates();
 }
