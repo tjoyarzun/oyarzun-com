@@ -51,13 +51,31 @@ The dead ones are every file under:
 no content. If a path in an older note or an older version of this guide
 points anywhere else under `components/`, it is out of date.
 
-The count is exact as of this writing: **39 dead, 16 live.**
+The count is exact as of this writing: **39 dead, 17 live.**
 
 Two data files are dead the same way:
 
 - `content/now.json` — the "Right now" content moved to `nowRows` in
   `lib/copy.ts`
 - `content/memory.json` — the Memory-of-the-Day feature no longer exists
+
+**And seven blocks inside `lib/data.ts` are dead**, which is harder to see
+because the file around them is live. Nothing the site renders imports any of
+these; they were read only by components in the list above:
+
+| Block | Was |
+|---|---|
+| `familyPhotos` (20 entries) | the old album — the live one is `gallery` in `lib/copy.ts` |
+| `familyFeedPosts` (5) | the old family feed |
+| `recentActivities` (5) | a home-page widget |
+| `upcomingEvents` (3) | a home-page widget |
+| `hikingData` (12) | an old chart |
+| `dashboardStats` (4 keys) | superseded — every one of those figures now derives |
+| `goalsYear` | superseded by `CURRENT_YEAR` |
+
+Editing any of them changes nothing on the site, silently. **`familyPhotos` is
+the trap**: it is twenty real entries with captions, it looks exactly like the
+album you see at `/family`, and it is not.
 
 ---
 
@@ -70,7 +88,7 @@ Two data files are dead the same way:
   - [`/family`](#family)
   - [Photograph captions](#photograph-captions)
   - [Blog posts](#blog-posts)
-  - [Thirty-three captions are NOT in `copy.ts`](#thirty-three-captions-are-not-in-copyts)
+  - [About fifty short labels are NOT in `copy.ts`](#about-fifty-short-labels-are-not-in-copyts)
 - [How live figures work](#how-live-figures-work) — the `{curly braces}`
 - [Changing a headline or a paragraph](#changing-a-headline-or-a-paragraph)
   - [Two things to know about `headline`](#two-things-to-know-about-headline)
@@ -171,18 +189,26 @@ line printed under it in the color view. See [Photographs](#photographs).
 One Markdown file each in [`content/posts/`](content/posts). See
 [Publishing a blog post](#publishing-a-blog-post).
 
-### Thirty-three captions are NOT in `copy.ts`
+### About fifty short labels are NOT in `copy.ts`
 
 The small monospace lines under the drawings and plates — *"Public
 contributions only"*, *"Vermilion = 90+"*, *"Click any frame for the actual
-color"*, *"Notch = pace"* — are written into the components, not the copy
-file. There are **33 of them**, all under
-[`components/thrasher/`](components/thrasher), and they are the one part of
-the prose this guide's "almost everything lives in two files" does not cover.
+color"*, *"Notch = pace"*, *"Reading now"*, *"Slot open"* — are written into
+the components, not the copy file. They are the one part of the prose this
+guide's "almost everything lives in two files" does not cover.
+
+They are all under [`components/thrasher/`](components/thrasher), in three
+shapes, and it takes three searches to see them all:
+
+| Search that folder for | Finds | Roughly |
+|---|---|---|
+| `left="` and `right="` | the two ends of a caption under a drawing | 17 |
+| `title="`, `label="`, `cta="` | plate titles and button words | 17 |
+| a capitalised word between `>` and `<` | panel and column headings | 18 |
 
 They are safe to edit — they are plain strings — but you are editing a
 component, so keep the quotes and the surrounding punctuation exactly as they
-are. Find them by searching that folder for `left="` and `right="`.
+are.
 
 This is a deliberate split rather than an oversight: those lines describe the
 drawing they sit under (its screen ruling, its source, how to read it), so

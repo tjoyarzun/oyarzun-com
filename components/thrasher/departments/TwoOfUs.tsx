@@ -87,11 +87,12 @@ export default async function TwoOfUs() {
               <Plate
                 full={p.portrait.src}
                 title={`${p.profile.name} · ${p.profile.title}, ${p.profile.company}`}
-                detail={
-                  i === 0
-                    ? "Self-timer · 2026"
-                    : "Influential Women certificate · 2026"
-                }
+                /* From the plate, not written here. These were two literals
+                   — "Self-timer · 2026" and "Influential Women certificate ·
+                   2026" — so the same photograph carried one caption on this
+                   page and a different one on /us, and hers named a document
+                   that is not the picture she is in. */
+                detail={p.portrait.detail}
                 ar={1.28}
                 gamma={p.portrait.gamma}
                 crop={p.portrait.crop}

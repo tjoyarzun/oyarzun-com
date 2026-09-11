@@ -65,7 +65,10 @@ export default function Away() {
           <svg
             id="chart"
             viewBox="0 0 1360 440"
-            aria-label="Route chart from Sandy, Utah to four 2026 destinations"
+            /* The count was the word "four". The chart is drawn from
+               adventuresThisYear, so a fifth trip left the only description a
+               screen reader gets saying four. */
+            aria-label={`Route chart from Sandy, Utah to ${log.length} ${fill("{year}")} ${log.length === 1 ? "destination" : "destinations"}`}
           />
         </div>
         <Caption

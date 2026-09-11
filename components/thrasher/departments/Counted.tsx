@@ -12,7 +12,7 @@ import {
 import { departments } from "@/lib/copy";
 import { bucketLevels, getContributions } from "@/lib/github";
 import { fill, lines, rich } from "@/lib/thrasher/fill";
-import { GOALS, figures, pct } from "@/lib/thrasher/issue";
+import { GOALS, booksShape, figures, pct } from "@/lib/thrasher/issue";
 
 /**
  * 03 · Counted — the instrument panel.
@@ -140,7 +140,7 @@ export default async function Counted() {
                 <span className="pu">2026</span>
               </div>
               <div className="pv">{figures.booksReadThisYear}</div>
-              <div className="pn2">Flat until Q2 · then 4 a quarter</div>
+              <div className="pn2">{booksShape()}</div>
               <div className="spark">
                 <Sparkline
                   fill

@@ -14,6 +14,7 @@
    ═══════════════════════════════════════════════════════════════════════ */
 
 import {
+  booksPerQuarter,
   adventures,
   adventuresOtherYears,
   adventuresThisYear,
@@ -52,6 +53,32 @@ export const GOALS = [
   { label: "Written", current: postsPublished, goal: target("Blog Posts", 5) },
   { label: "Adventures", current: adventuresThisYear.length, goal: target("Adventures", 20) },
 ] as const;
+
+/**
+ * The sentence under the Books readout, derived from booksPerQuarter.
+ *
+ * It was the literal "Flat until Q2 · then 4 a quarter", sitting directly
+ * beside a figure computed from the array it describes — so the moment the
+ * reading rate changed, the number and the sentence next to it would have
+ * disagreed. The other three readouts on that panel already derive their
+ * line; this one was the exception.
+ */
+export function booksShape(): string {
+  const qs = booksPerQuarter;
+  const first = qs.findIndex((q) => q.books > 0);
+  if (first === -1) return "Nothing logged yet";
+  const vals = qs.slice(first).map((q) => q.books);
+  const even = vals.every((v) => v === vals[0]);
+  const rate = even
+    ? String(vals[0])
+    : (vals.reduce((a, b) => a + b, 0) / vals.length)
+        .toFixed(1)
+        .replace(/\.0$/, "");
+  const tail = `${rate} a quarter`;
+  return first === 0
+    ? tail
+    : `Flat until ${qs[first].quarter.split(" ")[0]} · then ${tail}`;
+}
 
 /** The writing target, used by the copy tokens {postsGoal} and {slotsOpen}. */
 export const postsGoal = target("Blog Posts", 5);

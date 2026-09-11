@@ -29,7 +29,7 @@ const truth = JSON.parse(
     [
       "tsx",
       "-e",
-      `import { figures, GOALS, draftCount, yearsTotal, overlap, GALLERY_FRAMES, postsGoal, SKILL_AXES, skiDays } from "./lib/thrasher/issue";
+      `import { figures, GOALS, draftCount, yearsTotal, overlap, GALLERY_FRAMES, postsGoal, SKILL_AXES, skiDays, booksShape } from "./lib/thrasher/issue";
        import { skiResorts } from "./lib/data";
        const top = [...skiResorts].sort((a,b)=>b.days-a.days)[0];
        process.stdout.write(JSON.stringify({
@@ -38,6 +38,7 @@ const truth = JSON.parse(
          books: figures.booksReadThisYear, posts: figures.postsPublished,
          drafts: draftCount, postsGoal, yearsTotal, axes: SKILL_AXES.length,
          frames: GALLERY_FRAMES, topResort: top.name, topResortDays: top.days,
+         booksShape: booksShape(),
          overlapFrom: overlap?.from, overlapTo: overlap?.to,
          overlapYears: overlap?.shared, herTenureTo: overlap?.herTo,
          herTenureYears: overlap?.herYears,
@@ -211,6 +212,7 @@ check("countries", home, `${truth.countries} countries`);
 check("adventures logged", home, `${truth.adventures} adventures`);
 check("top resort", home, `${truth.topResort}, mostly`);
 check("top resort days", home, `${truth.topResortDays} days there`);
+check("books shape line", home, truth.booksShape);
 check("published / draft", home, `${truth.posts} published · ${truth.drafts} in draft`);
 check("slots open", home, `${truth.postsGoal - truth.posts} slots open`);
 check("overlap span", home, `${truth.overlapYears} years, different floors`);
