@@ -26,7 +26,7 @@ Two more places, for two specific things:
 
 ---
 
-## ⚠️ Read this before you edit anything
+## Read this before you edit anything ⚠️
 
 **There are 39 files in `components/` that look editable and are not.**
 
@@ -63,8 +63,17 @@ Two data files are dead the same way:
 
 ## Table of contents
 
+- [If you are rewriting all the words: start here](#if-you-are-rewriting-all-the-words-start-here)
+  - [The home page, top to bottom](#the-home-page-top-to-bottom)
+  - [`/us` — the full spread](#us--the-full-spread)
+  - [`/family`](#family)
+  - [Photograph captions](#photograph-captions)
+  - [Blog posts](#blog-posts)
+  - [Thirty-three captions are NOT in `copy.ts`](#thirty-three-captions-are-not-in-copyts)
 - [How live figures work](#how-live-figures-work) — the `{curly braces}`
 - [Changing a headline or a paragraph](#changing-a-headline-or-a-paragraph)
+  - [Two things to know about `headline`](#two-things-to-know-about-headline)
+  - [Adding a paragraph](#adding-a-paragraph)
 - [Right now — the monthly edit](#right-now--the-monthly-edit)
 - [Names, jobs and bios](#names-jobs-and-bios)
 - [Careers](#careers)
@@ -72,17 +81,111 @@ Two data files are dead the same way:
 - [Awards](#awards)
 - [Skills and the spider charts](#skills-and-the-spider-charts)
 - [Trips](#trips)
+  - [Trips count for the year they happened](#trips-count-for-the-year-they-happened)
+  - [The coastline](#the-coastline)
 - [The bucket list](#the-bucket-list)
 - [Ski days, books, films, reading](#ski-days-books-films-reading)
 - [Goals](#goals)
 - [Photographs](#photographs)
+  - [HEIC will not work](#heic-will-not-work)
+  - [Phone photos remember which way up they were](#phone-photos-remember-which-way-up-they-were)
+  - [The seven plates, and what shape each frame is](#the-seven-plates-and-what-shape-each-frame-is)
+  - [Swapping a picture](#swapping-a-picture)
+  - [Working out a crop without guessing blind](#working-out-a-crop-without-guessing-blind)
+  - [The picture must live in this repo](#the-picture-must-live-in-this-repo)
+  - [The cover is framed twice](#the-cover-is-framed-twice)
+  - [Negative](#negative)
 - [The family album](#the-family-album)
+  - [The password box checks nothing — read this](#the-password-box-checks-nothing--read-this)
 - [Publishing a blog post](#publishing-a-blog-post)
 - [The footer](#the-footer)
 - [Every figure and where it comes from](#every-figure-and-where-it-comes-from)
+  - [Counted from something (you never touch these)](#counted-from-something-you-never-touch-these)
+  - [Kept by hand, in one place each](#kept-by-hand-in-one-place-each)
+  - [Spelled-out numbers still derive](#spelled-out-numbers-still-derive)
+  - [If GitHub is unreachable](#if-github-is-unreachable)
 - [Checking the figures](#checking-the-figures)
 - [What still needs a developer](#what-still-needs-a-developer)
 - [Checking your work](#checking-your-work)
+  - [If a build fails](#if-a-build-fails)
+
+---
+
+## If you are rewriting all the words: start here
+
+The rest of this guide is arranged by **what a thing is** — careers, trips,
+photographs — which is what you want when you are changing one thing. For a
+front-to-back rewrite of the prose you want the opposite: **the order a reader
+meets it.** That is this list.
+
+Everything below is in [`lib/copy.ts`](lib/copy.ts) unless it says otherwise.
+Read [How live figures work](#how-live-figures-work) first — it is four
+minutes and it stops you deleting a `{token}` by accident.
+
+Every department has the same five fields. They are explained once, with an
+annotated example, in [Changing a headline or a paragraph](#changing-a-headline-or-a-paragraph):
+
+> `kicker` · `headline` · `dek` · `stats` · `deptKicker`
+
+Below, **"the five"** means those. Anything else is listed by name, because
+several departments have fields no other department has.
+
+### The home page, top to bottom
+
+| | Where | What is prose |
+|---|---|---|
+| Masthead strip | `issue` | `strapline`, `dateline`, `elevation`, `domain` |
+| **01** Cover | `departments.cover` | the five · `coverTitle` (the two lines over the photograph) · `coverBlurb` (the sentence under them) · `figures[].label` — the four tile captions. **Leave `figures[].value` alone**, those are tokens |
+| **02** The two of us | `departments.two` | the five · `teaseLabel`, `teaseBlurb`, `teaseCta` (the band that sends you to `/us`) · `overlapYears`, `overlapText`, `overlapStats` (the Overstock band) |
+| **03** Counted | `departments.counted` | the five, and nothing else |
+| **04** Andança | `departments.away` | the five. `dek` is two paragraphs here |
+| **05** Written | `departments.written` | the five · `indexTitle` · `emptyTitle` and `emptyFirstBlurb`, which fill the unwritten slots |
+| **06** Right now | `departments.now` + `nowRows` | the five · `updated`, a **hand-typed date** — change it whenever you change a row · then every `title`, `right`, `label`, `headline` and `text` in `nowRows` |
+| Footer | `footer` | `blurb`, `place`, `rights`, and each `family[].label` |
+
+### `/us` — the full spread
+
+| Where | What is prose |
+|---|---|
+| `us` | `kicker`, `headline`, `dek` (2 paragraphs), `stats` (3 lines), `overlapText`, `overlapStats` (3), `backLabel` |
+| [`lib/data.ts`](lib/data.ts) → `profiles.*.bio` | the two biographies |
+| `profiles.*.career[].description` | one sentence per job — see [Careers](#careers) |
+| `profiles.*.projects[].description` | see [Projects](#projects) |
+| `profiles.her.recognition.blurb` | see [Awards](#awards) |
+
+### `/family`
+
+| Where | What is prose |
+|---|---|
+| `family` | `kicker`, `headline`, `dek`, `stats` · `gateHeadline` (two lines) and `gateText`, which is the door · `lockedHeadline` (two lines) and `lockedText`, which is what a search engine sees |
+
+### Photograph captions
+
+`plates` carries a `title` and a `detail` for each picture. `detail` is the
+line printed under it in the color view. See [Photographs](#photographs).
+
+### Blog posts
+
+One Markdown file each in [`content/posts/`](content/posts). See
+[Publishing a blog post](#publishing-a-blog-post).
+
+### Thirty-three captions are NOT in `copy.ts`
+
+The small monospace lines under the drawings and plates — *"Public
+contributions only"*, *"Vermilion = 90+"*, *"Click any frame for the actual
+color"*, *"Notch = pace"* — are written into the components, not the copy
+file. There are **33 of them**, all under
+[`components/thrasher/`](components/thrasher), and they are the one part of
+the prose this guide's "almost everything lives in two files" does not cover.
+
+They are safe to edit — they are plain strings — but you are editing a
+component, so keep the quotes and the surrounding punctuation exactly as they
+are. Find them by searching that folder for `left="` and `right="`.
+
+This is a deliberate split rather than an oversight: those lines describe the
+drawing they sit under (its screen ruling, its source, how to read it), so
+they belong beside the thing that draws it. But if you do a `copy.ts`-only
+pass, **these are what you will have missed.**
 
 ---
 
@@ -735,7 +838,7 @@ Twenty frames are drawn, cycling through this list, each with its own crop.
 Add paths and the wall gets more variety. The crops come from a fixed seed, so
 a rebuild never reshuffles it.
 
-### ⚠️ The password box checks nothing
+### The password box checks nothing — read this
 
 Anyone who presses Enter gets in. This has always been true — the old gate did
 the same. The album is kept private by two things that **do** work:
@@ -977,7 +1080,7 @@ A quick checklist after an edit:
       phone as well — the plates are cropped to the same fractions at every
       size but the frame shape changes.
 - [ ] If you edited something and nothing changed, check you were not in one
-      of the [39 dead files](#-read-this-before-you-edit-anything).
+      of the [39 dead files](#read-this-before-you-edit-anything).
 
 ### If a build fails
 
