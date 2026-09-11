@@ -5,7 +5,7 @@ import { bucketLevels, type Contributions } from "@/lib/github";
 /**
  * Commit activity, rendered on the server.
  *
- * Was drawn client-side by drawHeat() in lib/thrasher/behaviours.ts, which
+ * Was drawn client-side by drawHeat() in lib/thrasher/behaviors.ts, which
  * fetched /api/github-activity after hydration and wrote into the DOM. That
  * meant the grid was absent in the HTML, absent with JavaScript off, absent
  * in a share preview, and — worse — the figure beside it was a stale literal

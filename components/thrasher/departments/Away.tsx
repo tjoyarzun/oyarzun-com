@@ -15,7 +15,7 @@ import { dateline, figures } from "@/lib/thrasher/issue";
 /**
  * 04 · Away.
  *
- * The route chart is drawn in lib/thrasher/behaviours.ts from the real lat/lng
+ * The route chart is drawn in lib/thrasher/behaviors.ts from the real lat/lng
  * on each adventure, projected equirectangularly onto a labelled graticule —
  * a print treatment of what react-leaflet renders interactively today. The
  * arcs are quadratic béziers whose control point rises with the span, so a
@@ -140,7 +140,7 @@ export default function Away() {
                     full={remote || !b.imageUrl ? stand.src : b.imageUrl}
                     title={`${b.name} · ${b.state}`}
                     detail={b.description}
-                    cta="Colour"
+                    cta="Color"
                     pitch={2.6}
                     ar={1.3}
                     crop={stand.crop}

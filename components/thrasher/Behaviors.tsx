@@ -2,20 +2,20 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { boot, refit, repaint } from "@/lib/thrasher/behaviours";
+import { boot, refit, repaint } from "@/lib/thrasher/behaviors";
 
 /**
- * Runs the issue's client behaviour: the halftone screens, the four drawings,
+ * Runs the issue's client behavior: the halftone screens, the four drawings,
  * the scroll-spy that drives the running head, the lightbox, and the type
  * fitter that force-justifies each masthead to its measure.
  *
  * This is a single mount point rather than per-component effects on purpose.
- * The behaviours are cross-cutting — the spy reads every department and writes
+ * The behaviors are cross-cutting — the spy reads every department and writes
  * to the nav; the fitter measures every masthead; the lightbox is one overlay
  * shared by every plate — so scattering them across the components they touch
  * would mean each one racing the others' DOM.
  */
-export default function Behaviours() {
+export default function Behaviors() {
   const pathname = usePathname();
 
   /* Boot on mount and after every client navigation. Waiting on document.fonts
@@ -23,14 +23,14 @@ export default function Behaviours() {
      face has loaded fits the headline to the fallback's metrics and leaves it
      at the wrong size. */
   useEffect(() => {
-    let cancelled = false;
+    let canceled = false;
     const run = () => {
-      if (!cancelled) boot();
+      if (!canceled) boot();
     };
     if (document.fonts?.ready) void document.fonts.ready.then(run);
     else run();
     return () => {
-      cancelled = true;
+      canceled = true;
     };
   }, [pathname]);
 
@@ -48,7 +48,7 @@ export default function Behaviours() {
      one. Toggling to Negative left photographs on a light ground over a dark
      page; toggling back rendered them as actual negatives on paper.
      
-     The class is what decides the colours, so the class is what to watch. A
+     The class is what decides the colors, so the class is what to watch. A
      MutationObserver fires after the attribute is written, which is the only
      moment the computed style is the one the canvas should be painted in. It
      is also independent of how next-themes is wired, so this cannot silently

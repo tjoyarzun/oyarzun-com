@@ -376,7 +376,7 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
         headline: "Dimple Dell in WebGL",
         text:
           "A walkable model of the house, generated from the architect’s CAD " +
-          "rather than modelled by hand.",
+          "rather than modeled by hand.",
       },
       {
         label: "Reading",
@@ -397,7 +397,7 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
       {
         label: "Working on",
         headline: "Pipelines at SeekWell",
-        text: "Hybrid out of Draper. Warehouse modelling and high-volume SQL.",
+        text: "Hybrid out of Draper. Warehouse modeling and high-volume SQL.",
       },
       {
         label: "Speaking",
@@ -407,7 +407,7 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
           "Valley on-ramp.",
       },
       {
-        label: "Recognised",
+        label: "Recognized",
         headline: "Influential Women, 2026",
         text: "Verified. The certificate is on her profile at /us.",
       },
@@ -446,7 +446,7 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
    That part is a genuine one-line edit.
 
    `crop` is NOT a one-line edit. It is "across,down,zoom" as fractions —
-   0.5,0.5,1 means centred and full-frame; 0.24,0.44,0.34 means 24% across,
+   0.5,0.5,1 means centered and full-frame; 0.24,0.44,0.34 means 24% across,
    44% down, at a 34% zoom. You cannot get it right by reading it; open the
    Vercel preview and nudge. One quirk worth knowing: when the frame is
    WIDER than the photograph, the across value does nothing at all — only

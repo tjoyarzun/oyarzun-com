@@ -12,7 +12,7 @@ import type { Recognition } from "@/lib/data";
  * it does the most work. The badge shrinks to a mark beside the heading and the
  * video sits at the foot.
  *
- * Colour: this card is the one place the Influential Women magenta appears. It
+ * Color: this card is the one place the Influential Women magenta appears. It
  * belongs to the awarding body, not to this site, so it stops at the card edge
  * — nothing else on the page picks it up.
  */

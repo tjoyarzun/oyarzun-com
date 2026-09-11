@@ -8,7 +8,7 @@ import { issue } from "@/lib/copy";
    These are grouped in one file rather than split one-per-file on purpose:
    each is a handful of lines of markup over a class already defined in the
    design system, and they are only ever read together. Anything with real
-   behaviour or its own state lives in its own file.
+   behavior or its own state lives in its own file.
    ═══════════════════════════════════════════════════════════════════════ */
 
 /**
@@ -35,7 +35,7 @@ export function DeptBar({
 
 /**
  * The masthead. `data-fitbox`/`data-fit` are the hooks for the type fitter in
- * lib/thrasher/behaviours.ts, which binary-searches a font size so the
+ * lib/thrasher/behaviors.ts, which binary-searches a font size so the
  * headline force-justifies to the exact measure.
  *
  * The span must NOT be given a max-width. The fitter measures scrollWidth,

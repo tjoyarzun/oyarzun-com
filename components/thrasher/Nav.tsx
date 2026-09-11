@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
  * does, not by where it sits.
  *
  *   jump  scrolls you down the one scroll. Highlighted by the scroll-spy in
- *         lib/thrasher/behaviours.ts, which sets aria-current="true".
+ *         lib/thrasher/behaviors.ts, which sets aria-current="true".
  *   go    leaves for another route, and carries a chevron.
  *
  * Department 02 is a `go` because the feature outgrew the scroll and lives at

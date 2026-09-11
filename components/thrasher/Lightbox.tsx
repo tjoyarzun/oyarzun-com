@@ -1,8 +1,8 @@
 /**
  * The site is printed in one ink. The photographs are not.
  *
- * Markup only — the open/close/preload behaviour is wired by
- * lib/thrasher/behaviours.ts, which also re-wires every new .plate after a
+ * Markup only — the open/close/preload behavior is wired by
+ * lib/thrasher/behaviors.ts, which also re-wires every new .plate after a
  * client navigation. Rendering this once in the root layout means the overlay
  * survives navigation and there is only ever one of it in the document.
  */
@@ -18,7 +18,7 @@ export default function Lightbox() {
             <b className="t" />
           </span>
           <span>
-            <span className="sw">Actual colour</span> · <span className="d" />
+            <span className="sw">Actual color</span> · <span className="d" />
           </span>
         </div>
       </div>

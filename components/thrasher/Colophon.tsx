@@ -24,7 +24,7 @@ import { fill } from "@/lib/thrasher/fill";
 function Letterboxd() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      {/* The real mark's three dots overlap and are told apart by colour.
+      {/* The real mark's three dots overlap and are told apart by color.
           In one ink they merge into a blob, so they are spaced instead. */}
       <circle cx="4.6" cy="12" r="3.5" />
       <circle cx="12" cy="12" r="3.5" />

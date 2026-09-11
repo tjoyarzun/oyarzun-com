@@ -75,7 +75,7 @@ export default function Written() {
                 full={cover.src}
                 title={`Cover · ${featured.title}`}
                 detail="Cover image · 2026"
-                label="Show the cover in colour"
+                label="Show the cover in color"
                 pitch={3.4}
                 gamma={1.06}
                 ar={1.5}

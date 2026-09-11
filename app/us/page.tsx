@@ -102,7 +102,7 @@ export default async function Us() {
         </div>
 
         {/* The certificate, at reproduction size. It is the one document on
-            the site where the colour reveal carries real information — the
+            the site where the color reveal carries real information — the
             IW pink is the whole point of the plate. */}
         {her.recognition ? (
           <div className="sec">
@@ -151,7 +151,7 @@ export default async function Us() {
                   full={her.recognition.certificateUrl}
                   title="Influential Women recognition certificate"
                   detail={`${her.name} · ${her.title}, ${her.company} · ${her.recognition.year}`}
-                  label="Show the certificate in colour"
+                  label="Show the certificate in color"
                   gamma={0.72}
                   ar={1.09}
                   crush={false}
@@ -159,7 +159,7 @@ export default async function Us() {
                 />
                 <Caption
                   left="The certificate · verified"
-                  right="Colour reveals the IW pink"
+                  right="Color reveals the IW pink"
                 />
               </div>
             </div>

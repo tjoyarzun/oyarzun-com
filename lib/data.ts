@@ -229,7 +229,7 @@ export const profiles: { him: Profile; her: Profile } = {
       {
         title: "Dimple Dell Residence — interactive 3D",
         description:
-          "A walkable 3D model of the house we're building in Sandy, generated from the architect's CAD drawings rather than modelled by hand. Orbit the massing, peel the roof off, isolate a level, drag the sun across the sky — or drop into first person and walk the interior.",
+          "A walkable 3D model of the house we're building in Sandy, generated from the architect's CAD drawings rather than modeled by hand. Orbit the massing, peel the roof off, isolate a level, drag the sun across the sky — or drop into first person and walk the interior.",
         tags: ["React Three Fiber", "three.js", "TypeScript", "Vite", "CAD"],
         // No githubUrl: the repo is private (it derives from a permit set),
         // so a link would 404 for every visitor.
@@ -487,7 +487,7 @@ export const countryName = (a: Adventure): string =>
  * The distinct countries in a list, in first-seen order.
  *
  * ONE function, so the count and the printed list cannot disagree. They did:
- * the count normalised case (`.trim().toUpperCase()`) while both places that
+ * the count normalized case (`.trim().toUpperCase()`) while both places that
  * printed the names only trimmed, so a single trip written `country: "usa"`
  * produced "2 countries" sitting beside a three-name list reading
  * "Italy · USA · usa" — on the same screen, inside the same element.
@@ -534,7 +534,7 @@ export const adventuresUndated: Adventure[] = adventures.filter(
 /**
  * Trip figures for an arbitrary list.
  *
- * Exported so scripts/check-figures.mjs can assert the behaviour on synthetic
+ * Exported so scripts/check-figures.mjs can assert the behavior on synthetic
  * entries — an out-of-year trip, a duplicated country in different casing, a
  * zero-night trip — without perturbing the real array and rebuilding.
  */

@@ -1,12 +1,12 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   Shared behaviour across every route.
+   Shared behavior across every route.
 
    Ported from the design exploration's site.js. Three things changed:
 
      1. Negative was removed. next-themes owns the theme now; this module only
         repaints the plates and redraws the charts when it changes.
      2. Prefetch-on-intent was removed. next/link already prefetches.
-     3. The charts read their colours from the design system's CSS variables
+     3. The charts read their colors from the design system's CSS variables
         instead of hard-coded hex, so they invert under Negative too. In the
         static original they did not — the SVGs were drawn once in ink-on-paper
         and stayed that way when the page went negative.
@@ -16,7 +16,7 @@ import { halftone, paintAllPlates } from "./halftone";
 import { GALLERY_FRAMES, gallery } from "@/lib/copy";
 import { adventuresThisYear } from "@/lib/data";
 
-/** Read the live design-system colours, so every drawing inverts with the page. */
+/** Read the live design-system colors, so every drawing inverts with the page. */
 function tokens() {
   const s = getComputedStyle(document.documentElement);
   const v = (n: string, fallback: string) =>
@@ -58,13 +58,13 @@ function initLightbox(): void {
     last = el;
     lbt.textContent = el.dataset.t || "";
     lbd.textContent = el.dataset.d || "";
-    lbi.alt = (el.dataset.t || "Photograph") + " — in colour";
+    lbi.alt = (el.dataset.t || "Photograph") + " — in color";
     lbi.classList.remove("in");
     lbm.classList.remove("in");
     lb.hidden = false;
     requestAnimationFrame(() => {
       lb.classList.add("in");
-      /* Preload before swapping src, so the reveal is the full-colour image
+      /* Preload before swapping src, so the reveal is the full-color image
          arriving rather than a blank frame that fills in. */
       const pre = new Image();
       pre.onload = () => {
@@ -192,7 +192,7 @@ function drawRadar(): void {
       if (d.value > 0)
         g += `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="2.6" fill="${t.red}"/>`;
       /* Labels are placed by quadrant so they never overrun the drawing:
-         anchored away from the centre, nudged clear of the vertex. */
+         anchored away from the center, nudged clear of the vertex. */
       const [lx, ly] = pt(i, 1.13);
       const dx = lx - cx;
       const anchor = Math.abs(dx) < 6 ? "middle" : dx > 0 ? "start" : "end";
@@ -338,14 +338,14 @@ function drawMap(): void {
   const padLon = Math.max(12, (Math.max(...lons) - Math.min(...lons)) * 0.1);
   const padLat = Math.max(5, (Math.max(...lats) - Math.min(...lats)) * 0.22);
 
-  /* ── Minimum spans, so the coastline is recognisable geography rather than
+  /* ── Minimum spans, so the coastline is recognizable geography rather than
      a vertical sliver.
 
      Framed to the markers alone this window was 35-45°N — five degrees of
      padding around four destinations that all sit near the 40th parallel.
      Correct framing, useless map: North America and Europe both cropped to
      ambiguous strips with no coastline anyone could name. A route chart is
-     read by recognising where the arcs land, so the window has to be wide
+     read by recognizing where the arcs land, so the window has to be wide
      enough to show that, even when the trips themselves are clustered. ── */
   const MIN_LAT_SPAN = 38;
   const MIN_LON_SPAN = 80;
@@ -390,7 +390,7 @@ function drawMap(): void {
   /* Labels are knocked out of whatever they cross. The arcs and the
      graticule both run through the label positions — Rome's dateline had a
      dashed vermilion arc straight through it — and paint-order lets one
-     <text> paint a ground-coloured stroke first and the glyph on top, which
+     <text> paint a ground-colored stroke first and the glyph on top, which
      is a halo without a second element or a filter. */
   const knock = `stroke="#141414" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke"`;
   const tight = W < 560;
@@ -615,7 +615,7 @@ function drawGallery(): void {
     const z = (0.34 + rnd() * 0.34).toFixed(2);
     h +=
       `<button class="plate" type="button" data-full="${f}" data-t="Family album · frame ${String(i + 1).padStart(2, "0")}" ` +
-      `data-d="Not indexed" aria-label="Show frame ${i + 1} in colour">` +
+      `data-d="Not indexed" aria-label="Show frame ${i + 1} in color">` +
       `<canvas data-src="${f}" data-pitch="2.2" data-angle="45" data-gamma="1.02" data-ar="1" ` +
       `data-ink="#141414" data-paper="#dcd9d0" data-crush="1" data-crop="${x},${y},${z}"></canvas></button>`;
   }
@@ -632,7 +632,7 @@ function drawGallery(): void {
    looked fine, /#counted was 516px short, /#written 1,216px short — far
    enough into the previous department that the link read as broken.
 
-   So the hash is honoured a second time, once the layout is final.
+   So the hash is honored a second time, once the layout is final.
 
    Two things this must not do. It must not fight a reader who started
    scrolling before the fonts arrived, so any real scroll input cancels it.
@@ -650,7 +650,7 @@ if (typeof window !== "undefined") {
   );
 }
 
-function honourHash(): void {
+function honorHash(): void {
   if (userHasScrolled) return;
   const hash = location.hash;
   if (hash.length < 2) return;
@@ -677,7 +677,7 @@ export function boot(): void {
   initLightbox(); /* after drawGallery, so the 20 new plates get wired */
   fitMast();
   /* after the fit, not before: the fit is what moves the target. */
-  honourHash();
+  honorHash();
   paintAllPlates();
 }
 

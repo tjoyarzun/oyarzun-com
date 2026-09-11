@@ -34,7 +34,7 @@ export default async function Counted() {
      Scoped to the reporting year: filtering on getUTCMonth() alone put March
      2025 and March 2026 in the same bar, which is a sparkline that silently
      conflates years. Month comes from the date string rather than a Date, so
-     no timezone can shift a trip into the neighbouring month. */
+     no timezone can shift a trip into the neighboring month. */
   const nightsByMonth = Array.from({ length: 12 }, (_, m) =>
     adventuresThisYear
       .filter((a) => tripMonth(a) === m + 1)
@@ -168,7 +168,7 @@ export default async function Counted() {
                       />
                       {/* Where a linear pace would put you today. Ahead of the
                           notch fills vermilion, behind it fills ink — so the
-                          colour carries the judgement, not just the length. */}
+                          color carries the judgment, not just the length. */}
                       <b style={{ left: `${paceMark}%` }} />
                     </span>
                     <span className="gv">
@@ -224,7 +224,7 @@ export default async function Counted() {
 
             <div className="cell">
               <div className="pl">
-                <span>Watched · favourites</span>
+                <span>Watched · favorites</span>
                 <span className="pu">Rating</span>
               </div>
               <div style={{ marginTop: 10 }}>

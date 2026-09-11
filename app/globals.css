@@ -42,11 +42,29 @@
 :root{
   --paper:#dcd9d0; --ink:#141414; --red:#dd2f1c;
   --ink70:#141414b3; --ink45:#14141473; --ink22:#14141438; --ink12:#1414141f;
+  /* ── Type on a reversed-out surface ───────────────────────────────────
+     The mirror of the ink ramp above, for the surfaces whose GROUND is
+     var(--ink): the footer, the sticky department bar, the panel heads.
+     Those grounds invert under Negative, so their type has to invert with
+     them — and it did not. Seven literals in the footer, plus the department
+     kicker and a panel label, were pinned to this paper color, so in
+     Negative the ground turned light underneath light type and the footer
+     went blank. A literal is only right on a surface that does NOT invert,
+     which in this issue is the lightbox scrim and nothing else. */
+  --paper88:#dcd9d0e0; --paper70:#dcd9d0b3;
+  --paper25:#dcd9d040; --paper20:#dcd9d033;
+  /* The reversed-out twin of --cap, and solid for the same reason --cap is.
+     Alpha does not survive an inversion evenly: 55% paper on ink measures
+     4.69:1, but the mirror — 55% ink on paper — is only 3.68:1, because
+     luminance is not linear. So the small mono labels on a reversed ground
+     get a tuned value per theme instead: 5.56:1 here, 5.52:1 under Negative.
+     Alpha is still fine for the rules and borders below, which are not type. */
+  --cap-rev:#8f8d88;
   /* ── Caption ink and caption red ───────────────────────────────────────
      The small monospace labels — kickers, field names, captions, bar labels,
      datelines — used --ink45 throughout. That is 45% ink, which measures
      2.80:1 against this paper. WCAG AA wants 4.5:1 for text at these sizes,
-     and about a hundred elements were failing it, which is what "the grey
+     and about a hundred elements were failing it, which is what "the gray
      small fonts are hard to read" actually was.
 
      --cap is the same idea at a legible weight: 5.45:1 here, 5.07:1 under
@@ -65,6 +83,8 @@
 }
 html.dark{--map-bg:#090909;--paper:#141414;--ink:#dcd9d0;
   --ink70:#dcd9d0b3;--ink45:#dcd9d073;--ink22:#dcd9d038;--ink12:#dcd9d01f;
+  --paper88:#141414e0;--paper70:#141414b3;
+  --paper25:#14141440;--paper20:#14141433;--cap-rev:#54524e;
   --cap:#888681;--red-tx:#e45949}
 *{box-sizing:border-box}
 html{-webkit-font-smoothing:antialiased;background:var(--paper);scroll-behavior:smooth}
@@ -106,7 +126,7 @@ a{color:inherit}
    common substitute, so the glyph's appearance is a property of the font
    rather than of the character. Two borders rotated 45° depend on no font at
    all, inherit currentColor, and sit where they are put — the anchor is
-   already a flex container, so the pseudo-element centres itself. */
+   already a flex container, so the pseudo-element centers itself. */
 .nav ul a.go::after{content:"";width:4px;height:4px;margin-left:7px;flex:0 0 auto;
   border-right:1.5px solid currentColor;border-top:1.5px solid currentColor;
   transform:rotate(45deg);opacity:.75}
@@ -170,7 +190,7 @@ a{color:inherit}
 .deptbar h2{font-family:var(--disp);font-weight:900;font-size:17px;margin:0;text-transform:uppercase;
   letter-spacing:-.008em;line-height:1}
 .deptbar .dk{font-family:var(--cred);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
-  color:#dcd9d08c;white-space:nowrap}
+  color:var(--cap-rev);white-space:nowrap}
 .mast.tight{padding-top:26px}
 .mast.tight h1{font-size:clamp(34px,7vw,92px)}
 
@@ -206,7 +226,7 @@ a{color:inherit}
 .tag:hover{border-color:var(--ink);color:var(--ink)}
 .tag[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 
-/* halftone plate — click reveals the colour */
+/* halftone plate — click reveals the color */
 .plate{position:relative;display:block;width:100%;padding:0;border:none;background:none;
   cursor:zoom-in;line-height:0}
 .plate canvas{width:100%;height:auto;display:block}
@@ -445,7 +465,7 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
 .panel .phead{display:flex;justify-content:space-between;align-items:baseline;gap:14px;
   padding:9px 14px 8px;background:var(--ink);color:var(--paper);
   font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transform:uppercase}
-.panel .phead .pr2{color:#dcd9d0a6;letter-spacing:.1em}
+.panel .phead .pr2{color:var(--paper70);letter-spacing:.1em}
 .panel .pbody{padding:11px 14px 13px}
 
 @media (max-width:860px){
@@ -623,16 +643,16 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
   padding:30px var(--m) 26px;align-items:start}
 .colo .lg{font-family:var(--disp);font-weight:900;font-size:30px;line-height:.86;
   text-transform:uppercase;letter-spacing:-.026em;color:var(--paper)}
-.cbrand p{margin:12px 0 0;font-size:13.5px;line-height:1.5;color:#dcd9d0b3;max-width:34ch}
+.cbrand p{margin:12px 0 0;font-size:13.5px;line-height:1.5;color:var(--paper70);max-width:34ch}
 .cbrand .mono{margin-top:12px;font-family:var(--cred);font-size:10.5px;
-  letter-spacing:.13em;text-transform:uppercase;color:#dcd9d08c}
+  letter-spacing:.13em;text-transform:uppercase;color:var(--cap-rev)}
 
 .ccol h4{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;
-  text-transform:uppercase;color:#dcd9d08c;margin:0 0 12px;font-weight:400;
-  padding-bottom:7px;border-bottom:1px solid #dcd9d033}
+  text-transform:uppercase;color:var(--cap-rev);margin:0 0 12px;font-weight:400;
+  padding-bottom:7px;border-bottom:1px solid var(--paper20)}
 .ccol ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
 .ccol a{display:flex;align-items:baseline;gap:9px;text-decoration:none;
-  font-size:14px;color:#dcd9d0e0;line-height:1.2}
+  font-size:14px;color:var(--paper88);line-height:1.2}
 .ccol a:hover{color:var(--paper)}
 /* The folio number, so the footer reads as a contents page rather than a
    pile of links — the departments really are numbered. */
@@ -647,14 +667,14 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
 
 .cicons a{align-items:center;gap:10px}
 .cicons i{display:flex;align-items:center;justify-content:center;flex:0 0 auto;
-  width:26px;height:26px;border:1px solid #dcd9d040}
+  width:26px;height:26px;border:1px solid var(--paper25)}
 .cicons a:hover i{background:var(--red);border-color:var(--red);color:#fff}
 .cicons svg{width:14px;height:14px;fill:currentColor;display:block}
 
 .cbar{display:flex;justify-content:space-between;align-items:center;gap:16px;
-  flex-wrap:wrap;padding:12px var(--m);border-top:1px solid #dcd9d033;
+  flex-wrap:wrap;padding:12px var(--m);border-top:1px solid var(--paper20);
   font-family:var(--cred);font-size:10px;letter-spacing:.13em;
-  text-transform:uppercase;color:#dcd9d08c}
+  text-transform:uppercase;color:var(--cap-rev)}
 
 @media (max-width:860px){
   .colgrid{grid-template-columns:1fr 1fr;gap:26px}
@@ -666,7 +686,7 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
      A taller frame alone does not fix it: the type needs ~45% of the height
      and a face occupies ~43% of the source, and there is no vertical band that
      fits both. So on a phone the type comes out of the picture and sits under
-     it, as a caption in ink on paper — which is also why the colours flip.
+     it, as a caption in ink on paper — which is also why the colors flip.
 
      1.6 keeps the frame wider than the 4:3 source, so the crop stays vertical
      and the `cy` in the plate's crop string still aims it. Go below ~1.34 and
@@ -675,7 +695,7 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
   .cover .plate canvas{--plate-ar:1.6;--plate-pitch:2.8}
   /* The type moves under the picture, but stays on .cover's dark ground, so
      it stays reversed out. The scrim exists only to darken what sits behind
-     the type; with nothing behind it any more, it just greys the photograph. */
+     the type; with nothing behind it any more, it just grays the photograph. */
   .cover .ov{position:static;padding:14px 22px 20px;left:auto;right:auto;bottom:auto}
   .cover::after{display:none}
   .cover .ov h2{font-size:clamp(28px,8.2vw,44px)}
@@ -697,6 +717,8 @@ h4.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transf
   transform:scale(.99);transition:opacity .36s ease,transform .36s ease}
 #lb img.in{opacity:1;transform:scale(1)}
 #lb .meta{display:flex;justify-content:space-between;gap:24px;margin-top:14px;font-family:var(--cred);
+  /* Deliberately a literal, not var(--cap-rev): the scrim above is a fixed
+     dark overlay in both themes, so this type must not invert with the page. */
   font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:#dcd9d08c;opacity:0;
   transition:opacity .36s ease .1s}
 #lb .meta.in{opacity:1}

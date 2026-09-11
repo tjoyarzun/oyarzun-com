@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Caption, SectionHead } from "@/components/thrasher/editorial";
-import { mountAlbum } from "@/lib/thrasher/behaviours";
+import { mountAlbum } from "@/lib/thrasher/behaviors";
 
 /**
  * The gate and the album.
@@ -11,7 +11,7 @@ import { mountAlbum } from "@/lib/thrasher/behaviours";
  * album, and any visitor who opens devtools or reads the JS bundle can do the
  * same. That is exactly what the pre-redesign FamilyGate did too (its
  * onSubmit called `onLogin?.()` with no comparison), so this is a faithful
- * port of existing behaviour rather than a new hole — but it should not be
+ * port of existing behavior rather than a new hole — but it should not be
  * described to anyone as protecting the album.
  *
  * Real privacy needs the photographs behind a server boundary: a route
@@ -97,11 +97,11 @@ export default function FamilyAlbum({ copy }: { copy: FamilyAlbumCopy }) {
         />
         {open ? (
           <>
-            {/* Filled by drawGallery() in lib/thrasher/behaviours.ts, which
+            {/* Filled by drawGallery() in lib/thrasher/behaviors.ts, which
                 emits twenty plates with deterministic crops. */}
             <div className="gallery" id="gal" />
             <Caption
-              left="Click any frame for the actual colour"
+              left="Click any frame for the actual color"
               right="Screen 2.2px"
             />
           </>

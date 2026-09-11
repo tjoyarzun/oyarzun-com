@@ -87,7 +87,7 @@ const check = (label, haystack, needle) => {
 /* ── Derivation unit checks ─────────────────────────────────────────────
    Run the trip derivations against synthetic entries, so the rules hold for
    data that does not exist yet. The page checks below can only see today's
-   array; these see the behaviour.
+   array; these see the behavior.
 
    The year rule is here because it was broken and shipped: trips were counted
    all-time while the labels said 2026, so a 2025 trip with nine nights showed
@@ -141,7 +141,7 @@ const unit = JSON.parse(
             1 January trip cannot slide into the previous year west of UTC */
          jan1: tripYear(mk({ date: y + "-01-01" })),
          dec31: tripYear(mk({ date: y + "-12-31" })),
-         /* countries normalise: three spellings of one country count once */
+         /* countries normalize: three spellings of one country count once */
          countryCasing: tripStats([
            mk({ date: y + "-01-02", country: "Italy" }),
            mk({ date: y + "-01-03", country: " italy " }),

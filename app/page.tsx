@@ -18,7 +18,7 @@ import { Folio, RunningHead } from "@/components/thrasher/editorial";
  * belongs at the end where a colophon would sit.
  *
  * The running head and the folio advance as you scroll — the scroll-spy in
- * lib/thrasher/behaviours.ts picks the topmost department above the fold line
+ * lib/thrasher/behaviors.ts picks the topmost department above the fold line
  * and writes into `#dept` and `#folio`, which is why both are marked `live`.
  *
  * What is NOT here, on purpose: /written/<slug> and /family. Both need to be

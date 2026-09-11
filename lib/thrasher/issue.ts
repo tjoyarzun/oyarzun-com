@@ -177,7 +177,7 @@ export function axesFor(who: "him" | "her"): Axis[] {
 /* ═══════════════════════════════════════════════════════════════════════
    The rest of the derived figures.
 
-   Everything below was a literal somewhere — in a component, or worse, spelt
+   Everything below was a literal somewhere — in a component, or worse, spelled
    out in words inside a sentence in lib/copy.ts, where nothing would ever
    catch it going stale. "19 years between us" was simply wrong: the two
    profiles say twelve and ten.

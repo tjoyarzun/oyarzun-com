@@ -133,8 +133,8 @@ function tokens(): Record<string, string> {
    So any token name ending in `Word` spells out the numeric token of the
    same base name: {yearsHim} gives "12", {yearsHimWord} gives "twelve".
    Generic on purpose, so a new figure needs no new token to be writable in
-   words. Capitalised if it starts the sentence, which the caller signals by
-   writing the token capitalised: {YearsHimWord}. */
+   words. Capitalized if it starts the sentence, which the caller signals by
+   writing the token capitalized: {YearsHimWord}. */
 const ONES = [
   "zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
   "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
@@ -173,7 +173,7 @@ export function fill(text: string, runtime?: Runtime): string {
     const direct = lookup(key);
     if (direct !== undefined) return direct;
 
-    /* {somethingWord} — spell out {something}. Handles a capitalised token
+    /* {somethingWord} — spell out {something}. Handles a capitalized token
        for sentence-initial use. */
     const m = key.match(/^([A-Za-z]\w*?)Word$/);
     if (m) {

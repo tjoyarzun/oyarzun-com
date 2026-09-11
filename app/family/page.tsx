@@ -8,7 +8,7 @@ import { fill, fillAll, lines, rich } from "@/lib/thrasher/fill";
  * /family — the one page in the issue that has to be a real route.
  *
  * You cannot noindex an anchor. A gated album living at /#family would be
- * crawled, indexed and summarised along with the rest of the scroll, because
+ * crawled, indexed and summarized along with the rest of the scroll, because
  * robots directives are per-URL. That single fact is what settled the
  * one-scroll-versus-routes question: everything browsable is one scroll, and
  * the two things that need their own URL — posts and this — get one.

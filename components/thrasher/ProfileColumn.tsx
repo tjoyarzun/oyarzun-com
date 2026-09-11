@@ -96,7 +96,7 @@ export default function ProfileColumn({
       </dl>
 
       <h4 className="blk">Stack · self-assessed</h4>
-      {/* Drawn by drawRadar() in lib/thrasher/behaviours.ts. The axes are the
+      {/* Drawn by drawRadar() in lib/thrasher/behaviors.ts. The axes are the
           union of both people's `skills` arrays, so the two radars on this
           page are directly comparable — see SKILL_AXES in lib/thrasher/issue. */}
       <div className="radar">
@@ -159,11 +159,11 @@ export default function ProfileColumn({
                 full={p.embed.poster}
                 title={p.title}
                 detail={p.embed.posterAlt ?? p.title}
-                label={`Show the render for ${p.title} in colour`}
+                label={`Show the render for ${p.title} in color`}
                 pitch={2.4}
                 ar={1.72}
                 crush={false}
-                cta="Colour"
+                cta="Color"
               />
             </div>
           ) : null}

@@ -45,7 +45,7 @@ export default async function TwoOfUs() {
       facts: [
         ["Years in field", String(her.yearsExperience)],
         [
-          "Recognised",
+          "Recognized",
           `${her.recognition?.org ?? "—"}, ${her.recognition?.year ?? ""}`,
         ],
         ["Strongest", `${strongest("her").skill} · ${strongest("her").value}`],

@@ -345,7 +345,7 @@ Consequences worth knowing:
 
 - **Add a skill to one person and it appears on both charts** — as a real
   value for them, and as zero for the other. A zero is information, not a gap:
-  Julia's `Domo` axis collapses to the centre because she does not list it.
+  Julia's `Domo` axis collapses to the center because she does not list it.
 - The axes are ordered by the two values added together, so the strongest
   shared skills come first.
 - Ten axes is about the limit before the labels crowd. There are ten now.
@@ -436,7 +436,7 @@ part of `location`**, not `name`: "Rome", not "Roman Holiday". A trip with no
 `lat`/`lng` is simply left off the chart; it still counts everywhere else.
 
 The window also has a minimum size — 38° of latitude and 80° of longitude —
-so the coastline stays recognisable even when every trip is clustered. Framed
+so the coastline stays recognizable even when every trip is clustered. Framed
 tightly to four destinations that all sit near the 40th parallel, the chart
 showed North America and Europe as unidentifiable vertical strips.
 
@@ -551,7 +551,7 @@ it fills ink.
 
 Every photograph on this site is **screened** — printed as halftone dots, the
 way a magazine prints a photograph, with the dot size worked out from the
-brightness of the picture underneath. Clicking one shows the real colour.
+brightness of the picture underneath. Clicking one shows the real color.
 
 ### HEIC will not work
 
@@ -619,7 +619,7 @@ Blog covers are not in `plates` — they live in each post's own file, as
 ```ts
 portraitHim: {
   src: "/images/tommy_amsterdam.jpg",  // ← the file you just uploaded
-  detail: "Amsterdam · 2026",          // ← the caption in the colour view
+  detail: "Amsterdam · 2026",          // ← the caption in the color view
   crop: "0.5,0.20,0.72",               // ← see below; start at "0.5,0.5,1.0"
   placeholder: false,                  // false once it is a real photograph
 },
@@ -632,7 +632,7 @@ portraitHim: {
 
 ### Working out a crop without guessing blind
 
-`crop` is `across,down,zoom`, all fractions. `0.5,0.5,1` is centred and
+`crop` is `across,down,zoom`, all fractions. `0.5,0.5,1` is centered and
 full-frame. Three things decide whether you spend five minutes on this or an
 hour:
 
@@ -906,7 +906,7 @@ Right-now section names.
 "Twelve years and ten years, five of them in the same building" is not typed
 out. It reads `{YearsHimWord} years and {yearsHerWord} years,
 {overlapYearsWord} of them…` — any token ending in `Word` prints its figure as
-a word, capitalised if you capitalise the token. So the prose keeps its words
+a word, capitalized if you capitalize the token. So the prose keeps its words
 and the number still comes from the data.
 
 ### If GitHub is unreachable
@@ -953,7 +953,7 @@ Honest list. These are not edits you can make in the web editor:
 | The tag filter under "Everything written" | The tags show, but filtering is not built |
 | A screened treatment for the Vimeo player and the 3D walkthrough | Both are plain links today |
 | Real privacy on the family album | Needs a server-side check |
-| Colours, type sizes, spacing | `app/globals.css` |
+| Colors, type sizes, spacing | `app/globals.css` |
 | Halftone `crop` and `gamma` by feel | Editable, but needs the preview to judge — see [Photographs](#photographs) |
 
 ---

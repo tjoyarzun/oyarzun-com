@@ -48,7 +48,7 @@ export default async function Cover() {
             full={p.src}
             title={p.title ?? "Cover photograph"}
             detail={p.detail}
-            label="Show the cover photograph in colour"
+            label="Show the cover photograph in color"
             pitch={5.0}
             /* Normal polarity, and no crush.
                This plate used to be reversed out — light ink on a dark

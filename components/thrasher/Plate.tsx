@@ -15,13 +15,13 @@ import type * as React from "react";
  *
  * The <button> wrapper is what opens the lightbox. It is a real button, not
  * an anchor with href="#", so keyboard and screen-reader users get the
- * behaviour the visual affords.
+ * behavior the visual affords.
  *
  * Under Negative, `ink` and `paper` are swapped and the plate is redrawn by
- * the behaviours module — so pass the light-mode pair and let it invert.
+ * the behaviors module — so pass the light-mode pair and let it invert.
  */
 export interface PlateProps {
-  /** Full-colour source revealed in the lightbox. Same-origin. */
+  /** Full-color source revealed in the lightbox. Same-origin. */
   full: string;
   /** Lightbox title. */
   title: string;
@@ -63,7 +63,7 @@ export default function Plate({
   paper = "#dcd9d0",
   crush = true,
   crop = "0.5,0.5,1",
-  cta = "Click for colour",
+  cta = "Click for color",
   label,
 }: PlateProps) {
   return (
@@ -73,7 +73,7 @@ export default function Plate({
       data-full={full}
       data-t={title}
       data-d={detail}
-      aria-label={label ?? `Show this photograph in colour: ${title}`}
+      aria-label={label ?? `Show this photograph in color: ${title}`}
     >
       <canvas
         /* Reserve the plate's final height before the photograph loads.

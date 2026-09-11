@@ -9,7 +9,7 @@ import Providers from "@/components/providers";
 import Nav from "@/components/thrasher/Nav";
 import Colophon from "@/components/thrasher/Colophon";
 import Lightbox from "@/components/thrasher/Lightbox";
-import Behaviours from "@/components/thrasher/Behaviours";
+import Behaviors from "@/components/thrasher/Behaviors";
 
 /**
  * The three faces of Issue 04. All three are SIL Open Font License — free for
@@ -62,7 +62,7 @@ export default function RootLayout({
       className={`${display.variable} ${body.variable} ${cred.variable}`}
     >
       {/**
-       * No Tailwind colour classes on <body>. The design system in
+       * No Tailwind color classes on <body>. The design system in
        * globals.css owns paper, ink and the newsprint tooth, and it has to,
        * because those three invert together under Negative.
        */}
@@ -77,7 +77,7 @@ export default function RootLayout({
           {children}
           <Colophon />
           <Lightbox />
-          <Behaviours />
+          <Behaviors />
         </Providers>
       </body>
     </html>

@@ -1,8 +1,8 @@
 /**
  * A sparkline, drawn server-side.
  *
- * Deliberately not in lib/thrasher/behaviours.ts with the other drawings:
- * these have no interaction and no theme-dependent colour beyond `currentColor`,
+ * Deliberately not in lib/thrasher/behaviors.ts with the other drawings:
+ * these have no interaction and no theme-dependent color beyond `currentColor`,
  * so they can be plain SVG in the markup. That means they are in the HTML on
  * first paint rather than appearing after hydration — which matters on a panel
  * whose whole job is to be readable at a glance.
