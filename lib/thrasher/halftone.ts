@@ -132,6 +132,26 @@ export function halftone(cv: HTMLCanvasElement): void {
     ctx.fillStyle = paper;
     ctx.fillRect(0, 0, W, H);
 
+    /* Dots go into a scratch layer opaque, and the layer is composited once
+       at `alpha`. Two reasons, and the second is a bug fix.
+
+       The dots used to accumulate into ONE path on the visible canvas and be
+       filled in a single call. The count grows with the square of the plate's
+       width — 126,000 arcs in one path for the certificate in a 2400px
+       window — and a path that large is not something every engine will
+       rasterise. Chromium draws it; others silently draw nothing, which is
+       why two plates vanished as the window grew, and why it was those two:
+       they are the two with `crush` off, and crush is what pushes tone to the
+       extremes where most dots fall below the radius threshold and are never
+       added. The two uncrushed plates carry the most dots by some margin.
+
+       Flushing the path every few thousand arcs fixes that, but only works
+       at full opacity: at alpha < 1, two overlapping dots filled in separate
+       batches composite twice and the overlap darkens, where in one path
+       they are a single union. Adjacent dots do overlap here — a dot's
+       diameter reaches 1.49x the pitch at full coverage. Drawing opaque into
+       a layer and compositing the layer once keeps the original semantics
+       exactly, and makes the batch size a free choice. */
     const plate = (
       col: string,
       angle: number,
@@ -141,13 +161,18 @@ export function halftone(cv: HTMLCanvasElement): void {
       scale: number,
       alpha: number,
     ) => {
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = col;
+      const layer = scratch();
+      layer.width = cv.width;
+      layer.height = cv.height;
+      const lx = layer.getContext("2d");
+      if (!lx) return;
+      lx.scale(dpr, dpr);
+      lx.fillStyle = col;
       const ca = Math.cos(angle);
       const sa = Math.sin(angle);
       const diag = Math.ceil(Math.hypot(W, H) / pitch) + 2;
-      ctx.beginPath();
+      let queued = 0;
+      lx.beginPath();
       for (let j = -diag; j <= diag; j++) {
         for (let i = -diag; i <= diag; i++) {
           const gx = i * pitch;
@@ -163,12 +188,21 @@ export function halftone(cv: HTMLCanvasElement): void {
           const t = Math.pow(Math.max(0, Math.min(1, 1 - lum(x, y))), gamma);
           const r = t * pitch * 0.745 * scale;
           if (r > 0.15) {
-            ctx.moveTo(x + r, y);
-            ctx.arc(x, y, r, 0, 6.28318);
+            lx.moveTo(x + r, y);
+            lx.arc(x, y, r, 0, 6.28318);
+            if (++queued >= BATCH) {
+              lx.fill();
+              lx.beginPath();
+              queued = 0;
+            }
           }
         }
       }
-      ctx.fill();
+      if (queued) lx.fill();
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(layer, 0, 0, W, H);
       ctx.restore();
     };
 
@@ -181,6 +215,17 @@ export function halftone(cv: HTMLCanvasElement): void {
     cv.dataset.ready = "1";
   };
   img.src = src;
+}
+
+/** Arcs per fill. Small enough that no engine has to rasterise a huge path. */
+const BATCH = 4000;
+
+/* One scratch canvas, reused. A fresh one per plate per repaint would mean
+   allocating and discarding several megapixels on every resize step. */
+let scratchCanvas: HTMLCanvasElement | null = null;
+function scratch(): HTMLCanvasElement {
+  if (!scratchCanvas) scratchCanvas = document.createElement("canvas");
+  return scratchCanvas;
 }
 
 /** Screen (or re-screen) every plate in the document. Idempotent. */
