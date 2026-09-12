@@ -1,60 +1,808 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   OYARZUN.COM — Issue 04 · the design system
+   ═══════════════════════════════════════════════════════════════════════
+
+   Ported from the design exploration at
+   scratchpad/design/SITE/site.css. Two deliberate substitutions were made
+   during the port and nothing else changed:
+
+     1. `html[data-neg]`  →  `html.dark`
+        The design hand-rolled Negative on a `data-neg` attribute plus
+        localStorage. The app already ships next-themes with Tailwind's
+        `darkMode: "class"`, so the mechanism is dark mode and only the
+        *name* is Negative. One selector rename replaces ~20 lines of
+        persistence code, and the toggle then survives navigation for free.
+
+     2. Font stacks are indirected through next/font variables.
+        `--disp`/`--body`/`--cred` keep their names so every rule below is
+        untouched; only their values now point at the self-hosted faces
+        declared in app/layout.tsx. All three are SIL Open Font License.
+
+   Tailwind's preflight loads first so the design system wins every
+   collision. Utility classes still work on top for anything new.
+   ═══════════════════════════════════════════════════════════════════════ */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --navy: #1c1917;
-  --teal: #c8973e;
-  --teal-dark: #8b6b2a;
-  --orange: #d4614a;
-  --sand: #f0e9da;
-  --slate: #f7f2eb;
+/* ════ OYARZUN.COM — Issue 04 · the design system ════════════════════ */
+
+/* Real routes, but they move. One rule, no framework, no SPA.
+   The nav and the running head are named, so they stay put across the
+   navigation while the page body cross-fades under them. */
+@view-transition{ navigation:auto }
+@media (prefers-reduced-motion:no-preference){
+  ::view-transition-group(root){ animation-duration:.28s }
+  ::view-transition-old(root){ animation:vt-out .22s ease both }
+  ::view-transition-new(root){ animation:vt-in .28s ease both }
+}
+@keyframes vt-out{ to{ opacity:0; transform:translateY(-6px) } }
+@keyframes vt-in{ from{ opacity:0; transform:translateY(8px) } }
+:root{
+  --paper:#dcd9d0; --ink:#141414; --red:#dd2f1c;
+  --ink70:#141414b3; --ink45:#14141473; --ink22:#14141438; --ink12:#1414141f;
+  /* ── Type on a reversed-out surface ───────────────────────────────────
+     The mirror of the ink ramp above, for the surfaces whose GROUND is
+     var(--ink): the footer, the sticky department bar, the panel heads.
+     Those grounds invert under Negative, so their type has to invert with
+     them — and it did not. Seven literals in the footer, plus the department
+     kicker and a panel label, were pinned to this paper color, so in
+     Negative the ground turned light underneath light type and the footer
+     went blank. A literal is only right on a surface that does NOT invert,
+     which in this issue is the lightbox scrim and nothing else. */
+  --paper88:#dcd9d0e0; --paper70:#dcd9d0b3;
+  --paper25:#dcd9d040; --paper20:#dcd9d033;
+  /* The reversed-out twin of --cap, and solid for the same reason --cap is.
+     Alpha does not survive an inversion evenly: 55% paper on ink measures
+     4.69:1, but the mirror — 55% ink on paper — is only 3.68:1, because
+     luminance is not linear. So the small mono labels on a reversed ground
+     get a tuned value per theme instead: 5.56:1 here, 5.52:1 under Negative.
+     Alpha is still fine for the rules and borders below, which are not type. */
+  --cap-rev:#8f8d88;
+  /* ── Caption ink and caption red ───────────────────────────────────────
+     The small monospace labels — kickers, field names, captions, bar labels,
+     datelines — used --ink45 throughout. That is 45% ink, which measures
+     2.80:1 against this paper. WCAG AA wants 4.5:1 for text at these sizes,
+     and about a hundred elements were failing it, which is what "the gray
+     small fonts are hard to read" actually was.
+
+     --cap is the same idea at a legible weight: 5.45:1 here, 5.07:1 under
+     Negative. --ink45 stays, but only for the washes and fills it is right
+     for (the level-2 heatmap cell), never for type.
+
+     --red-tx is the same correction for the vermilion. --red is 3.31:1 on
+     paper, fine for display sizes and solid fills, not for a 10px label. */
+  --cap:#545350;
+  --red-tx:#a62315;
+  --disp:var(--font-display),Impact,sans-serif;
+  --body:var(--font-body),'Arial Narrow',sans-serif;
+  --cred:var(--font-cred),ui-monospace,monospace;
+  --m:clamp(20px,3.4vw,52px);
+  --measure:68ch;
+}
+html.dark{--paper:#141414;--ink:#dcd9d0;
+  --ink70:#dcd9d0b3;--ink45:#dcd9d073;--ink22:#dcd9d038;--ink12:#dcd9d01f;
+  --paper88:#141414e0;--paper70:#141414b3;
+  --paper25:#14141440;--paper20:#14141433;--cap-rev:#54524e;
+  --cap:#888681;--red-tx:#e45949}
+*{box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased;background:var(--paper);scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:15px;line-height:1.52}
+/* newsprint tooth */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;z-index:100;background:var(--ink);color:var(--paper);
+  padding:9px 13px;font-family:var(--cred);font-size:11px;letter-spacing:.13em;text-transform:uppercase}
+
+/* ── NAVBAR — the real site header ─────────────────────────────────── */
+.nav{view-transition-name:sitenav;position:sticky;top:0;z-index:70;display:flex;align-items:stretch;background:var(--ink);
+  color:var(--paper);height:36px;font-family:var(--cred);font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase}
+.nav .wm{display:flex;align-items:center;padding:0 15px;background:var(--red);color:#fff;
+  font-weight:700;white-space:nowrap;text-decoration:none}
+.nav ul{display:flex;align-items:center;gap:0;margin:0;padding:0;list-style:none;flex:1;
+  overflow-x:auto;scrollbar-width:none}
+.nav ul::-webkit-scrollbar{display:none}
+.nav ul a{display:flex;align-items:center;height:36px;padding:0 13px;color:var(--paper);
+  text-decoration:none;opacity:.58;white-space:nowrap}
+.nav ul a:hover{opacity:1}
+.nav ul a[aria-current="page"]{opacity:1;background:#ffffff26}
+/* jumps move you down this page; goes take you somewhere else. */
+.nav ul a.jump[aria-current="true"]{opacity:1;color:#fff;background:var(--red)}
+.nav ul li.split{width:1px;align-self:stretch;margin:0 9px;background:#ffffff40;flex:0 0 1px}
+.nav ul a.go{opacity:.72}
+/* The departure chevron is DRAWN, not typed.
+   It used to be content:"›" (U+203A). That character is a single right-
+   pointing angle QUOTATION mark, not an arrow — and Anonymous Pro draws it
+   the way a quote mark should be drawn: small, and sitting near the baseline.
+   Beside 10px caps it read as a comma: "THE TWO OF US ,".
+
+   Faces where U+203A happens to look like a chevron are what make it a
+   common substitute, so the glyph's appearance is a property of the font
+   rather than of the character. Two borders rotated 45° depend on no font at
+   all, inherit currentColor, and sit where they are put — the anchor is
+   already a flex container, so the pseudo-element centers itself. */
+.nav ul a.go::after{content:"";width:4px;height:4px;margin-left:7px;flex:0 0 auto;
+  border-right:1.5px solid currentColor;border-top:1.5px solid currentColor;
+  transform:rotate(45deg);opacity:.75}
+.nav ul a.go:hover{opacity:1}
+.nav .neg{background:none;border:none;border-left:1px solid #ffffff2e;color:var(--paper);
+  font-family:inherit;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  padding:0 15px;cursor:pointer;white-space:nowrap}
+.nav .neg:hover{background:var(--red);color:#fff}
+
+/* ── RUNNING HEAD — the magazine department bar ────────────────────── */
+.run{view-transition-name:runhead;display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:baseline;
+  padding:12px var(--m) 9px;border-bottom:1px solid var(--ink22)}
+.run .dept{font-family:var(--cred);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--red-tx);font-weight:700;white-space:nowrap}
+/* The department name as a way back. Underlined on hover only — it sits in
+   a bar of small caps where a permanent underline would read as noise. */
+.run a.dept.back{text-decoration:none}
+.run a.dept.back:hover{text-decoration:underline;text-decoration-thickness:1px;
+  text-underline-offset:3px}
+.run a.dept.back::after{content:"";display:inline-block;width:4px;height:4px;
+  margin-left:7px;vertical-align:middle;
+  border-left:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
+  transform:rotate(45deg);opacity:.75}
+.run .mid{font-family:var(--cred);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--cap);text-align:center}
+.run .iss{font-family:var(--cred);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--cap);white-space:nowrap}
+
+/* ── PAGE MASTHEAD ─────────────────────────────────────────────────── */
+.mast{padding:30px var(--m) 0}
+.mast .kick{font-family:var(--cred);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--cap)}
+.mast h1,.mast h2{font-family:var(--disp);font-weight:900;margin:8px 0 0;line-height:.82;
+  letter-spacing:-.04em;text-transform:uppercase;font-size:clamp(42px,8.4vw,116px)}
+.mast h1 span,.mast h2 span{display:block;width:max-content;white-space:nowrap}
+.mast .dek{display:grid;grid-template-columns:1.6fr 1fr;gap:0 26px;align-items:end;
+  border-top:5px solid var(--ink);margin-top:14px;padding-top:12px}
+.mast .dek p{margin:0;font-size:17px;line-height:1.4;max-width:52ch}
+.mono{font-family:var(--cred);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cap);line-height:1.95}
+
+.contents{position:sticky;top:36px;z-index:65;display:flex;align-items:center;gap:0;
+  background:var(--paper);border-bottom:1px solid var(--ink22);padding:0 var(--m);
+  overflow-x:auto;scrollbar-width:none}
+.contents::-webkit-scrollbar{display:none}
+.contents .lbl{font-family:var(--cred);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--cap);padding:9px 14px 8px 0;white-space:nowrap}
+.contents a{font-family:var(--cred);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink70);text-decoration:none;padding:9px 13px 8px;white-space:nowrap;
+  border-left:1px solid var(--ink12)}
+.contents a:hover{background:var(--ink);color:var(--paper)}
+.contents a[aria-current="true"]{background:var(--red);color:#fff;border-left-color:var(--red)}
+[id]{scroll-margin-top:84px}
+
+.dept{scroll-margin-top:38px}
+.dept + .dept{margin-top:64px}
+.deptbar{position:sticky;top:36px;z-index:64;display:grid;grid-template-columns:auto 1fr auto;
+  gap:16px;align-items:center;background:var(--ink);color:var(--paper);
+  padding:8px var(--m) 7px;margin-bottom:0}
+.deptbar .dn{font-family:var(--disp);font-weight:900;font-size:16px;color:var(--red-tx);letter-spacing:-.02em}
+.deptbar .dnm{display:block;font-family:var(--disp);font-weight:900;font-size:17px;margin:0;text-transform:uppercase;
+  letter-spacing:-.008em;line-height:1}
+.deptbar .dk{font-family:var(--cred);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--cap-rev);white-space:nowrap}
+.mast.tight{padding-top:26px}
+.mast.tight h1{font-size:clamp(34px,7vw,92px)}
+
+/* ── SECTIONS ──────────────────────────────────────────────────────── */
+.sec{padding:0 var(--m);margin-top:46px}
+.sh{display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:end;
+  border-top:4px solid var(--ink);padding-top:11px;margin-bottom:20px}
+.sh .no{font-family:var(--disp);font-weight:900;font-size:clamp(24px,3vw,38px);line-height:.8;
+  color:var(--red);letter-spacing:-.03em}
+.sh h2{font-family:var(--disp);font-weight:900;font-size:clamp(23px,3vw,36px);margin:0;
+  line-height:.86;letter-spacing:-.024em;text-transform:uppercase}
+.sh .r{text-align:right;white-space:nowrap}
+.sh.lite{border-top-width:1px}
+.sh.lite h2{font-size:clamp(18px,2.1vw,25px)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.four{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+
+/* ── PRIMITIVES ────────────────────────────────────────────────────── */
+.kick{font-family:var(--cred);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--cap)}
+.btn{display:inline-block;font-family:var(--cred);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;padding:9px 15px 8px;background:var(--ink);color:var(--paper);
+  text-decoration:none;border:none;cursor:pointer}
+.btn:hover{background:var(--red);color:#fff}
+.btn.alt{background:var(--red);color:#fff}
+.btn.alt:hover{background:var(--ink);color:var(--paper)}
+.btn.gho{background:none;color:var(--ink);border:2px solid var(--ink)}
+.btn.gho:hover{background:var(--ink);color:var(--paper)}
+.tag{font-family:var(--cred);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  padding:5px 9px 4px;border:1px solid var(--ink22);color:var(--ink70);cursor:pointer;
+  background:none;text-decoration:none;display:inline-block}
+.tag:hover{border-color:var(--ink);color:var(--ink)}
+.tag[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* halftone plate — click reveals the color */
+.plate{position:relative;display:block;width:100%;padding:0;border:none;background:none;
+  cursor:zoom-in;line-height:0}
+.plate canvas{width:100%;height:auto;display:block}
+.plate .cta{position:absolute;right:0;bottom:0;font-family:var(--cred);font-size:10px;
+  letter-spacing:.13em;text-transform:uppercase;background:var(--ink);color:var(--paper);
+  padding:4px 7px 3px;opacity:0;transition:opacity .14s}
+.plate:hover .cta,.plate:focus-visible .cta{opacity:1}
+.cap{font-family:var(--cred);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--cap);margin-top:6px;display:flex;justify-content:space-between;gap:14px;line-height:1.7}
+
+/* ── HOME ──────────────────────────────────────────────────────────── */
+.cover{position:relative;overflow:hidden;background:var(--ink);margin-top:18px}
+.cover canvas{width:100%;height:auto;display:block;opacity:.92}
+/* The scrim is measured in px from the bottom, not as a percentage of the
+   plate. A percentage scrim is only correct at one reproduction size: this
+   plate is 2.35:1, so it stands 571px tall at 1440 and 162px at 420 — and the
+   overlay, whose height is set by its type rather than by the plate, started
+   at 26% of the small plate, above the 34% where the old gradient began. The
+   headline sat on bare photograph on every phone. Anchoring the stops in px
+   makes the scrim cover the type at any width while leaving most of a large
+   plate untouched. */
+.cover::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,#141414f2 0,#141414cc 84px,#14141400 210px)}
+.cover .ov{position:absolute;left:24px;right:24px;bottom:22px;pointer-events:none;z-index:2}
+/* Fixed polarity, like the route chart: this type sits on a scrim that is
+   always dark, so it is always light. Reading it from --paper made it invert
+   with the theme and go near-black on near-black under Negative. */
+.cover .ov h2{font-family:var(--disp);font-weight:900;color:#f2f0ea;margin:0;
+  font-size:clamp(26px,4.2vw,54px);line-height:.86;letter-spacing:-.028em;text-transform:uppercase}
+.cover .ov p{margin:10px 0 0;color:#f2f0ea;font-size:15px;max-width:46ch;line-height:1.42}
+.grid6{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--ink)}
+.grid6 a{background:var(--paper);padding:16px 15px 14px;text-decoration:none;color:var(--ink);
+  display:flex;flex-direction:column;justify-content:space-between;min-height:96px}
+.grid6 a:hover{background:var(--red);color:#fff}
+.grid6 a:hover .n,.grid6 a:hover .k{color:#fff}
+.grid6 .n{font-family:var(--disp);font-weight:900;font-size:22px;text-transform:uppercase;
+  letter-spacing:-.012em;line-height:.94}
+.grid6 .k{font-family:var(--cred);font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--cap);margin-bottom:9px}
+.widget{border-top:2px solid var(--ink)}
+.widget .wr{display:grid;grid-template-columns:1fr auto;gap:12px;padding:7px 0;
+  border-bottom:1px solid var(--ink12);align-items:baseline}
+.widget .wr dt{font-family:var(--cred);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--cap)}
+.widget .wr dd{margin:0;font-size:13px;font-weight:600;text-align:right}
+.widget .wr dd.hl{color:var(--red);font-weight:700}
+.figstrip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:4px solid var(--ink)}
+.figstrip .f{padding:12px 20px 14px 0;border-right:1px solid var(--ink12)}
+.figstrip .f:last-child{border-right:none}
+.figstrip .v{font-family:var(--disp);font-weight:900;font-size:clamp(30px,3.6vw,48px);line-height:.84;
+  letter-spacing:-.028em;font-variant-numeric:tabular-nums}
+.figstrip .f.hl .v{color:var(--red)}
+.figstrip .k{font-family:var(--cred);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--cap);margin-top:7px}
+
+/* ── PROFILES ──────────────────────────────────────────────────────── */
+.pair{display:grid;grid-template-columns:1fr 1px 1fr;gap:0 34px}
+.pair .div{background:var(--ink22)}
+.who .pn{margin:0;font-family:var(--disp);font-weight:900;font-size:clamp(34px,4.8vw,68px);line-height:.82;
+  letter-spacing:-.032em;text-transform:uppercase;margin-top:14px}
+.who .pr{font-family:var(--cred);font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--red-tx);margin-top:10px}
+.who .pb{font-size:14.5px;line-height:1.5;margin:13px 0 0;color:var(--ink70)}
+.fld{margin-top:17px;border-top:2px solid var(--ink)}
+.fld .fr2{display:grid;grid-template-columns:1fr auto;gap:12px;padding:7px 0;
+  border-bottom:1px solid var(--ink12);align-items:baseline}
+.fld dt{font-family:var(--cred);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--cap)}
+.fld dd{margin:0;font-family:var(--disp);font-weight:800;font-size:16px;letter-spacing:-.008em;text-align:right}
+.fld dd.w{font-family:var(--body);font-weight:600;font-size:13px;letter-spacing:0}
+.blk{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--ink);margin:22px 0 9px;padding-bottom:5px;border-bottom:2px solid var(--ink)}
+.job{display:grid;grid-template-columns:74px 1fr;gap:13px;padding:9px 0;border-bottom:1px solid var(--ink12)}
+.job .yr{font-family:var(--cred);font-size:11px;letter-spacing:.06em;color:var(--cap);padding-top:2px}
+.job .co{font-family:var(--disp);font-weight:800;font-size:15px;text-transform:uppercase;line-height:1}
+.job .ti{font-size:12.5px;color:var(--ink70);margin-top:2px}
+.job .de{font-size:12px;color:var(--cap);margin-top:4px;line-height:1.4}
+.job.ov{background:var(--red);color:#fff;padding:9px 11px;margin:0 -11px;border-bottom:none}
+/* Full white, not 85%. On the vermilion band pure white measures 4.67:1;
+   at 85% it drops to about 3.8:1, which the 12px description line fails. */
+.job.ov .yr,.job.ov .ti,.job.ov .de{color:#fff}
+.job.ov .co{color:#fff}
+.pj{border-top:1px solid var(--ink12);padding:10px 0 0;margin-top:4px}
+.pj .pt{font-family:var(--disp);font-weight:800;font-size:16px;text-transform:uppercase;line-height:1.02}
+.pj p{margin:6px 0 0;font-size:12.5px;line-height:1.44;color:var(--ink70)}
+/* The teaser's way out. A band, not a card — it is the department handing
+   off to its own route, so it reads as a continuation rather than an aside. */
+.teaseout{margin-top:22px;border-top:4px solid var(--ink);border-bottom:1px solid var(--ink22);
+  padding:14px 0;display:grid;grid-template-columns:1fr auto;gap:26px;align-items:center}
+.teaseout p{margin:5px 0 0;font-size:14.5px;line-height:1.45;color:var(--ink70);max-width:62ch}
+
+/* ── THE SPREAD ────────────────────────────────────────────────────────
+   /us is a dedicated route, not a department inside the scroll, so it can
+   afford a larger reading size throughout. Same components, one step up —
+   the department teaser on the home page keeps the compact scale.
+
+   Scoped with `.spread` rather than by editing the base rules, so the two
+   contexts stay independently tunable. */
+.spread .who .pb{font-size:16px;line-height:1.54}
+.spread .job{padding:11px 0}
+.spread .job .co{font-size:17px}
+.spread .job .ti{font-size:13.5px}
+.spread .job .de{font-size:13px;line-height:1.46}
+.spread .job .yr{font-size:11.5px}
+.spread .fld .fr2{padding:9px 0}
+.spread .fld dd.w{font-size:14px}
+.spread .fld dt{font-size:11px}
+.spread .pj .pt{font-size:18px}
+.spread .pj p{font-size:13.5px;line-height:1.5}
+.spread .overlap p{font-size:16.5px;line-height:1.46}
+.spread .blk{font-size:11px;margin:26px 0 10px}
+
+/* The radar sits in its own framed plate so the axis labels have room to
+   breathe outside the rings — they are placed at 1.13R and would otherwise
+   collide with whatever follows. */
+.radar{margin-top:10px;border:1px solid var(--ink22);padding:8px 4px 4px}
+.radar svg{width:100%;height:auto;display:block;overflow:visible}
+.radarkey{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--cred);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--cap);padding:0 6px 4px}
+
+.overlap{grid-column:1 / -1;margin-top:24px;border-top:4px solid var(--ink);border-bottom:4px solid var(--ink);
+  padding:14px 0;display:grid;grid-template-columns:auto 1fr auto;gap:26px;align-items:center}
+.overlap .big{font-family:var(--disp);font-weight:900;font-size:clamp(28px,3.4vw,48px);line-height:.84;
+  letter-spacing:-.028em;text-transform:uppercase;color:var(--red)}
+.overlap p{margin:0;font-size:15px;line-height:1.42;max-width:56ch}
+.rec{margin-top:28px;display:grid;grid-template-columns:1fr 1.3fr;gap:26px;align-items:start;
+  border-top:4px solid var(--ink);padding-top:14px}
+.rec .rt{font-family:var(--disp);font-weight:900;font-size:clamp(24px,3vw,40px);line-height:.86;
+  letter-spacing:-.024em;text-transform:uppercase}
+.rec .tl{font-style:italic;font-size:15px;line-height:1.42;color:var(--ink70);margin:11px 0 0}
+.rec p{margin:11px 0 0;font-size:13.5px;line-height:1.48;color:var(--ink70)}
+/* Columns are weeks, rows are weekdays, and grid-auto-flow:column is what
+   makes a column fill top-to-bottom before moving right. Without it the
+   cells run in reading order and the calendar means nothing. */
+/* minmax(0,1fr), not 1fr. A bare `1fr` track cannot shrink below its
+   content's min-content width, and each cell carries aspect-ratio:1 against
+   the row height — so the columns floored at 23px apiece and the grid
+   demanded 670px inside a 350px column, taking the whole page 280px wide.
+   minmax(0,1fr) removes the floor; the cells then take their width from the
+   container and their height from the aspect ratio. */
+.heat{display:grid;grid-auto-flow:column;
+  grid-template-columns:repeat(26,minmax(0,1fr));
+  grid-template-rows:repeat(7,auto);gap:2px;margin-top:2px}
+.heat i{aspect-ratio:1;background:var(--ink12);display:block}
+.heat i.l1{background:var(--ink22)}.heat i.l2{background:var(--ink45)}
+.heat i.l3{background:var(--ink70)}.heat i.l4{background:var(--red)}
+.heat i.pad{background:none}
+
+/* ── THE WRITTEN INDEX ─────────────────────────────────────────────────
+   Full-width numbered bands rather than a card grid. A three-column card
+   grid is sized for exactly the number of posts that exist — two posts leave
+   a hole, twenty wrap into a wall — whereas a band list reads correctly at
+   any length and gives the titles the width they deserve.
+
+   The index numeral is the structure doing real work: these are numbered
+   because they are a sequence, newest first, and the empty slots continue the
+   count so the gap to the 2026 goal is a visible part of the list. */
+.windex{border-top:4px solid var(--ink);margin-top:16px}
+.wrow{display:grid;grid-template-columns:76px minmax(0,1fr) 220px;gap:26px;
+  padding:20px 0 19px;border-bottom:1px solid var(--ink22);align-items:start}
+.wrow .wn{font-family:var(--disp);font-weight:900;font-size:44px;line-height:.8;
+  letter-spacing:-.03em;color:var(--ink22);font-variant-numeric:tabular-nums}
+.wrow .wt{font-family:var(--disp);font-weight:900;font-size:clamp(24px,2.7vw,38px);
+  line-height:.94;letter-spacing:-.024em;text-transform:uppercase;margin:0}
+.wrow .wt a{text-decoration:none}
+.wrow .wt a:hover{color:var(--red)}
+.wrow .wx{margin:9px 0 0;font-size:14.5px;line-height:1.46;color:var(--ink70);max-width:74ch}
+.wrow .wm2{font-family:var(--cred);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cap);display:flex;flex-direction:column;gap:5px;text-align:right}
+.wrow .wm2 .wa{color:var(--red-tx);font-weight:700}
+.wrow .wtags{display:flex;flex-wrap:wrap;gap:5px;margin-top:11px;justify-content:flex-end}
+.wrow:hover .wn{color:var(--red)}
+
+/* An unwritten slot. Dashed, unlinked, and it keeps its number, because the
+   point is that it is the next one — not that something is missing. */
+.wrow.empty{border-bottom-style:dashed}
+.wrow.empty .wn{color:var(--ink12)}
+.wrow.empty .wt{color:var(--ink22)}
+.wrow.empty:hover .wn{color:var(--ink12)}
+
+@media (max-width:860px){
+  .wrow{grid-template-columns:52px minmax(0,1fr);gap:16px}
+  .wrow .wn{font-size:32px}
+  .wrow .wm2{grid-column:2;flex-direction:row;flex-wrap:wrap;gap:10px;text-align:left;margin-top:9px}
+  .wrow .wtags{justify-content:flex-start}
 }
 
-html {
-  scroll-behavior: smooth;
+/* ── THE INSTRUMENT PANEL ──────────────────────────────────────────────
+   Counted reads as a panel rather than a page of cards: one hairline grid,
+   monospace labels, tabular figures that line up in columns, and a sparkline
+   under every readout. The reference is a plate from a technical journal, not
+   a BI dashboard — no rounded corners, no drop shadows, no chart chrome.
+
+   `font-variant-numeric: tabular-nums` is load-bearing. These figures are
+   meant to be compared down a column, and proportional digits make a 1 narrow
+   enough that the columns visibly stagger. */
+.panel{border:2px solid var(--ink);margin-top:18px}
+.panel .prow{display:grid;border-bottom:1px solid var(--ink22)}
+.panel .prow:last-child{border-bottom:none}
+.panel .prow.r4{grid-template-columns:repeat(4,1fr)}
+.panel .prow.r3{grid-template-columns:repeat(3,1fr)}
+.panel .prow.r2{grid-template-columns:1fr 1fr}
+.panel .cell{padding:12px 14px 11px;border-right:1px solid var(--ink22);min-width:0}
+.panel .cell:last-child{border-right:none}
+.panel .cell.hl{background:var(--red);color:#fff}
+.panel .cell.hl .pl,.panel .cell.hl .pu,.panel .cell.hl .pn2{color:#fff}
+
+/* label / figure / unit */
+.panel .pl{font-family:var(--cred);font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--cap);display:flex;justify-content:space-between;gap:8px;white-space:nowrap}
+.panel .pl .pu{color:var(--cap);letter-spacing:.1em}
+.panel .pv{font-family:var(--disp);font-weight:900;font-size:clamp(34px,3.6vw,52px);
+  line-height:.9;letter-spacing:-.026em;margin-top:7px;font-variant-numeric:tabular-nums}
+.panel .cell.hl .pv{color:#fff}
+.panel .pn2{font-family:var(--cred);font-size:10px;letter-spacing:.08em;color:var(--cap);margin-top:5px}
+
+/* the sparkline strip under a readout */
+.panel .spark{margin-top:11px;margin-bottom:2px;height:26px}
+.panel .spark svg{width:100%;height:26px;display:block;overflow:visible}
+
+/* a full-width instrument: label rail on the left, bars on the right */
+.gauge{display:grid;grid-template-columns:142px 1fr auto;gap:12px;align-items:center;
+  padding:7px 0;border-bottom:1px solid var(--ink12)}
+.gauge:last-child{border-bottom:none}
+.gauge .gl{font-family:var(--cred);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--cap);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gauge .gt{height:13px;background:var(--ink12);position:relative}
+.gauge .gt i{position:absolute;inset:0 auto 0 0;background:var(--ink);display:block}
+.gauge .gt i.r{background:var(--red)}
+/* the target notch on a goal gauge — a rule, not a fill, so "where we are"
+   and "where we said we would be" are visually different kinds of thing */
+.gauge .gt b{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.gauge .gv{font-family:var(--disp);font-weight:800;font-size:15px;letter-spacing:-.01em;
+  font-variant-numeric:tabular-nums;white-space:nowrap;min-width:56px;text-align:right}
+
+/* the panel's own section head — flush, no numeral, reads as a rail label */
+.panel .phead{display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+  padding:9px 14px 8px;background:var(--ink);color:var(--paper);
+  font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;text-transform:uppercase}
+.panel .phead .pr2{color:var(--paper70);letter-spacing:.1em}
+.panel .pbody{padding:11px 14px 13px}
+
+@media (max-width:860px){
+  .panel .prow.r4{grid-template-columns:1fr 1fr}
+  .panel .prow.r3,.panel .prow.r2{grid-template-columns:1fr}
+  .panel .cell{border-right:none;border-bottom:1px solid var(--ink22)}
+  .gauge{grid-template-columns:96px 1fr auto;gap:9px}
 }
 
-body {
-  font-family: var(--font-dm-sans), sans-serif;
+/* ── DASHBOARD ─────────────────────────────────────────────────────── */
+.stat{border-top:3px solid var(--ink);padding-top:9px}
+.stat .v{font-family:var(--disp);font-weight:900;font-size:clamp(34px,4.2vw,56px);line-height:.84;
+  letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.stat .k{font-family:var(--cred);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--cap);margin-top:8px}
+.stat.hl .v{color:var(--red)}
+.chart svg{width:100%;height:auto;display:block}
+.bars{display:grid;gap:5px}
+.bars .b{display:grid;grid-template-columns:60px 1fr 44px;gap:9px;align-items:center}
+.bars .lb{font-family:var(--cred);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--cap)}
+.bars .tr{height:13px;background:var(--ink12);position:relative}
+.bars .tr i{position:absolute;inset:0 auto 0 0;background:var(--ink);display:block}
+.bars .tr i.r{background:var(--red)}
+.bars .vv{font-family:var(--cred);font-size:11px;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.book{display:grid;grid-template-columns:40px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid var(--ink12)}
+.book .sp{background:var(--ink);aspect-ratio:2/3}
+.book .bt{font-family:var(--disp);font-weight:800;font-size:14px;text-transform:uppercase;line-height:1.06}
+.book .ba{font-size:11.5px;color:var(--cap)}
+.book .bp{height:4px;background:var(--ink12);margin-top:7px;position:relative}
+.book .bp i{position:absolute;inset:0 auto 0 0;background:var(--red)}
+
+/* ── BLOG ──────────────────────────────────────────────────────────── */
+.feat{display:grid;grid-template-columns:1.3fr 1fr;gap:26px;align-items:start}
+.feat .ft{font-family:var(--disp);font-weight:900;font-size:clamp(26px,3.4vw,46px);text-transform:uppercase;
+  line-height:.88;letter-spacing:-.024em;margin:8px 0 0}
+.feat .ft a{text-decoration:none}
+.feat .ft a:hover{color:var(--red)}
+.feat p{margin:12px 0 0;font-size:14.5px;line-height:1.48;color:var(--ink70);max-width:46ch}
+.bcard{border-top:1px solid var(--ink);padding-top:10px}
+/* A card with no photograph. It sits in the same grid as cards that have one,
+   so it gets a heavier rule and a little air to read as a deliberate entry
+   rather than a picture that failed to load. */
+.bnoimg .bcard{border-top-width:3px;padding-bottom:4px}
+.bcard .bh{font-family:var(--disp);font-weight:800;font-size:17px;text-transform:uppercase;
+  line-height:1.02;margin:8px 0 0}
+.bcard .bh a{text-decoration:none}
+.bcard .bh a:hover{color:var(--red)}
+.bcard p{margin:7px 0 0;font-size:12px;line-height:1.42;color:var(--ink70)}
+
+/* ── POST ──────────────────────────────────────────────────────────── */
+.article{padding:0 var(--m);margin-top:34px}
+/* Three columns, not two: the text is set to its measure on the left, the
+   marginal rail is pinned to the right, and the slack is an explicit middle
+   column rather than an accident.
+
+   The original `1fr 232px` gave column one ~1066px while `.body` inside it
+   was capped at 66ch (~450px in a condensed face) — so 600px of dead space
+   opened between the prose and the rail, with both edges floating. Setting
+   the measure and pinning the rail puts the left and right edges back on the
+   full-width masthead rule above them, which is how a magazine sets a text
+   page with a marginal column. */
+/* The measure is set in rem, not ch.
+   `ch` is the width of the "0" glyph, and in a condensed face that is very
+   narrow — 66ch measured 451px here, which is only about 49 characters a
+   line, well under the comfortable band and visibly thin beside a full-width
+   masthead. 36rem lands around 71 characters, inside the comfortable band; 40rem
+   overshot to 79. Anything expressed in ch will keep lying as long as the body face is
+   condensed. */
+.artgrid{display:grid;grid-template-columns:minmax(0,36rem) 1fr 232px;gap:44px;
+  align-items:start;margin-top:26px}
+.artgrid > .marg{grid-column:3}
+.marg{position:sticky;top:56px}
+.marg .mb{border-top:2px solid var(--ink);padding-top:9px;margin-bottom:20px}
+.marg .mbl{font-family:var(--cred);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--cap);margin:0 0 8px;font-weight:400}
+.marg .mv{font-size:13.5px;line-height:1.45}
+.marg .mv b{font-family:var(--disp);font-weight:800;font-size:16px;text-transform:uppercase;
+  display:block;line-height:1.04;letter-spacing:-.008em}
+.marg .tl2{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.article .hd{border-bottom:4px solid var(--ink);padding-bottom:14px}
+.article h1{font-family:var(--disp);font-weight:900;font-size:clamp(32px,5.4vw,74px);margin:10px 0 0;
+  line-height:.84;letter-spacing:-.03em;text-transform:uppercase;max-width:26ch}
+.article .byl{display:flex;flex-wrap:wrap;gap:0 22px;margin-top:14px}
+.article .body{max-width:36rem;margin:0;font-size:17px;line-height:1.62}
+.article .body > p:first-of-type{font-size:20px;line-height:1.46}
+/* ::first-letter takes exactly one letter, so a paragraph opening on an
+   acronym gets it split: "AI will not eliminate work" sets as a boxed A
+   followed by "I will not eliminate work". `.no-initial` is applied by the
+   post route when the opening word is all-caps, and suppresses the standing
+   initial rather than shipping a headline that reads wrong. */
+.article .body.no-initial > p:first-of-type{font-size:20px;line-height:1.46}
+.article .body.no-initial > p:first-of-type::first-letter{font-family:inherit;
+  font-weight:inherit;font-size:inherit;float:none;margin:0;padding:0;
+  background:none;color:inherit}
+.article .body > p:first-of-type::first-letter{font-family:var(--disp);font-weight:900;
+  font-size:44px;line-height:1;float:left;margin:5px 11px 0 0;padding:9px 13px 7px;
+  background:var(--red);color:#fff}
+/* The mock article used h3 for its subheads; the real posts in
+   content/posts/*.mdx use `##`, which is an h2. Both are styled, and so is
+   h4, because Tailwind's preflight resets every heading to inherit its
+   size — an unstyled subhead does not look wrong, it looks like a bold
+   paragraph, which is the failure that is easy to ship. */
+.article .body h2,
+.article .body h3{font-family:var(--disp);font-weight:800;font-size:24px;text-transform:uppercase;
+  letter-spacing:-.014em;margin:30px 0 10px;line-height:1}
+.article .body h2{font-size:28px;margin-top:34px}
+.article .body h4{font-family:var(--cred);font-weight:700;font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--red-tx);margin:26px 0 8px}
+.article .body ul,.article .body ol{margin:0 0 16px;padding-left:22px}
+.article .body li{margin:0 0 7px}
+.article .body a{text-decoration:underline;text-decoration-thickness:1px;
+  text-underline-offset:2px}
+.article .body strong{font-weight:700}
+.article .body hr{border:none;border-top:1px solid var(--ink22);margin:28px 0}
+.article .body p{margin:0 0 16px}
+.article .body blockquote{margin:24px 0;padding:0;border-top:3px solid var(--ink);
+  border-bottom:3px solid var(--ink);padding:14px 0}
+.article .body blockquote p{font-family:var(--disp);font-weight:900;font-size:clamp(22px,2.8vw,34px);
+  line-height:.98;text-transform:uppercase;letter-spacing:-.018em;margin:0}
+.article .end{max-width:36rem;margin-top:26px;border-top:1px solid var(--ink);padding-top:12px}
+
+/* ── TRAVELS ───────────────────────────────────────────────────────── */
+/* FIXED POLARITY. The route chart is printed as a reversed-out plate — light
+   marks on a dark ground — in both themes, exactly like the cover overlay.
+   `var(--ink)` inverts, so under Negative this ground went light while the
+   chart's marks stayed light, and the whole map disappeared: all 43 SVG
+   elements present, none of them visible. */
+/* The route chart is a reversed-out surface: its ground is the ink and its
+   marks are the paper, so it turns over with the issue. Drawn in
+   behaviors.ts, which reads these same two tokens. */
+.map{position:relative;background:var(--ink);overflow:hidden;
+  outline:1px solid var(--ink22);outline-offset:-1px}
+.map svg{display:block;width:100%;height:auto}
+.alog{border-top:2px solid var(--ink)}
+/* column-gap only. `gap` applied between rows as well, and the row below
+   the first is now the trip's description — 14px of grid gap plus its own
+   margin set the sentence adrift from the row it belongs to. */
+.alog .ar{display:grid;grid-template-columns:112px 1fr auto auto;
+  column-gap:14px;row-gap:0;padding:9px 0;
+  border-bottom:1px solid var(--ink12);align-items:baseline}
+.alog .ad{font-family:var(--cred);font-size:11px;letter-spacing:.06em;color:var(--cap);
+  white-space:nowrap}
+.alog .an{font-family:var(--disp);font-weight:800;font-size:15px;text-transform:uppercase;line-height:1}
+/* The place is a label; the sentence below it is the content. They were the
+   same size and the same ink, so they read as one wrapped line. */
+.alog .al{font-size:11.5px;color:var(--cap)}
+/* Column 2 to the end, on its own row. `2 / -1` lands inside the four tracks
+   the row already declares, so no implicit column is created — which is the
+   fault that once squeezed the article body to 117px. */
+.alog .ax{grid-column:2 / -1;font-size:12.5px;line-height:1.45;
+  color:var(--ink70);margin-top:6px;max-width:74ch}
+.alog .aw{font-family:var(--cred);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--cap)}
+.alog .ann{font-family:var(--disp);font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+.alog .tot{border-bottom:none;border-top:2px solid var(--ink);margin-top:3px;padding-top:9px}
+.alog .tot .ad,.alog .tot .al,.alog .tot .ann{color:var(--red-tx)}
+
+/* ── NOW ───────────────────────────────────────────────────────────── */
+.nowlist{border-top:2px solid var(--ink);max-width:var(--measure)}
+.nowlist .nr{display:grid;grid-template-columns:120px 1fr;gap:16px;padding:13px 0;
+  border-bottom:1px solid var(--ink12)}
+.nowlist .nk{font-family:var(--cred);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--cap);padding-top:3px}
+.nowlist .nv{font-size:16px;line-height:1.45}
+.nowlist .nv b{font-family:var(--disp);font-weight:800;font-size:19px;text-transform:uppercase;
+  display:block;letter-spacing:-.01em;line-height:1.06}
+
+/* ── FAMILY ────────────────────────────────────────────────────────── */
+.gate{border:2px solid var(--ink);padding:22px;max-width:400px}
+.gate .gt{font-family:var(--disp);font-weight:900;font-size:24px;text-transform:uppercase;line-height:.94}
+.gate p{margin:9px 0 14px;font-size:12.5px;color:var(--ink70);line-height:1.46}
+.gate .fld2{display:flex;border:2px solid var(--ink)}
+.gate input{flex:1;border:none;background:none;padding:10px 11px;font-family:var(--cred);
+  font-size:11px;letter-spacing:.1em;color:var(--ink);outline:none;text-transform:uppercase}
+.gate input::placeholder{color:var(--cap)}
+.gallery{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+
+/* ── COLOPHON ──────────────────────────────────────────────────────── */
+/* ── THE FOOT OF THE PAGE ──────────────────────────────────────────────
+   A contents list, where to find us, and the family's other sites.
+
+   It used to be one long paragraph about how the halftone engine worked.
+   That is an essay, not a footer — a footer's job is to get the reader
+   somewhere, and the paragraph went nowhere. Reversed out, because the
+   issue should close on ink the way it opens on it. */
+.colo{margin-top:54px;border-top:5px solid var(--ink);background:var(--ink);
+  color:var(--paper)}
+.colgrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:34px;
+  padding:30px var(--m) 26px;align-items:start}
+.colo .lg{font-family:var(--disp);font-weight:900;font-size:30px;line-height:.86;
+  text-transform:uppercase;letter-spacing:-.026em;color:var(--paper)}
+.cbrand p{margin:12px 0 0;font-size:13.5px;line-height:1.5;color:var(--paper70);max-width:34ch}
+.cbrand .mono{margin-top:12px;font-family:var(--cred);font-size:10.5px;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--cap-rev)}
+
+.ccol h2{font-family:var(--cred);font-size:10.5px;letter-spacing:.17em;
+  text-transform:uppercase;color:var(--cap-rev);margin:0 0 12px;font-weight:400;
+  padding-bottom:7px;border-bottom:1px solid var(--paper20)}
+.ccol ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.ccol a{display:flex;align-items:baseline;gap:9px;text-decoration:none;
+  font-size:14px;color:var(--paper88);line-height:1.2}
+.ccol a:hover{color:var(--paper)}
+/* The folio number, so the footer reads as a contents page rather than a
+   pile of links — the departments really are numbered. */
+.ccol a b{font-family:var(--cred);font-size:10.5px;font-weight:700;
+  letter-spacing:.1em;color:var(--red);min-width:17px}
+.ccol a:hover b{color:#fff}
+/* The outbound mark, drawn rather than typed — U+2197 and friends are
+   quotation-family glyphs in this face and set far too low. */
+.ccol a .ext{width:5px;height:5px;flex:0 0 auto;align-self:center;
+  border-top:1.5px solid currentColor;border-right:1.5px solid currentColor;
+  transform:rotate(45deg);opacity:.6}
+
+.cicons a{align-items:center;gap:10px}
+.cicons i{display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  width:26px;height:26px;border:1px solid var(--paper25)}
+.cicons a:hover i{background:var(--red);border-color:var(--red);color:#fff}
+.cicons svg{width:14px;height:14px;fill:currentColor;display:block}
+
+.cbar{display:flex;justify-content:space-between;align-items:center;gap:16px;
+  flex-wrap:wrap;padding:12px var(--m);border-top:1px solid var(--paper20);
+  font-family:var(--cred);font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--cap-rev)}
+
+@media (max-width:860px){
+  .colgrid{grid-template-columns:1fr 1fr;gap:26px}
+  .cbrand{grid-column:1 / -1}
+  /* The cover is a 2.35:1 letterbox. At 390px that leaves 149px of picture and
+     the reversed-out type needs 119px of it, so the photograph was effectively
+     invisible on a phone. Two changes, and the second is the one that matters.
+
+     A taller frame alone does not fix it: the type needs ~45% of the height
+     and a face occupies ~43% of the source, and there is no vertical band that
+     fits both. So on a phone the type comes out of the picture and sits under
+     it, as a caption in ink on paper — which is also why the colors flip.
+
+     1.6 keeps the frame wider than the 4:3 source, so the crop stays vertical
+     and the `cy` in the plate's crop string still aims it. Go below ~1.34 and
+     the crop flips to horizontal, cy goes inert, and the whole jungle comes
+     back into frame with the faces shrunk into a corner. */
+  .cover .plate canvas{--plate-ar:1.6;--plate-pitch:2.8}
+  /* The type moves under the picture, but stays on .cover's dark ground, so
+     it stays reversed out. The scrim exists only to darken what sits behind
+     the type; with nothing behind it any more, it just grays the photograph. */
+  .cover .ov{position:static;padding:14px 22px 20px;left:auto;right:auto;bottom:auto}
+  .cover::after{display:none}
+  .cover .ov h2{font-size:clamp(28px,8.2vw,44px)}
+  .cover .ov p{font-size:14px;max-width:42ch;margin-top:8px}
 }
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
+@media (max-width:480px){
+  .colgrid{grid-template-columns:1fr}
 }
+.folio{padding:0 var(--m);display:flex;justify-content:flex-end}
+.folio span{font-family:var(--disp);font-weight:900;font-size:15px;color:var(--red-tx)}
 
-::-webkit-scrollbar-track {
-  background: transparent;
+/* ── LIGHTBOX ──────────────────────────────────────────────────────── */
+#lb{position:fixed;inset:0;z-index:95;background:#0d0c0bF7;display:grid;place-items:center;
+  padding:clamp(18px,4vw,58px);opacity:0;transition:opacity .3s ease}
+#lb[hidden]{display:none}
+#lb.in{opacity:1}
+#lb .stage{max-width:1120px;width:100%}
+#lb img{width:100%;height:auto;max-height:76vh;object-fit:contain;display:block;opacity:0;
+  transform:scale(.99);transition:opacity .36s ease,transform .36s ease}
+#lb img.in{opacity:1;transform:scale(1)}
+#lb .meta{display:flex;justify-content:space-between;gap:24px;margin-top:14px;font-family:var(--cred);
+  /* Deliberately a literal, not var(--cap-rev): the scrim above is a fixed
+     dark overlay in both themes, so this type must not invert with the page. */
+  font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:#dcd9d08c;opacity:0;
+  transition:opacity .36s ease .1s}
+#lb .meta.in{opacity:1}
+#lb .meta b{color:#fff;font-weight:400}
+#lb .meta .sw{color:#f0563d}
+#lb button{position:absolute;right:clamp(16px,3vw,40px);top:clamp(16px,3vw,40px);background:none;
+  border:2px solid #ffffff59;color:#fff;font-family:var(--cred);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;padding:9px 14px;cursor:pointer}
+#lb button:hover{background:#dd2f1c;border-color:#dd2f1c}
+
+@media (max-width:1000px){
+  /* ── The article, on a phone ──────────────────────────────────────────
+     `grid-column:3` on the rail is declared outside this block and kept
+     applying, so placing it in column 3 of a ONE-column grid created two
+     implicit auto tracks. The rail's content sized column 3 to ~180px and
+     the 1fr body got whatever was left: 117px on a 390px phone — thirteen
+     characters a line. Resetting the placement is the actual fix; the
+     single-column template alone never took effect. */
+  .artgrid{grid-template-columns:minmax(0,1fr);gap:22px}
+  .artgrid > .marg{grid-column:1}
+  .marg{position:static}
+  .article .body{max-width:none}
+
+  /* The rail repeats the header: author, date, read time and tags are all
+     in the kicker and byline a screen above. Repeating them under the
+     article is noise on a phone, so only "Next" — the one thing the header
+     does not carry — survives, and it gets the width to read as a real
+     hand-off rather than a footnote. */
+  .marg .mb.author,
+  .marg .mb.published,
+  .marg .mb.tags{display:none}
+  .marg .mb.next{border-top-width:4px;padding-top:12px;margin-bottom:0}
+  .marg .mb.next .mv{font-family:var(--disp);font-weight:800;
+    font-size:clamp(19px,5.4vw,26px);line-height:1.02;text-transform:uppercase;
+    letter-spacing:-.018em}
+  .marg .mb.next .mv a{text-decoration:none}
+
+  /* ── The sticky department bar ────────────────────────────────────────
+     Its third track was `auto`, so the kicker — "4 adventures · 2 countries
+     · 18 nights" at its longest — sized itself to its content and pushed the
+     bar 14px past a 390px viewport, which is what was making the whole page
+     scroll sideways. The bar is sticky and 39px tall, and the folio offsets
+     and scroll-margins are measured against that, so it must not wrap: the
+     kicker shrinks and ellipses instead. It repeats what the standfirst
+     immediately below says anyway. */
+  .deptbar{grid-template-columns:auto auto minmax(0,1fr);gap:10px}
+  .deptbar .dk{min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:right}
+
+  .pair{grid-template-columns:1fr;gap:32px}
+  /* The teaser places its second column explicitly at track 3 for the
+     desktop `1fr 1px 1fr`. Left alone here it conjured implicit tracks and
+     split a 390px phone into 103px and 183px columns, overflowing the page
+     by 14px. Both columns are full width now and the hairline divider,
+     which is the middle track, has nothing to divide. */
+  .pair > .who{grid-column:1 !important}
+  .pair > .div{display:none}
+  .pair .div{display:none}
+  .two,.three,.four,.feat,.grid6,.figstrip{grid-template-columns:1fr 1fr}
+  .mast .dek,.colo,.overlap,.rec{grid-template-columns:1fr;gap:14px}
+  .figstrip .f{border-right:none;border-bottom:1px solid var(--ink12)}
+  .gallery{grid-template-columns:repeat(3,1fr)}
+  .heat{grid-template-columns:repeat(13,1fr)}
+  .run{grid-template-columns:auto auto}
+  .run .mid{display:none}
+  .sh{grid-template-columns:auto 1fr}
+  .sh .r{grid-column:1/-1;text-align:left}
 }
-
-::-webkit-scrollbar-thumb {
-  background-color: #c8973e;
-  border-radius: 3px;
+@media (max-width:620px){
+  .three,.four,.grid6,.figstrip,.two,.feat{grid-template-columns:1fr}
+  .gallery{grid-template-columns:repeat(2,1fr)}
 }
-
-/* Leaflet map styles */
-.leaflet-container {
-  height: 100%;
-  width: 100%;
-  border-radius: 0.75rem;
-}
-
-/* Typography utilities */
-@layer base {
-  h1,
-  h2,
-  h3 {
-    font-family: var(--font-playfair), serif;
-  }
-}
-
-@layer utilities {
-  .font-display {
-    font-family: var(--font-playfair), serif;
-  }
-
-  .text-balance {
-    text-wrap: balance;
-  }
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
 }
