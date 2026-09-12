@@ -180,7 +180,7 @@ export const departments: {
     coverTitle: ["Two of us,", "mostly outside"],
     coverBlurb:
       "We both work with data and live at the bottom of the Wasatch. The rest " +
-      "of the time we are somewhere else, and we write down where.",
+      "of the time we are somewhere else, this site is our log.",
     /* The four figures under the cover. `value` may be a {figure} or plain
        text — "None" below is deliberately a word, not a number. */
     figures: [
