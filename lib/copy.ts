@@ -168,7 +168,7 @@ export const departments: {
     headline: "Oyarzun",
     dek: [
       "Tommy runs analytics at Domo. Julia engineers data at SeekWell. We met " +
-        "at Overstock and never left Utah. Everything on this page was " +
+        "at Overstock and raised a family in Utah. Everything on this page was " +
         "counted, not guessed at.",
     ],
     stats: [
@@ -204,15 +204,14 @@ export const departments: {
     dek: [
       "{YearsHimWord} years of analytics and {yearsHerWord} of data " +
         "engineering. {OverlapYearsWord} of those years were spent in the same " +
-        "building, on different floors, before either of us thought to " +
-        "mention it.",
+        "building, on different teams, and both with different lives.",
     ],
     stats: ["{himLine}", "{herLine}", "Both in Sandy, Utah"],
     /* The band at the foot of the teaser that sends you to /us. */
     teaseLabel: "The full spread",
     teaseBlurb:
-      "Both stacks on the same {axes} axes, careers in full, every project, the " +
-      "commit year, and the certificate at reproduction size.",
+      "Both stacks on the same {axes} axes, careers in full, latest projects, Tommy's " +
+      "commit year, and the certs viewable at reproduction size.",
     teaseCta: "Read the feature",
     /* The vermilion band across both columns.
        Derived: the years, the span and the company all come out of the two
@@ -220,7 +219,7 @@ export const departments: {
        moves this band with it. They were four separate literals before. */
     overlapYears: ["{overlapFrom}", "–{overlapTo}"],
     overlapText:
-      "**Same company, {overlapYears} years, different floors.** He was " +
+      "**Same company, {overlapYears} years, different teans.** He was " +
       "Manager of BI Development at {overlapCompany} while she was growing " +
       "from BI Developer to Manager of Data Engineering there.",
     overlapStats: ["{overlapCompany}", "Midvale, Utah", "The overlap"],
@@ -253,11 +252,9 @@ export const departments: {
     headline: "Andança",
     dek: [
       "Portuguese, from **andar**, to walk. A wandering — the going itself " +
-        "rather than the arriving. Julia is Brazilian, and it is a better " +
-        "word than any English one for what a route chart is a record of.",
+        "rather than the arriving.",
       "{adventures} adventures, {countries} countries, {nights} nights so " +
-        "far this year. Every figure derived from the log below, so adding a " +
-        "trip updates all of them.",
+        "far this year. Every figure derived from the log below.",
     ],
     stats: [
       "{countryList}",
@@ -279,10 +276,10 @@ export const departments: {
     kicker: "What we are actually doing this month",
     headline: "Right now",
     dek: [
-      "What we are actually doing this month, kept short enough that it " +
+      "What we are actually doing lately, kept short enough that it " +
         "stays true. Last edited {updated}.",
     ],
-    stats: ["Updated monthly", "Sandy, Utah", "Not a changelog"],
+    stats: ["Updated monthly... mostly", "Sandy, Utah", "Not a changelog"],
   },
 
   written: {
@@ -294,8 +291,8 @@ export const departments: {
     headline: "Written",
     dek: [
       "{posts} posts so far against a target of {postsGoal}. Each one is its " +
-        "own page with its own address, because a post you cannot link to is " +
-        "not published.",
+        "own page with its own address, because a post you can't link to " +
+        "isn't published.",
     ],
     stats: [
       "{posts} published · {drafts} in draft",
@@ -381,11 +378,11 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
       },
       {
         label: "Reading",
-        headline: "Do Androids Dream of Electric Sheep?",
+        headline: "Neuromancer",
         text: "{books} books finished this year against a target of {booksGoal}.",
       },
       {
-        label: "Skiing",
+        label: "Snowboarding",
         headline: "{topResort}, mostly",
         text: "{topResortDays} days there last season out of {skiDays} total.",
       },
@@ -560,10 +557,10 @@ export const us = {
   dek: [
     "{YearsHimWord} years of analytics and {yearsHerWord} of data " +
       "engineering. {OverlapYearsWord} of those years were spent in the same " +
-      "building, on different floors, before either of us thought to " +
+      "building, on different teams, before either of us thought to " +
       "mention it.",
     "Both stacks below are plotted on the same {axes} axes, so the two shapes " +
-      "mean the same thing. Everything on this page comes out of one file.",
+      "mean the same thing.",
   ],
   stats: [
     "{himLine}",
@@ -571,7 +568,7 @@ export const us = {
     "{commits} commits · {yearsTotal} years between us",
   ],
   overlapText:
-    "**Same company, {overlapYears} years, different floors.** He was " +
+    "**Same company, {overlapYears} years, different teams.** He was " +
     "Manager of BI Development at {overlapCompany} while she was growing " +
     "from BI Developer to Manager of Data Engineering there. Her tenure ran " +
     "to {herTenureTo} — {herTenureYears} years in all.",
