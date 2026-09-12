@@ -8,23 +8,49 @@
 
      1. `html[data-neg]`  →  `html.dark`
         The design hand-rolled Negative on a `data-neg` attribute plus
-        localStorage. The app already ships next-themes with Tailwind's
-        `darkMode: "class"`, so the mechanism is dark mode and only the
-        *name* is Negative. One selector rename replaces ~20 lines of
-        persistence code, and the toggle then survives navigation for free.
+        localStorage. next-themes writes `class="dark"` on <html>, so the
+        mechanism is its theme switch and only the *name* is Negative. One
+        selector rename replaces ~20 lines of persistence code, and the
+        toggle then survives navigation for free. Nothing here depends on a
+        CSS framework's dark-mode variant; the rules select `html.dark`
+        directly.
 
      2. Font stacks are indirected through next/font variables.
         `--disp`/`--body`/`--cred` keep their names so every rule below is
         untouched; only their values now point at the self-hosted faces
         declared in app/layout.tsx. All three are SIL Open Font License.
 
-   Tailwind's preflight loads first so the design system wins every
-   collision. Utility classes still work on top for anything new.
+   There is no CSS framework. The reset below is written out and everything
+   after it is this design system, so the stylesheet is the whole story.
    ═══════════════════════════════════════════════════════════════════════ */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* ── The reset ────────────────────────────────────────────────────────
+   This was `@tailwind base/components/utilities`. Tailwind was generating a
+   reset plus a full utility layer for a stylesheet that uses no utility
+   classes at all — not one, anywhere in the app — and @tailwindcss/typography
+   was loaded for `prose` classes the blog route deliberately does not use.
+
+   What was actually load-bearing is Preflight, and only a few rules of it.
+   They are written out here so the stylesheet is the whole story: margins
+   off, borders set to a sane default, media as blocks, form controls
+   inheriting type. Everything else Preflight does was either irrelevant or
+   already overridden below. */
+*,*::before,*::after{box-sizing:border-box;border:0 solid var(--ink22)}
+html{line-height:1.5;-webkit-text-size-adjust:100%;tab-size:4}
+body,h1,h2,h3,h4,h5,h6,p,figure,blockquote,dl,dd{margin:0}
+h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}
+ol,ul,menu{list-style:none;margin:0;padding:0}
+img,svg,video,canvas,audio,iframe,embed,object{display:block;vertical-align:middle}
+img,video{max-width:100%;height:auto}
+button,input,optgroup,select,textarea{font:inherit;color:inherit;margin:0;padding:0}
+button,[type="button"],[type="submit"]{-webkit-appearance:button;background:none}
+a{color:inherit;text-decoration:inherit}
+table{border-collapse:collapse;text-indent:0;border-color:inherit}
+hr{height:0;color:inherit;border-top-width:1px}
+b,strong{font-weight:bolder}
+code,kbd,samp,pre{font-family:var(--cred),ui-monospace,monospace;font-size:1em}
+small{font-size:80%}
+[hidden]{display:none}
 
 /* ════ OYARZUN.COM — Issue 04 · the design system ════════════════════ */
 
@@ -574,9 +600,9 @@ a{color:inherit}
   background:var(--red);color:#fff}
 /* The mock article used h3 for its subheads; the real posts in
    content/posts/*.mdx use `##`, which is an h2. Both are styled, and so is
-   h4, because Tailwind's preflight resets every heading to inherit its
-   size — an unstyled subhead does not look wrong, it looks like a bold
-   paragraph, which is the failure that is easy to ship. */
+   h4, because the reset at the top of this file sets every heading to
+   inherit its size — an unstyled subhead does not look wrong, it looks like
+   a bold paragraph, which is the failure that is easy to ship. */
 .article .body h2,
 .article .body h3{font-family:var(--disp);font-weight:800;font-size:24px;text-transform:uppercase;
   letter-spacing:-.014em;margin:30px 0 10px;line-height:1}
