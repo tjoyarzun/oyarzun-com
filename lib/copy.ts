@@ -219,7 +219,7 @@ export const departments: {
        moves this band with it. They were four separate literals before. */
     overlapYears: ["{overlapFrom}", "–{overlapTo}"],
     overlapText:
-      "**Same company, {overlapYears} years, different teans.** He was " +
+      "**Same company, {overlapYears} years, different teams.** He was " +
       "Manager of BI Development at {overlapCompany} while she was growing " +
       "from BI Developer to Manager of Data Engineering there.",
     overlapStats: ["{overlapCompany}", "Midvale, Utah", "The overlap"],

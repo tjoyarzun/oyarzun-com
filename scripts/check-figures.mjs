@@ -215,7 +215,7 @@ check("top resort days", home, `${truth.topResortDays} days there`);
 check("books shape line", home, truth.booksShape);
 check("published / draft", home, `${truth.posts} published · ${truth.drafts} in draft`);
 check("slots open", home, `${truth.postsGoal - truth.posts} slots open`);
-check("overlap span", home, `${truth.overlapYears} years, different floors`);
+check("overlap span", home, `${truth.overlapYears} years, different teams`);
 check("overlap company year", home, `–${truth.overlapTo}`);
 check("years between us", us, `${truth.yearsTotal} years between us`);
 check("shared axes", us, `same ${truth.axes} axes`);
@@ -240,7 +240,7 @@ for (const bad of [
   "19 years between us",
   "Twenty photographs",
   "same ten axes",
-  "five years, different floors",
+  "five years, different teams",
   "Eighteen days there",
   "target of twenty",
   /* NOT here: "2014 –2019". It is now derived from the career entries, and
