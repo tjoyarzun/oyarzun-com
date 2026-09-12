@@ -557,8 +557,7 @@ export const us = {
   dek: [
     "{YearsHimWord} years of analytics and {yearsHerWord} of data " +
       "engineering. {OverlapYearsWord} of those years were spent in the same " +
-      "building, on different teams, before either of us thought to " +
-      "mention it.",
+      "building, on different teams, and both with different lives.",
     "Both stacks below are plotted on the same {axes} axes, so the two shapes " +
       "mean the same thing.",
   ],
