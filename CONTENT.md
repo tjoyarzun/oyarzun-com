@@ -78,7 +78,7 @@ sit:
 - [Photographs](#photographs)
   - [HEIC will not work](#heic-will-not-work)
   - [Phone photos remember which way up they were](#phone-photos-remember-which-way-up-they-were)
-  - [The seven plates, and what shape each frame is](#the-seven-plates-and-what-shape-each-frame-is)
+  - [Every screened photograph, and the shape of its frame](#every-screened-photograph-and-the-shape-of-its-frame)
   - [Swapping a picture](#swapping-a-picture)
   - [Working out a crop without guessing blind](#working-out-a-crop-without-guessing-blind)
   - [The picture must live in this repo](#the-picture-must-live-in-this-repo)
@@ -174,7 +174,7 @@ shapes, and it takes three searches to see them all:
 |---|---|---|
 | `left="` and `right="` | the two ends of a caption under a drawing | 17 |
 | `title="`, `label="`, `cta="` | plate titles and button words | 17 |
-| a capitalised word between `>` and `<` | panel and column headings | 18 |
+| a capitalised word between `>` and `<` | panel and column headings | 16 |
 
 They are safe to edit — they are plain strings — but you are editing a
 component, so keep the quotes and the surrounding punctuation exactly as they
@@ -341,6 +341,7 @@ which is the first title in `currentlyReading` in
 progress bar. They were written out separately once and the page ended up
 saying two different things at the same time. Change the book in `data.ts`
 and both move together.
+
 ---
 
 ## Names, jobs and bios
@@ -354,7 +355,8 @@ her: {
   company: "SeekWell",
   bio: "Staff Data Engineer with 10+ years of experience…",
   linkedin: "julia-velicev",        // just the handle, not the full URL
-  github: "tjoyarzun",              // optional; omit and no GitHub row appears
+  github: "tjoyarzun",              // optional; omit and no GitHub button appears
+  resume: "/documents/julia_velicev_resume_2026.pdf",
 ```
 
 Changing `title` or `company` updates it **everywhere at once** — the profile
@@ -379,6 +381,7 @@ Leave one out and its button does not appear — Julia has no `github`, so she
 has two buttons and Tommy has three. A résumé is a file in
 [`public/documents/`](public/documents); replacing it is an upload plus a
 change to the filename here, and the button downloads rather than navigates.
+
 ---
 
 ## Careers
@@ -760,20 +763,28 @@ It turns the pixels the right way up and drops the tag, so nothing can
 disagree about it later. `costa_rica.jpg` went through this; the others did
 not need it.
 
-### The seven plates, and what shape each frame is
+### Every screened photograph, and the shape of its frame
 
 Every photograph on the site is one entry in `plates` in `lib/copy.ts`. The
 **frame** column is the shape the site prints it at, and it is the number that
 decides which part of `crop` does anything (see below).
 
-| Entry | Where it appears | Frame |
-|---|---|---|
-| `cover` | the cover, top of the home page | 2.35 (1.6 on a phone) |
-| `portraitHim` | Tommy, on `/us` and the teaser | 1.28 |
-| `portraitHer` | Julia, same two places | 1.28 |
-| `bucketTahiti` | "On the list", in Andança | 1.3 — one per item, named by its `plate` field |
-| blog cover | the newest post only | 1.9 |
-| family album | `/family`, 20 frames | square |
+The **frame** is the number that decides which part of `crop` does anything —
+see the next section. Getting it wrong is what makes a crop refuse to move.
+
+| The photograph | Set in | Where it appears | Frame |
+|---|---|---|---|
+| `plates.cover` | `lib/copy.ts` | the cover, top of the home page | **2.35** (1.6 on a phone) |
+| `plates.portraitHim` | `lib/copy.ts` | Tommy, on `/us` and the home teaser | **1.28** |
+| `plates.portraitHer` | `lib/copy.ts` | Julia, same two places | **1.28** |
+| `plates.bucketTahiti` | `lib/copy.ts` | "On the list", in Andança — one per item, named by the item's `plate` field | **1.3** |
+| a post's `coverImage` | the post's own `.mdx` | the newest post only, in Written | **1.5** |
+| a project's `embed.poster` | `lib/data.ts` → `projects` | under that project on `/us` | **1.72** |
+| `recognition.certificateUrl` | `lib/data.ts` | Julia's Recognition block on `/us` | **1.09** |
+| the family album | `gallery` in `lib/copy.ts` | `/family`, 20 frames | **square** |
+
+Only the first four are in `plates`. The other four are pictures attached to
+the thing they illustrate — a post, a project, an award — and live beside it.
 
 Blog covers are not in `plates` — they live in each post's own file, as
 `coverImage`. Only the **newest** post's cover is ever shown.
@@ -1089,6 +1100,7 @@ spelled out inside sentences, which is where they used to hide.
 | Years in the field, each and combined | `yearsExperience` on each profile |
 | The Overstock overlap — years, span, company | both `career` arrays, intersected |
 | Shared spider-chart axes | both `skills` arrays, combined |
+| The book named in Right now | the first title in `currentlyReading`, printed as `{reading}` |
 | Album frames | `GALLERY_FRAMES` in `lib/copy.ts` |
 | Every goal gauge, and its pace notch | the arrays above, and today's date |
 
@@ -1098,7 +1110,7 @@ spelled out inside sentences, which is where they used to hide.
 |---|---|
 | Days at each resort | `skiResorts` in `lib/data.ts` |
 | Books per quarter | `booksPerQuarter` in `lib/data.ts` |
-| What you're reading, and how far in | `currentlyReading` in `lib/data.ts` |
+| What you're reading, and how far in | `currentlyReading` in `lib/data.ts` — the Right-now row names the **first** title in it, as `{reading}`, so both places move together |
 | Films and their ratings | `favoriteMovies` in `lib/data.ts` |
 | The 2026 targets | the `goal` field in `goals` in `lib/data.ts` |
 | Trips | `adventures` in `lib/data.ts` |
