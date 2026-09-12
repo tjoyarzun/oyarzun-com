@@ -15,3 +15,10 @@ out/
 *.pem
 npm-debug.log*
 tsconfig.tsbuildinfo
+
+# Screenshots written to the repo root by verification scripts. Five of these
+# were committed during the redesign and very nearly shipped; images belong in
+# public/images/ and nowhere else at the root.
+/*.png
+/*.jpg
+/*.jpeg
