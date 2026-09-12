@@ -52,11 +52,17 @@ export default function ProfileColumn({
         gamma={portrait.gamma ?? 1.0}
         crop={portrait.crop}
       />
-      <div className="pn">
+      {/* The person's name is the heading for their column.
+          
+          It was a plain div, so /us went from its h1 straight to a flat run of
+          "Stack · self-assessed", "Career", "Projects" — twice, once per
+          person, with nothing to say whose was whose. Navigating that column
+          by heading told you nothing at all. */}
+      <h2 className="pn">
         {first}
         <br />
         {rest.join(" ")}
-      </div>
+      </h2>
       <div className="pr">
         {profile.title} · {profile.company}
       </div>
@@ -95,7 +101,7 @@ export default function ProfileColumn({
         </div>
       </dl>
 
-      <h4 className="blk">Stack · self-assessed</h4>
+      <h3 className="blk">Stack · self-assessed</h3>
       {/* Drawn by drawRadar() in lib/thrasher/behaviors.ts. The axes are the
           union of both people's `skills` arrays, so the two radars on this
           page are directly comparable — see SKILL_AXES in lib/thrasher/issue. */}
@@ -119,7 +125,7 @@ export default function ProfileColumn({
         right="Vermilion = 90+"
       />
 
-      <h4 className="blk">Career</h4>
+      <h3 className="blk">Career</h3>
       {profile.career.map((j) => (
         <div
           className={j.company === OVERLAP_COMPANY ? "job ov" : "job"}
@@ -136,7 +142,7 @@ export default function ProfileColumn({
 
       {children}
 
-      <h4 className="blk">Projects · {profile.projects.length}</h4>
+      <h3 className="blk">Projects · {profile.projects.length}</h3>
       {profile.projects.map((p) => (
         <div className="pj" key={p.title}>
           <div className="pt">{p.title}</div>
@@ -203,7 +209,7 @@ export default function ProfileColumn({
           it prints an absence as if it were a fact about the person. */}
       {rec ? (
         <>
-          <h4 className="blk">Recognition</h4>
+          <h3 className="blk">Recognition</h3>
           <div className="pj">
             <div className="pt">
               {rec.org} {rec.year}

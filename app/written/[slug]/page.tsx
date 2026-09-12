@@ -148,14 +148,14 @@ export default function WrittenPost({ params }: Props) {
                   globals.css. Classed rather than conditionally rendered, so
                   the markup is identical at every width. */}
               <div className="mb author">
-                <h5>Author</h5>
+                <p className="mbl">Author</p>
                 <div className="mv">
                   <b>{author.name}</b>
                   {author.title}, {author.company}
                 </div>
               </div>
               <div className="mb published">
-                <h5>Published</h5>
+                <p className="mbl">Published</p>
                 <div className="mv">
                   {longDate(post.date)}
                   <br />
@@ -163,7 +163,7 @@ export default function WrittenPost({ params }: Props) {
                 </div>
               </div>
               <div className="mb tags">
-                <h5>Tags</h5>
+                <p className="mbl">Tags</p>
                 <div className="tl2">
                   {post.tags.map((t) => (
                     <span className="tag" key={t}>
@@ -174,7 +174,7 @@ export default function WrittenPost({ params }: Props) {
               </div>
               {next ? (
                 <div className="mb next">
-                  <h5>Next</h5>
+                  <p className="mbl">Next</p>
                   <div className="mv">
                     <Link
                       href={`/written/${next.slug}`}

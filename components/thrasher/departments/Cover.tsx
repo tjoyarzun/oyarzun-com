@@ -33,6 +33,8 @@ export default async function Cover() {
       <DeptBar folio={c.folio} name={c.name} kicker={fill(c.deptKicker, rt)} />
 
       <Mast
+        /* The one h1 on the page: this is the issue's masthead. */
+        level={1}
         kicker={fill(c.kicker, rt)}
         headline={fill(c.headline, rt)}
         stats={lines(c.stats, rt)}

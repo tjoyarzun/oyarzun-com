@@ -68,6 +68,8 @@ export default async function Us() {
 
       <main id="main" className="spread">
         <Mast
+        /* Its own page, so its masthead is that page's h1. */
+        level={1}
           tight={false}
           kicker={fill(copy.kicker, rt)}
           headline={fill(copy.headline, rt)}
@@ -91,7 +93,7 @@ export default async function Us() {
                 },
               ]}
             >
-              <h4 className="blk">Commits · 52 weeks</h4>
+              <h3 className="blk">Commits · 52 weeks</h3>
               <CommitGrid data={gh} />
             </ProfileColumn>
 

@@ -25,9 +25,16 @@ export function DeptBar({
   kicker: string;
 }) {
   return (
-    <div className="deptbar">
+    /* aria-hidden, and not a heading.
+       
+       This is a running head: it repeats the masthead directly below it, and
+       it did so as an <h2> sitting ABOVE that <h1>, so every department
+       announced itself twice and in the wrong order. Sighted readers need it
+       because it is sticky and tells you where you are once the masthead has
+       scrolled away; a screen reader gets the masthead itself. */
+    <div className="deptbar" aria-hidden="true">
       <span className="dn">{folio}</span>
-      <h2>{name}</h2>
+      <span className="dnm">{name}</span>
       <span className="dk">{kicker}</span>
     </div>
   );
@@ -48,6 +55,7 @@ export function Mast({
   children,
   stats,
   tight = true,
+  level = 2,
 }: {
   kicker: string;
   headline: string;
@@ -56,13 +64,23 @@ export function Mast({
   /** The right-hand credit block. One item per line. */
   stats: ReactNode;
   tight?: boolean;
+  /**
+   * Heading level. One per page is an <h1>; the rest are <h2>.
+   *
+   * Every masthead used to be an <h1>, which gave the home page six of them —
+   * six things announcing themselves as the title of the page. The departments
+   * are sections of one issue, so the cover's masthead is the h1 and they are
+   * its h2s. Nothing visual depends on this: the styles key off `.mast`.
+   */
+  level?: 1 | 2;
 }) {
+  const H = level === 1 ? "h1" : "h2";
   return (
     <header className={tight ? "mast tight" : "mast"}>
       <div className="kick">{kicker}</div>
-      <h1 data-fitbox>
+      <H data-fitbox>
         <span data-fit>{headline}</span>
-      </h1>
+      </H>
       <div className="dek">
         <div>{children}</div>
         <div className="mono">{stats}</div>

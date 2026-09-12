@@ -36,6 +36,8 @@ export default function Family() {
       <RunningHead dept="Private" middle="Password required · not indexed" />
       <main id="main">
         <Mast
+        /* Its own page, so its masthead is that page's h1. */
+        level={1}
           tight={false}
           kicker={fill(copy.kicker)}
           headline={fill(copy.headline)}

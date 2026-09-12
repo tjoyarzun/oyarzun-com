@@ -100,7 +100,7 @@ export default function Colophon() {
         </div>
 
         <nav className="ccol" aria-label="Contents">
-          <h4>Contents</h4>
+          <h2>Contents</h2>
           <ul>
             {runningOrder.map((e) => {
               const d = departments[e.key];
@@ -129,7 +129,7 @@ export default function Colophon() {
         </nav>
 
         <div className="ccol">
-          <h4>Connect</h4>
+          <h2>Connect</h2>
           <ul className="cicons">
             {social.map((s) => (
               <li key={`${s.label}-${s.handle}`}>
@@ -149,7 +149,7 @@ export default function Colophon() {
         </div>
 
         <div className="ccol">
-          <h4>Family</h4>
+          <h2>Family</h2>
           <ul>
             {footer.family.map((f) => (
               <li key={f.href}>
