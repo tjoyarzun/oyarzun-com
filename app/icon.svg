@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Oyarzun">
+  <!--
+    The nav wordmark, reduced to one letter: paper O on the vermilion block.
+
+    Drawn as geometry rather than set as type, because a favicon cannot carry
+    a font. The proportions are traced from Big Shoulders Display's own O —
+    narrow, straight-sided, tight radii — with one deliberate departure: the
+    real counter is a slot about a quarter the width of the letter, which
+    closes up and reads as a solid blob at 16px. This one is wider, which is
+    the ordinary optical correction for a mark drawn at tab size.
+  -->
+  <rect width="64" height="64" fill="#dd2f1c"/>
+  <rect x="17" y="6" width="30" height="52" rx="13" fill="#dcd9d0"/>
+  <rect x="26.5" y="17" width="11" height="30" rx="5" fill="#dd2f1c"/>
+</svg>
