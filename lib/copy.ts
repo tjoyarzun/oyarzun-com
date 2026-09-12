@@ -378,7 +378,9 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
       },
       {
         label: "Reading",
-        headline: "Neuromancer",
+        /* Derived. Naming the book here as well as in `currentlyReading`
+           meant the page could, and did, say two different things at once. */
+        headline: "{reading}",
         text: "{books} books finished this year against a target of {booksGoal}.",
       },
       {

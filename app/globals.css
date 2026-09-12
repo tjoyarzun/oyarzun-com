@@ -220,6 +220,15 @@ a{color:inherit}
 .btn.alt:hover{background:var(--ink);color:var(--paper)}
 .btn.gho{background:none;color:var(--ink);border:2px solid var(--ink)}
 .btn.gho:hover{background:var(--ink);color:var(--paper)}
+/* Where to find one of us. A row of real links, replacing two rows of the
+   field table that printed a handle and could not be clicked. */
+.plinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.plink{display:inline-flex;align-items:center;gap:8px}
+.plink i{display:flex;flex:0 0 auto}
+.plink svg{width:13px;height:13px;fill:currentColor;display:block}
+/* In the home-page teaser the columns are narrower, so the row wraps rather
+   than pushing the grid wider. */
+.pair .plinks{margin-top:12px}
 .tag{font-family:var(--cred);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
   padding:5px 9px 4px;border:1px solid var(--ink22);color:var(--ink70);cursor:pointer;
   background:none;text-decoration:none;display:inline-block}

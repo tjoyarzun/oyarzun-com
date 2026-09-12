@@ -234,14 +234,8 @@ export const profiles: { him: Profile; her: Profile } = {
       {
         title: "Oyarzun.com",
         description:
-          "This very site — a Next.js 14 personal/family website with Framer Motion animations, an interactive world travel map, and data dashboards.",
-        tags: [
-          "Next.js",
-          "TypeScript",
-          "Tailwind",
-          "Recharts",
-          "Framer Motion",
-        ],
+          "This very site — a print magazine in a browser. Every photograph is screened into halftone dots on a canvas at the size it is displayed, and every figure on the page is counted from a list rather than typed, so the words and the numbers cannot disagree.",
+        tags: ["Next.js", "TypeScript", "Canvas", "SVG", "MDX"],
         githubUrl: "https://github.com/tjoyarzun/oyarzun-com",
         liveUrl: "https://oyarzun.com",
       },
@@ -545,13 +539,7 @@ export const travelStats = tripStats(adventures);
 export const travelStatsThisYear = tripStats(adventuresThisYear);
 
 export const currentlyReading: Book[] = [
-  {
-    title: "Do Androids Dream of Electric Sheep?",
-    author: "Philip K. Dick",
-    progress: 25,
-    coverColor: "#1C1917",
-    genre: "Sci-Fi",
-  },
+  { title: "Neuromancer", author: "William Gibson", progress: 25, coverColor: "#1C1917", genre: "Sci-Fi" },
   {
     title: "The Tell: Oprah's Book Club, A Memoir",
     author: "Amy Griffin",

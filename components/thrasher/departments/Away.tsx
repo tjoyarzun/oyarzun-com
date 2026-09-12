@@ -17,7 +17,7 @@ import { dateline, figures } from "@/lib/thrasher/issue";
  *
  * The route chart is drawn in lib/thrasher/behaviors.ts from the real lat/lng
  * on each adventure, projected equirectangularly onto a labelled graticule —
- * a print treatment of what react-leaflet renders interactively today. The
+ * drawn here rather than rendered by a mapping library. The
  * arcs are quadratic béziers whose control point rises with the span, so a
  * transatlantic leg reads as longer than a domestic one.
  */
@@ -72,7 +72,7 @@ export default function Away() {
           />
         </div>
         <Caption
-          left="Print treatment of the react-leaflet map · arcs from the adventures array"
+          left="Drawn from the trip coordinates · equirectangular, Natural Earth coastline"
           right={`${figures.nightsAway} nights · ${figures.countriesVisited} countries`}
         />
       </div>

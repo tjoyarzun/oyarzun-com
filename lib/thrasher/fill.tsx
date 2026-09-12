@@ -4,6 +4,7 @@ import {
   adventuresThisYear,
   adventuresUpcoming,
   countriesIn,
+  currentlyReading,
   goals,
   profiles,
   skiResorts,
@@ -90,6 +91,13 @@ function tokens(): Record<string, string> {
 
     /* odds and ends that were literals in prose */
     frames: String(GALLERY_FRAMES),
+    /* The book the Right-now row names, from the same array the Counted
+       panel lists. These were written out separately and drifted: Right now
+       said Neuromancer while Counted still listed Do Androids Dream of
+       Electric Sheep at 25%, and both were on the home page at once. Neither
+       guard could catch it — one checks derived numbers, the other looks for
+       hard-coded figures, and this was two sentences of prose disagreeing. */
+    reading: currentlyReading[0]?.title ?? "—",
     topResort: topResort?.name ?? "—",
     topResortDays: topResort ? String(topResort.days) : "—",
 

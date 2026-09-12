@@ -64,6 +64,7 @@ sit:
   - [Adding a paragraph](#adding-a-paragraph)
 - [Right now — the monthly edit](#right-now--the-monthly-edit)
 - [Names, jobs and bios](#names-jobs-and-bios)
+  - [The buttons under each person](#the-buttons-under-each-person)
 - [Careers](#careers)
 - [Projects](#projects)
 - [Awards](#awards)
@@ -333,6 +334,13 @@ That one field feeds both the department bar and the last sentence of the
 standfirst, so you only type it once. The whole value of a "now" page is that
 the date is honest.
 
+
+**The Reading row names no book of its own.** Its headline is `{reading}`,
+which is the first title in `currentlyReading` in
+[`lib/data.ts`](lib/data.ts) — the same list the Counted panel prints with a
+progress bar. They were written out separately once and the page ended up
+saying two different things at the same time. Change the book in `data.ts`
+and both move together.
 ---
 
 ## Names, jobs and bios
@@ -354,6 +362,23 @@ column, the teaser on the home page, the credit block under two different
 headlines, and the byline on any post that person wrote. That is what
 `{himLine}` and `{herLine}` are for.
 
+
+### The buttons under each person
+
+`github`, `linkedin` and `resume` on a profile become the three buttons under
+the field table, on the home page and on `/us`. The URLs are built from the
+handles, so there is nothing to keep in step:
+
+```ts
+github: "tjoyarzun",                              // → github.com/tjoyarzun
+linkedin: "tom-oyarzun",                          // → linkedin.com/in/tom-oyarzun
+resume: "/documents/tommy_oyarzun_resume_2026.pdf",
+```
+
+Leave one out and its button does not appear — Julia has no `github`, so she
+has two buttons and Tommy has three. A résumé is a file in
+[`public/documents/`](public/documents); replacing it is an upload plus a
+change to the filename here, and the button downloads rather than navigates.
 ---
 
 ## Careers

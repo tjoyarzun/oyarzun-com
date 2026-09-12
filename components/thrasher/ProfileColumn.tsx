@@ -1,4 +1,5 @@
 import Plate from "@/components/thrasher/Plate";
+import ProfileLinks from "@/components/thrasher/ProfileLinks";
 import { Caption } from "@/components/thrasher/editorial";
 import type { Profile } from "@/lib/data";
 import { axesFor } from "@/lib/thrasher/issue";
@@ -89,17 +90,11 @@ export default function ProfileColumn({
             {top.skill} · {top.value}
           </dd>
         </div>
-        {profile.github ? (
-          <div className="fr2">
-            <dt>Github</dt>
-            <dd className="w">{profile.github}</dd>
-          </div>
-        ) : null}
-        <div className="fr2">
-          <dt>Linkedin</dt>
-          <dd className="w">{profile.linkedin}</dd>
-        </div>
       </dl>
+
+      {/* The handles used to sit in the table above as two unclickable rows.
+          A handle is a fact about a person; it is not a way to reach them. */}
+      <ProfileLinks profile={profile} />
 
       <h3 className="blk">Stack · self-assessed</h3>
       {/* Drawn by drawRadar() in lib/thrasher/behaviors.ts. The axes are the

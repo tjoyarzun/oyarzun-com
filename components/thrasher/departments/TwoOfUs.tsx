@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Plate from "@/components/thrasher/Plate";
+import ProfileLinks from "@/components/thrasher/ProfileLinks";
 import { Caption, DeptBar, Mast } from "@/components/thrasher/editorial";
 import { profiles } from "@/lib/data";
 import { departments, plates } from "@/lib/copy";
@@ -113,6 +114,7 @@ export default async function TwoOfUs() {
                   </div>
                 ))}
               </dl>
+              <ProfileLinks profile={p.profile} />
             </div>
           ))}
           <div className="div" style={{ gridColumn: 2, gridRow: 1 }} />
