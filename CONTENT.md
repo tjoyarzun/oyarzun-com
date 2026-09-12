@@ -88,6 +88,7 @@ sit:
   - [The password box checks nothing — read this](#the-password-box-checks-nothing--read-this)
 - [Publishing a blog post](#publishing-a-blog-post)
   - [The "Unwritten" slots](#the-unwritten-slots)
+  - [The big red first letter](#the-big-red-first-letter)
 - [The footer](#the-footer)
 - [Every figure and where it comes from](#every-figure-and-where-it-comes-from)
   - [Counted from something (you never touch these)](#counted-from-something-you-never-touch-these)
@@ -1025,10 +1026,45 @@ about a gap, not content.
 `{slotsOpen}` figure across the site — the Counted panel, the Written goal
 gauge, the standfirst, the Right-now row.
 
+### The big red first letter
+
 **The first letter of your first paragraph** is set as a large initial in a
-vermilion box. If your post opens on an acronym — "AI will not…" — the site
-notices and skips the initial, because it would otherwise print a boxed **A**
-followed by "I will not…".
+vermilion box. You do not turn it on — it is on by default, and there is
+nothing to add to the frontmatter for it.
+
+**It switches itself off when the paragraph opens on an acronym.** The initial
+is drawn with CSS `::first-letter`, which takes exactly *one* letter — so "AI
+will not eliminate work" would print a boxed **A** followed by "I will not
+eliminate work". The site reads the first word and suppresses the initial
+rather than ship that. It is why the AI post has no red letter and Julia's
+does: hers opens "I did not start in tech", and a one-letter word is not an
+acronym.
+
+The rule, exactly: the first word of the first **paragraph**, with punctuation
+ignored, is two or more letters and all capitals.
+
+| Your post opens | Initial |
+|---|---|
+| `I did not start in tech.` | **yes** — one letter is not an acronym |
+| `A quick note on this.` | **yes** |
+| `I'm not sure about this.` | **yes** — mixed case |
+| `2026 was the year.` | **yes**, on the `2` |
+| `AI will not eliminate work.` | no |
+| `SQL is the whole job.` | no |
+| `OK, so here is the thing.` | no |
+| a heading, list or quote, then a paragraph starting `AI…` | no — it reads the first paragraph, not the first line |
+
+**To override it,** add `dropCap` to the frontmatter. `false` forces it off,
+`true` forces it on even where the rule would have suppressed it. Leave it out
+and the rule decides, which is what every post does today.
+
+```yaml
+dropCap: false      # no red initial, whatever the post opens with
+```
+
+One thing the rule cannot help with: `::first-letter` also swallows any
+punctuation in front of the letter, so a post opening on a quotation mark
+boxes the quote *and* the letter. If that looks wrong, `dropCap: false`.
 
 To **edit** a post, edit the file. To **remove** one, either delete the file
 or set `draft: true`, which keeps the text for later.

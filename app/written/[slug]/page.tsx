@@ -38,21 +38,34 @@ export function generateMetadata({ params }: Props): Metadata {
 }
 
 /**
- * Does the post open on an acronym?
+ * Should the standing initial be suppressed?
  *
- * The standing initial is set with ::first-letter, which takes exactly one
- * letter — so "AI will not eliminate work" renders as a boxed A followed by
- * "I will not eliminate work". Detecting it here and suppressing the initial
- * is the only reliable fix: CSS cannot see the word, and re-writing the post
- * to avoid the case would be the design dictating the prose.
+ * It is set with ::first-letter, which takes exactly one letter — so a
+ * paragraph opening on an acronym gets split: "AI will not eliminate work"
+ * sets as a boxed A followed by "I will not eliminate work". CSS cannot see
+ * the word, and re-writing the post to avoid the case would be the design
+ * dictating the prose, so it is detected here.
+ *
+ * Read the FIRST PARAGRAPH, not the first word of the file. The CSS targets
+ * `p:first-of-type`, so a post that opens with a heading, a list or a
+ * blockquote still gets its initial on the paragraph further down — while
+ * the old check looked at the very first token, saw "##" or ">" or "-",
+ * found no acronym and let the initial through onto a paragraph that did
+ * start with one. The two have to look at the same paragraph.
  */
 function opensOnAcronym(content: string): boolean {
-  const firstWord = content
-    .replace(/^\s*(?:import[^\n]*\n|\n)*/, "")
-    .trim()
-    .split(/\s+/)[0]
-    ?.replace(/[^A-Za-z]/g, "");
-  return !!firstWord && firstWord.length > 1 && firstWord === firstWord.toUpperCase();
+  const body = content.replace(/^\s*(?:import[^\n]*\n|\n)*/, "");
+  /* The first block that will render as a <p>: not a heading, list, quote,
+     fence, table, image or rule. */
+  const para = body
+    .split(/\n{2,}/)
+    .map((b) => b.trim())
+    .find((b) => b && !/^(?:#{1,6} |[-*+] |\d+\. |> |```|\||!\[|---|===)/.test(b));
+  if (!para) return false;
+  const firstWord = para.split(/\s+/)[0]?.replace(/[^A-Za-z]/g, "");
+  return (
+    !!firstWord && firstWord.length > 1 && firstWord === firstWord.toUpperCase()
+  );
 }
 
 const BYLINE = {
@@ -106,8 +119,16 @@ export default function WrittenPost({ params }: Props) {
                   systems fighting over the same paragraphs is how the old
                   page ended up with a serif stack inside a sans design. */}
               <div
+                /* `dropCap: false` in a post's frontmatter forces the
+                   initial off; `true` forces it on even where the rule would
+                   have suppressed it. Left unset — which is every post so
+                   far — the rule above decides. */
                 className={
-                  opensOnAcronym(post.content) ? "body no-initial" : "body"
+                  (
+                    post.dropCap ?? !opensOnAcronym(post.content)
+                  )
+                    ? "body"
+                    : "body no-initial"
                 }
                 style={{ marginTop: 26 }}
               >

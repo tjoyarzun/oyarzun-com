@@ -16,6 +16,9 @@ export interface PostMeta {
   excerpt: string;
   coverImage: string;
   draft?: boolean;
+  /** Force the standing initial on (`true`) or off (`false`). Unset = the
+   *  route decides, by looking at the first paragraph. */
+  dropCap?: boolean;
 }
 
 export interface Post extends PostMeta {
