@@ -10,6 +10,7 @@ import Nav from "@/components/thrasher/Nav";
 import Colophon from "@/components/thrasher/Colophon";
 import Lightbox from "@/components/thrasher/Lightbox";
 import Behaviors from "@/components/thrasher/Behaviors";
+import { Analytics } from "@vercel/analytics/next";
 
 /**
  * The three faces of Issue 04. All three are SIL Open Font License — free for
@@ -100,6 +101,16 @@ export default function RootLayout({
           <Colophon />
           <Lightbox />
           <Behaviors />
+          {/* Vercel Web Analytics. This was mounted on the site before the
+              redesign and the redesign dropped it, because the cover copy at
+              the time claimed nothing was tracking you. That claim is gone
+              and this is not — so the two agreed then and they agree now.
+
+              Web Analytics stayed switched on at the project the whole time,
+              serving /_vercel/insights/script.js and waiting for beacons the
+              page had stopped sending, which is why the dashboard read zero
+              rather than reading nothing at all. */}
+          <Analytics />
         </Providers>
       </body>
     </html>
