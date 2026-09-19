@@ -367,7 +367,7 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
         headline: "Analytics Engineering at Domo",
         text:
           "Building the team and improving marketing performance through" +
-          "Gated Free Trial, Paid Search spend optimizations, and marketing" +
+          "Gated Free Trial, Paid Search spend optimizations, and marketing " +
           "attribution optimizations.",
       },
       {
@@ -387,8 +387,8 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
       {
         label: "Skateboarding",
         headline: "Sandy & Pleasant Grove parks",
-        text: "Keeping my cooks and front boards on lock and the rest of my body" +
-          "in one piece. It hurts more than it used to.",
+        text: "Keeping my crooks and front boards on lock and the rest of my body" +
+          "in one piece. It totally hurts more than it used to.",
       },
     ],
   },
