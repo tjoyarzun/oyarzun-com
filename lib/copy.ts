@@ -364,10 +364,11 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
     rows: [
       {
         label: "Working on",
-        headline: "Marketing analytics at Domo",
+        headline: "Analytics Engineering at Domo",
         text:
-          "Building the team out and running experiments against the Gated " +
-          "Free Trial funnel.",
+          "Building the team and improving marketing performance through" +
+          "Gated Free Trial, Paid Search spend optimizations, and marketing" +
+          "attribution optimizations.",
       },
       {
         label: "Building",
@@ -384,9 +385,10 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
         text: "{books} books finished this year against a target of {booksGoal}.",
       },
       {
-        label: "Snowboarding",
-        headline: "{topResort}, mostly",
-        text: "{topResortDays} days there last season out of {skiDays} total.",
+        label: "Skateboarding",
+        headline: "Sandy & Pleasant Grove parks",
+        text: "Keeping my cooks and front boards on lock and the rest of my body" +
+          "in one piece. It hurts more than it used to.",
       },
     ],
   },
@@ -424,7 +426,7 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
     rows: [
       {
         label: "Travelling",
-        headline: "Nothing booked",
+        headline: "New Year in Brazil",
         /* The places are derived too. Naming them by hand meant a fifth
            trip made the sentence wrong beside a correct {nights}, and no
            check could see it — city names are not numbers. */
