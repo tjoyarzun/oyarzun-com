@@ -381,7 +381,7 @@ export const adventures: Adventure[] = [
     country: "USA",
     lat: 36.169798592946364,
     lng: -115.1674570783433,
-    date: "2026-07-03",
+    date: "2026-08-01",
     type: "sightseeing",
     who: "Family",
     nights: 3,
@@ -389,6 +389,22 @@ export const adventures: Adventure[] = [
     description:
       "Drove the whole family including the animals to see my mom in Las Vegas.",
     imageUrl: "https://picsum.photos/seed/slc/400/250",
+  },
+  {
+    id: 5,
+    name: "August One Year Anniversary in Orlando",
+    location: "Orlando, FL",
+    country: "USA",
+    lat: 28.538335599999997,
+    lng: -81.3792364,
+    date: "2026-08-28",
+    type: "sightseeing",
+    who: "Just Us",
+    nights: 3,
+    emoji: ":beach_with_umbrella:",
+    description:
+      "Visited some of Julia's friends and family in Orlando, Florida for our one year anniversary. We had a great time at the beach, pool, and night out.",
+    imageUrl: "https://picsum.photos/seed/orlando/400/250",
   },
 ];
 
@@ -576,6 +592,15 @@ export const favoriteMovies: Movie[] = [
     genre: "Sci-Fi",
     rating: 5,
     platform: "AppleTV+",
+  },
+  {
+    title: "The Odyssey",
+    year: 2026,
+    director: "Christopher Nolan",
+    posterColor: "#1A365D",
+    genre: "Epic Action / Fantasy",
+    rating: 5,
+    platform: "Theatrical Release",
   },
 ];
 
