@@ -232,6 +232,15 @@ export const profiles: { him: Profile; her: Profile } = {
         },
       },
       {
+        title: "Claude Code Starter Kit",
+        description:
+          "A guided setup that turns a new laptop into a working environment for building with Claude Code. You don't follow it by hand — you clone it, point Claude at one file, and it interviews you, explains each piece, and stops to fix things when they break.",
+        tags: ["Claude Code", "Shell", "GitHub", "Vercel", "Onboarding"],
+        githubUrl: "https://github.com/tjoyarzun/claude-code-starter-kit",
+        /* No liveUrl: this is a repository you clone and run, not a site you
+           visit. A link labelled "Open" would go nowhere useful. */
+      },
+      {
         title: "Oyarzun.com",
         description:
           "This very site — a print magazine in a browser. Every photograph is screened into halftone dots on a canvas at the size it is displayed, and every figure on the page is counted from a list rather than typed, so the words and the numbers cannot disagree.",

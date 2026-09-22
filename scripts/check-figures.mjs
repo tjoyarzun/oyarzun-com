@@ -38,6 +38,7 @@ const truth = JSON.parse(
          books: figures.booksReadThisYear, posts: figures.postsPublished,
          drafts: draftCount, postsGoal, yearsTotal, axes: SKILL_AXES.length,
          frames: GALLERY_FRAMES, topResort: top.name, topResortDays: top.days,
+         skiResorts: skiResorts.length,
          booksShape: booksShape(),
          overlapFrom: overlap?.from, overlapTo: overlap?.to,
          overlapYears: overlap?.shared, herTenureTo: overlap?.herTo,
@@ -210,8 +211,15 @@ console.log("\nfigures reach the page:");
 check("nights away", home, `${truth.nights} nights`);
 check("countries", home, `${truth.countries} countries`);
 check("adventures logged", home, `${truth.adventures} adventures`);
-check("top resort", home, `${truth.topResort}, mostly`);
-check("top resort days", home, `${truth.topResortDays} days there`);
+/* These used to assert the Right-now Skateboarding row back when it was a
+   Snowboarding row reading "{topResort}, mostly" and "{topResortDays} days
+   there". That copy is gone — {topResort} and {topResortDays} are now used
+   zero times — so the assertions were checking for text the page no longer
+   prints by design. Re-pointed at the Counted panel, which still derives both
+   figures from skiResorts, rather than deleted: losing the coverage silently
+   is how a derivation stops being checked without anyone deciding to. */
+check("busiest resort", home, `${truth.topResort} leads`);
+check("resort count", home, `${truth.skiResorts} resorts`);
 check("books shape line", home, truth.booksShape);
 check("published / draft", home, `${truth.posts} published · ${truth.drafts} in draft`);
 check("slots open", home, `${truth.postsGoal - truth.posts} slots open`);

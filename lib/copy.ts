@@ -387,7 +387,7 @@ export const nowRows: Record<"him" | "her" | "both", NowGroup> = {
       {
         label: "Skateboarding",
         headline: "Sandy & Pleasant Grove parks",
-        text: "Keeping my crooks and front boards on lock and the rest of my body" +
+        text: "Keeping my crooks and front boards on lock and the rest of my body " +
           "in one piece. It totally hurts more than it used to.",
       },
     ],
