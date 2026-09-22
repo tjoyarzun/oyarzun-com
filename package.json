@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "check:figures": "node scripts/check-figures.mjs"
+    "check:figures": "node scripts/check-figures.mjs",
+    "await-deploy": "node scripts/await-deploy.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

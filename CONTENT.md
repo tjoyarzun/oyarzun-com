@@ -98,6 +98,7 @@ sit:
 - [Checking the figures](#checking-the-figures)
 - [What still needs a developer](#what-still-needs-a-developer)
 - [Checking your work](#checking-your-work)
+  - [Watching a deploy](#watching-a-deploy)
   - [If a build fails](#if-a-build-fails)
 
 ---
@@ -1233,6 +1234,21 @@ A quick checklist after an edit:
 - [ ] If you edited something and nothing changed, check the value is not
       **derived**. A figure computed from a list ignores anything you type at
       it — see [Every figure and where it comes from](#every-figure-and-where-it-comes-from).
+
+### Watching a deploy
+
+`npm run await-deploy` waits until the commit you just pushed is actually
+serving at oyarzun.com, then exits. It prints the deployment and the commit
+message it matched, exits non-zero if the build fails or it gives up, and
+takes an optional commit SHA if you want to check an older one.
+
+It is more careful than it looks, because two obvious ways to write it are
+both wrong. "Is the newest deployment ready?" answers yes straight after a
+push — Vercel has not created yours yet, so the newest is the *previous* one,
+already finished. And "Ready" is not "serving": a build finishes before the
+domain moves to it, and checks run in that gap read the old site. So it
+matches on the commit SHA and then waits for the domain to actually point at
+that deployment.
 
 ### If a build fails
 
