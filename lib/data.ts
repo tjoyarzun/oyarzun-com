@@ -232,6 +232,17 @@ export const profiles: { him: Profile; her: Profile } = {
         },
       },
       {
+        title: "Throughline",
+        description:
+          "A media tracker on a knowledge graph where every connection is a declared type — directed by, part of, scored by — not a similarity score. The ontology is a build input, not a diagram: it compiles to types and database constraints, and CI fails when the two drift.",
+        tags: ["Next.js", "TypeScript", "Postgres", "Knowledge Graph", "Ontology"],
+        githubUrl: "https://github.com/tjoyarzun/throughline",
+        /* /explore, not the root. The root redirects to a sign-in wall; the
+           ontology explorer underneath it is deliberately open, and it is the
+           part this blurb describes. */
+        liveUrl: "https://throughline-ontology.vercel.app/explore",
+      },
+      {
         title: "Claude Code Starter Kit",
         description:
           "A guided setup that turns a new laptop into a working environment for building with Claude Code. You don't follow it by hand — you clone it, point Claude at one file, and it interviews you, explains each piece, and stops to fix things when they break.",
