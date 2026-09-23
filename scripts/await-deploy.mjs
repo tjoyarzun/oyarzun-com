@@ -27,6 +27,7 @@
  *
  *   node scripts/await-deploy.mjs                 # waits for HEAD
  *   node scripts/await-deploy.mjs <sha>           # waits for a specific commit
+ *   node scripts/await-deploy.mjs --expect Throughline --path /us
  *   DEPLOY_TIMEOUT=600 node scripts/await-deploy.mjs
  */
 import { execFile } from "node:child_process";
@@ -38,10 +39,47 @@ const PROJECT = process.env.VERCEL_PROJECT ?? "oyarzun-com";
 const SCOPE = process.env.VERCEL_SCOPE ?? "agora-innovations";
 const DOMAIN = process.env.DEPLOY_DOMAIN ?? "www.oyarzun.com";
 const TIMEOUT_S = Number(process.env.DEPLOY_TIMEOUT ?? 600);
+/* How long to keep confirming AFTER the build is READY. Short, because a
+   failure to confirm is not a failure to deploy. */
+const CONFIRM_S = Number(process.env.DEPLOY_CONFIRM ?? 120);
 const POLL_S = 8;
 
+/* Parsed strictly. An earlier version treated any non-flag argument as the
+   commit, so passing an option it did not know about made that option's VALUE
+   the SHA — it then hunted for a deployment of "/us" and polled until timeout
+   with no hint as to why. Unknown arguments stop the script instead. */
 const sleep = (s) => new Promise((r) => setTimeout(r, s * 1000));
 const say = (m) => process.stdout.write(`${m}\n`);
+
+const argv = process.argv.slice(2);
+const FLAGS = { "--expect": null, "--path": null };
+let SHA_ARG = null;
+for (let i = 0; i < argv.length; i++) {
+  const a = argv[i];
+  if (a in FLAGS) {
+    if (argv[i + 1] === undefined || argv[i + 1].startsWith("--")) {
+      say(`${a} needs a value`);
+      process.exit(2);
+    }
+    FLAGS[a] = argv[++i];
+  } else if (a.startsWith("--")) {
+    say(`unknown option ${a} — expected --expect or --path`);
+    process.exit(2);
+  } else if (SHA_ARG === null) {
+    SHA_ARG = a;
+  } else {
+    say(`unexpected argument ${a}`);
+    process.exit(2);
+  }
+}
+const EXPECT = FLAGS["--expect"];
+/* The change may not be on the home page — the projects list lives on /us. */
+const PATH = FLAGS["--path"] ?? "/";
+
+const report = (d) => {
+  say(`  ${d.url}`);
+  say(`  ${(d.meta?.githubCommitMessage ?? "").split("\n")[0]}`);
+};
 
 /* The two commands this script uses disagree about which stream to write to,
    so they get one helper each rather than a shared one with a flag.
@@ -74,28 +112,32 @@ async function vercelText(args) {
 async function findBySha(sha) {
   const json = await vercelJson(["ls", PROJECT, "--prod", "--json"]);
   return (
-    (json.deployments ?? []).find(
-      (d) => (d.meta?.githubCommitSha ?? "").startsWith(sha),
+    (json.deployments ?? []).find((d) =>
+      (d.meta?.githubCommitSha ?? "").startsWith(sha),
     ) ?? null
   );
 }
 
 /**
- * Does the production domain currently point at this deployment?
+ * Best-effort: does the alias listing say this deployment holds the domain?
  *
- * NOT `vercel inspect`. Its "Aliases" block lists the project's configured
- * domains and prints the identical list for every deployment, current or
- * three weeks dead — so a check against it passes for any deployment at all.
- * That is how the first version of this script green-lit a commit from two
- * deploys ago, which is the exact bug it exists to prevent.
+ * NOT `vercel inspect`. Its "Aliases" block prints the project's configured
+ * domains identically for every deployment, current or three weeks dead, so a
+ * check against it passes for anything — that is how the first version of this
+ * script green-lit a commit from two deploys ago.
  *
- * `vercel alias ls` maps source deployment -> alias, which is the question.
- * The apex is what the mapping records, so both sides are compared with any
- * leading "www." removed.
+ * `vercel alias ls` maps source deployment -> alias, which is the right
+ * question, but it LAGS: it kept reporting the previous deployment for well
+ * over ten minutes after the domain was demonstrably serving the new build.
+ * So this is a confirmation, never a gate — see the note on `--expect`.
  */
-const bare = (d) => d.replace(/^https?:\/\//, "").replace(/^www\./, "").trim();
+const bare = (d) =>
+  d
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .trim();
 
-async function isServing(deploymentUrl) {
+async function aliasHolds(deploymentUrl) {
   const out = await vercelText(["alias", "ls"]);
   const want = bare(DOMAIN);
   const src = bare(deploymentUrl);
@@ -110,9 +152,25 @@ async function isServing(deploymentUrl) {
     );
 }
 
+/**
+ * Precise: is a string you expect from this change actually on the page?
+ *
+ * There is no fingerprint that ties the served HTML to a deployment from
+ * outside — chunk hashes differ from a local build because Vercel builds on a
+ * different Node, the deployment's own URL is behind SSO, and the domain's
+ * HTML is edge-cached. But if you know something the change added, asking for
+ * it directly answers the question the alias listing only approximates.
+ */
+async function serves(expect) {
+  const res = await fetch(`https://${DOMAIN}${PATH}?cb=${Date.now()}`, {
+    headers: { "Cache-Control": "no-cache" },
+    redirect: "follow",
+  });
+  return (await res.text()).includes(expect);
+}
+
 const sha = (
-  process.argv[2] ??
-  (await run("git", ["rev-parse", "HEAD"])).stdout.trim()
+  SHA_ARG ?? (await run("git", ["rev-parse", "HEAD"])).stdout.trim()
 ).trim();
 
 say(`waiting for ${sha.slice(0, 7)} on ${DOMAIN} (timeout ${TIMEOUT_S}s)`);
@@ -137,19 +195,32 @@ while (Date.now() < deadline) {
       say(`\nBUILD ${state} — https://${deployment.url}`);
       process.exit(1);
     }
-    /* READY is not the finish line: the alias has to move before the domain
-       serves this build. Checking a page in that window reads the old one. */
+    /* READY means the build of THIS commit succeeded, which is the part that
+       can be established for certain. Whether the domain is already serving it
+       cannot be, so that is confirmed on a short leash and reported honestly
+       either way — never claimed. */
     if (state === "READY") {
-      if (await isServing(deployment.url)) {
-        say(`\nserving https://${DOMAIN}`);
-        say(`  ${deployment.url}`);
-        say(`  ${(deployment.meta?.githubCommitMessage ?? "").split("\n")[0]}`);
-        process.exit(0);
+      announce("READY — confirming the domain…");
+      const until = Date.now() + CONFIRM_S * 1000;
+      while (Date.now() < until) {
+        if (EXPECT ? await serves(EXPECT) : await aliasHolds(deployment.url)) {
+          say(`\nserving https://${DOMAIN}`);
+          report(deployment);
+          process.exit(0);
+        }
+        await sleep(POLL_S);
       }
-      announce("READY — waiting for the alias to move…");
-    } else {
-      announce(state);
+      say(`\nbuilt and promoted — NOT confirmed serving`);
+      report(deployment);
+      say(
+        EXPECT
+          ? `  https://${DOMAIN}${PATH} did not contain ${JSON.stringify(EXPECT)} within ${CONFIRM_S}s`
+          : `  the alias listing did not catch up within ${CONFIRM_S}s, which it often does not.\n` +
+              `  Pass --expect "<something the change adds>" to check the page itself.`,
+      );
+      process.exit(0);
     }
+    announce(state);
   }
   await sleep(POLL_S);
 }

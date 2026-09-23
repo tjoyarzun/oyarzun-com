@@ -1237,20 +1237,37 @@ A quick checklist after an edit:
 
 ### Watching a deploy
 
-`npm run await-deploy` waits until the commit you just pushed is actually
-serving at oyarzun.com, then exits. It prints the deployment and the commit
-message it matched, exits non-zero if the build fails or it gives up, and
-takes an optional commit SHA if you want to check an older one.
+```bash
+npm run await-deploy                                    # waits for HEAD
+npm run await-deploy -- --expect Throughline --path /us # checks the page itself
+```
 
-It is more careful than it looks, because two obvious ways to write it are
-both wrong. "Is the newest deployment ready?" answers yes straight after a
-push — Vercel has not created yours yet, so the newest is the *previous* one,
-already finished. And "Ready" is not "serving": a build finishes before the
-domain moves to it, and checks run in that gap read the old site. So it
-matches on the commit SHA and then waits for the domain to actually point at
-that deployment.
+It waits until the commit you just pushed has **built**, then tries for two
+minutes to confirm the domain is serving it. It prints which of those two it
+established — never the stronger claim when it only has the weaker one.
 
-### If a build fails
+It is fussier than it looks because three obvious ways to write it are wrong:
+
+- **"Is the newest deployment ready?"** answers yes straight after a push.
+  Vercel has not created yours yet, so the newest is the *previous* one,
+  already finished. That reported a deploy as live while the old page was
+  still serving. It matches on the commit SHA instead.
+- **"Ready" is not "serving."** A build finishes before the domain moves to
+  it, and checks run in that gap read the old site — which is what made the
+  favicon and the analytics beacon look broken when both were fine.
+- **`vercel inspect`'s alias list is the same for every deployment.** It
+  prints the project's configured domains, not who holds them, so a check
+  against it passes for a deployment from three weeks ago.
+
+What it cannot do is prove the domain is serving a specific build: Vercel's
+alias listing lags by many minutes, the deployment's own URL is behind SSO,
+and the page is edge-cached. So pass **`--expect`** with something the change
+adds and **`--path`** with the page it is on, and it asks the page directly.
+Without those it falls back to the alias listing, and will often say "built
+and promoted — NOT confirmed serving", which usually means the listing has
+not caught up rather than anything being wrong.
+
+### If a build fails### If a build fails
 
 The error names the file and the line. It is almost always one of three
 things: a missing `"` , a missing `,` at the end of a line, or a `{` without
