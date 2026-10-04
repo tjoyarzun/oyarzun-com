@@ -412,7 +412,7 @@ export const adventures: Adventure[] = [
   },
   {
     id: 5,
-    name: "August One Year Anniversary in Orlando",
+    name: "August Anniversary in Orlando",
     location: "Orlando, FL",
     country: "USA",
     lat: 28.538335599999997,
