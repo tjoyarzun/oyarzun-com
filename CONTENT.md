@@ -1267,7 +1267,7 @@ Without those it falls back to the alias listing, and will often say "built
 and promoted — NOT confirmed serving", which usually means the listing has
 not caught up rather than anything being wrong.
 
-### If a build fails### If a build fails
+### If a build fails
 
 The error names the file and the line. It is almost always one of three
 things: a missing `"` , a missing `,` at the end of a line, or a `{` without
