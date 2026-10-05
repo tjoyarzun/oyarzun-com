@@ -337,7 +337,6 @@ export const profiles: { him: Profile; her: Profile } = {
         description:
           "Speaker at Tech Moms on navigating data engineering as a foreign-born woman with a non-traditional education and career path. On making it work without the typical CS degree or Silicon Valley on-ramp.",
         tags: ["Speaking", "Career", "Women in Tech"],
-        githubUrl: "https://www.linkedin.com/in/julia-velicev",
       },
     ],
     linkedin: "julia-velicev",
@@ -575,7 +574,7 @@ export const travelStats = tripStats(adventures);
 export const travelStatsThisYear = tripStats(adventuresThisYear);
 
 export const currentlyReading: Book[] = [
-  { title: "Neuromancer", author: "William Gibson", progress: 25, coverColor: "#1C1917", genre: "Sci-Fi" },
+  { title: "Neuromancer", author: "William Gibson", progress: 50, coverColor: "#1C1917", genre: "Sci-Fi" },
   {
     title: "The Tell: Oprah's Book Club, A Memoir",
     author: "Amy Griffin",
@@ -680,6 +679,7 @@ export const booksPerQuarter = [
   { quarter: "Q1 26", books: 0 },
   { quarter: "Q2 26", books: 4 },
   { quarter: "Q3 26", books: 5 },
+  { quarter: "Q4 26", books: 1 },
 ];
 
 /**
