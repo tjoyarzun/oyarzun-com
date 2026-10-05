@@ -166,7 +166,17 @@ async function serves(expect) {
     headers: { "Cache-Control": "no-cache" },
     redirect: "follow",
   });
-  return (await res.text()).includes(expect);
+  /* Normalised the same way scripts/check-figures.mjs does, and for the same
+     reason: React separates adjacent text nodes with an empty HTML comment,
+     so a gauge rendered {current}/{goal} arrives as `10<!-- -->/<!-- -->20`.
+     Matching the raw HTML for "10/20" fails on a page that plainly shows it —
+     this reported NOT CONFIRMED against a deploy that was already live. */
+  const text = (await res.text())
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .replace(/\s*\/\s*/g, "/");
+  return text.includes(expect);
 }
 
 const sha = (
