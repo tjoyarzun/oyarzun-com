@@ -399,15 +399,14 @@ function drawMap(): void {
     MIN_LAT_SPAN,
   );
 
-  /* Height from the geographic window, but never a sliver. A 174-degree
-     longitude span over 23 of latitude wants a 5.5:1 plate, which at phone
-     width is 70px tall — so the aspect is clamped and a floor applied. The
-     result is vertically stretched relative to the geography, which is why
-     the caption calls this a print treatment rather than a map. */
+  /* Height from the geographic window, but never a sliver. The 2026 set is
+     163 degrees of longitude over 38 of latitude and wants a 4.3:1 plate, so
+     the aspect is clamped to 3.4 and the result is modestly stretched — which
+     is why the caption calls this a print treatment rather than a map. The
+     clamp is the ONLY adjustment: a pixel floor used to sit here as well and
+     it overrode the clamp on narrow screens, stretching a phone plate 2.3x. */
   const geoAspect = (LON1 - LON0) / Math.max(1, LAT0 - LAT1);
-  const H = Math.round(
-    Math.max(W / Math.min(3.4, Math.max(1.6, geoAspect)), 190),
-  );
+  const H = Math.round(W / Math.min(3.4, Math.max(1.6, geoAspect)));
 
   const X = (l: number) => ((l - LON0) / (LON1 - LON0)) * W;
   const Y = (a: number) => ((LAT0 - a) / (LAT0 - LAT1)) * H;
@@ -537,9 +536,13 @@ function drawMap(): void {
   const block = lineH + (showDates ? fMeta + 4 : 0) + 6;
   /* Keep the whole label — headline plus its meta line — inside the plate. */
   const floorY = H - (showDates ? fMeta + 8 : 6);
-  for (let i = 1; i < placed.length; i++) {
-    const prev = placed[i - 1];
+  for (let i = 0; i < placed.length; i++) {
     const cur = placed[i];
+    const prev = placed[i - 1] ?? { x: hx, ly: hy };
+    /* The origin marker is an obstacle too, and for every label — the walk
+       only ever compared a label with the previous LABEL, so SAN FRANCISCO
+       sat on the Sandy dot once the plate stopped being padded out to 190px. */
+    if (Math.abs(cur.x - hx) < W * 0.24 && cur.ly - hy < block) cur.ly = hy + block;
     /* only a real overlap counts — labels far apart horizontally are fine */
     if (Math.abs(cur.x - prev.x) < W * 0.24 && cur.ly - prev.ly < block) {
       cur.ly = prev.ly + block;
@@ -557,12 +560,16 @@ function drawMap(): void {
     cur.ly = Math.max(lineH, cur.ly);
   }
 
+  /* Markers and leaders first, type second: drawing rect-then-text per city
+     let a later city's square land on an earlier city's name. */
   placed.forEach((d) => {
     g += `<rect x="${(d.x - 4).toFixed(1)}" y="${(d.y - 4).toFixed(1)}" width="8" height="8" fill="${t.red}"/>`;
     /* a leader line when the label has been pushed clear of its marker */
     if (Math.abs(d.ly - d.y) > 2) {
       g += `<line x1="${d.x.toFixed(1)}" y1="${d.y.toFixed(1)}" x2="${d.lx.toFixed(1)}" y2="${(d.ly - lineH * 0.3).toFixed(1)}" stroke="${mark}59" stroke-width="1"/>`;
     }
+  });
+  placed.forEach((d) => {
     g += `<text x="${d.lx.toFixed(1)}" y="${d.ly.toFixed(1)}" text-anchor="${d.anchor}" font-family="var(--disp)" font-weight="800" font-size="${fCity}" fill="${mark}" letter-spacing="-.2" ${knock}>${d.place.toUpperCase()}</text>`;
     if (showDates) {
       g += `<text x="${d.lx.toFixed(1)}" y="${(d.ly + fMeta + 3).toFixed(1)}" text-anchor="${d.anchor}" font-family="var(--cred)" font-size="${fMeta}" letter-spacing="1.1" fill="${t.capRev}" ${knock}>${d.d} · ${d.n} NIGHTS</text>`;
