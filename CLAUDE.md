@@ -10,6 +10,11 @@ word or a number lives, CONTENT.md is part of the change.** It is not reference
 documentation that drifts; it is the only reason the site is editable without
 you.
 
+[HANDOFF.md](HANDOFF.md) is where the build's hard-won findings live — the
+failure modes that cost real time and would cost it again. **Read it at the
+start of a session.** For what actually changed and what is still open, read
+`git log` and the Asana project it names, not a summary.
+
 ## The one rule that matters
 
 **Every file you can see is a file that runs.** A previous cleanup deleted 39

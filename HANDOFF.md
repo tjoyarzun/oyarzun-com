@@ -1,38 +1,37 @@
 # Handoff — oyarzun.com
 
-**As of 11 October 2026.** Where the site stands, what was learned building it,
-and what is still open. [CLAUDE.md](CLAUDE.md) holds the working rules;
-[CONTENT.md](CONTENT.md) is the guide for editing content without a terminal.
-This file is the state.
+The failure modes this build has already hit, and what they cost. Read this at
+the start of a session; it is the part that does not decay.
 
-## State
+## Orientation
 
 Live at `www.oyarzun.com`, Vercel, auto-deploys from `main`. Next.js 14 App
-Router, TypeScript strict, no CSS framework. Four routes: `/`, `/us`,
-`/family`, `/written/[slug]`, plus `/api/github-activity`.
+Router, TypeScript strict, no CSS framework, no component library.
 
-| | |
+**This file is deliberately not a status report.** A hand-kept summary of
+"where we left off" goes stale the next time anyone commits, and a stale one
+is worse than none — it reads as current. Four sources are authoritative:
+
+| What | Where |
 |---|---|
-| Dependencies | 8 runtime, 8 dev. Tailwind was removed; `app/globals.css` carries an explicit written-out reset. |
-| Analytics | `@vercel/analytics` — **verify `<Analytics />` is still rendered in `app/layout.tsx`.** It was removed by accident once and the dashboard read zero for weeks before anyone noticed. |
-| Posts | 2 published, in `content/posts/`. |
-| Guards | `npm run check:figures` asserts every live figure traces to `lib/data.ts` and that stale literals stay deleted. |
-| Deploy watcher | `node scripts/await-deploy.mjs --expect "<string>" --path /` |
+| What changed and why | `git log` — the commit messages carry the reasoning, not just the what |
+| What is still open | Asana project `1218384029247712` |
+| How to edit the content | [CONTENT.md](CONTENT.md) |
+| How to work in the code | [CLAUDE.md](CLAUDE.md) |
 
-The open backlog is in Asana, project `1218384029247712`, which is the live
-list — this file only summarizes it.
+## Standing traps
 
-**Next up:** derive the Counted date range (it is the one hand-typed kicker in
-`copy.ts`); build the crop-preview tool for picking `cx,cy,cz`; write the third
-post.
+Live tripwires, as opposed to the history below.
 
-**Ideas:** drop or wire up the inert trip fields; serve smaller photographs per
-breakpoint; seasonal pace for the ski-days gauge; one LinkedIn URL form rather
-than two; decide what the family gate is; a post about building this site.
-
-**Ongoing:** log trips, books and films as they happen; refresh the dateline
-and the Right-now date when the issue changes; review the analytics once a
-month of it exists.
+- **`<Analytics />` must stay rendered in `app/layout.tsx`.** It was removed by
+  accident once and the Vercel dashboard read zero for weeks before anyone
+  noticed. Check it before concluding that traffic is down.
+- **Re-point `check:figures` assertions when copy changes; never delete them.**
+  A deleted assertion loses its coverage with no signal, which is the same
+  class of bug as everything else in this file.
+- **A comment asserting why something is safe can itself be the bug.** Two
+  fixes here were delayed by confidently-worded comments that were false when
+  written or went false later. Verify the claim, not the confidence.
 
 ## What was learned
 
@@ -80,11 +79,24 @@ descendant runs *before* next-themes' own effect writes the class onto
 `<html>`, so the plate repainted against the previous theme. Replaced with a
 `MutationObserver` on the class attribute.
 
+The same bug has now surfaced twice, in unrelated parts of the stylesheet,
+which makes it this codebase's signature failure: **a ground that inverts with the theme, carrying type
+pinned to a literal that does not.** Check both halves whenever either moves.
+
 Type vanished in Negative because grounds came from `var(--ink)` (which
 inverts) while the type was a literal `#dcd9d0` (which does not). Then the
 first fix still failed contrast one way round, because alpha compositing is not
 symmetric across inversion — 55% paper on ink is 4.69:1 and the mirror is
 3.68:1. Reversed-out surfaces use the solid `--cap-rev` token.
+
+The cover overlay was the second instance, and the instructive one: its literal
+carried a comment explaining that it was correct — "this type sits on a scrim
+that is always dark, so it is always light." The premise was false. `.cover` is
+`var(--ink)` and inverts, and below 860px the scrim is `display:none` and the
+type sits straight on that ground, so Negative gave 1.1:1 on a phone. The scrim
+was a ground wearing a literal's clothes; it now reads `--ink95` / `--ink80`
+off the existing ramp. **The lightbox is the only fixed-polarity surface left**
+— if you find another literal, it is a bug, not an exception.
 
 ### Type
 
@@ -109,7 +121,7 @@ as the gate and serving-the-string as a 120s best-effort confirmation.
 Deployment URLs are SSO-gated; check the apex domain, and `www` is not the
 apex.
 
-### The map, most recently
+### The route map
 
 The route plate derives its height from the geographic window. The span is
 163° of longitude over 38° of latitude — a 4.3:1 figure — capped at 3.4:1 so it
