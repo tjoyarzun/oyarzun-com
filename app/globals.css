@@ -68,6 +68,8 @@ small{font-size:80%}
 :root{
   --paper:#dcd9d0; --ink:#141414; --red:#dd2f1c;
   --ink70:#141414b3; --ink45:#14141473; --ink22:#14141438; --ink12:#1414141f;
+  /* The cover scrim, which is a ground and so has to invert like one. */
+  --ink95:#141414f2; --ink80:#141414cc;
   /* ── Type on a reversed-out surface ───────────────────────────────────
      The mirror of the ink ramp above, for the surfaces whose GROUND is
      var(--ink): the footer, the sticky department bar, the panel heads.
@@ -109,6 +111,7 @@ small{font-size:80%}
 }
 html.dark{--paper:#141414;--ink:#dcd9d0;
   --ink70:#dcd9d0b3;--ink45:#dcd9d073;--ink22:#dcd9d038;--ink12:#dcd9d01f;
+  --ink95:#dcd9d0f2;--ink80:#dcd9d0cc;
   --paper88:#141414e0;--paper70:#141414b3;
   --paper25:#14141440;--paper20:#14141433;--cap-rev:#54524e;
   --cap:#888681;--red-tx:#e45949}
@@ -284,14 +287,15 @@ a{color:inherit}
    makes the scrim cover the type at any width while leaving most of a large
    plate untouched. */
 .cover::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(to top,#141414f2 0,#141414cc 84px,#14141400 210px)}
+  background:linear-gradient(to top,var(--ink95) 0,var(--ink80) 84px,transparent 210px)}
 .cover .ov{position:absolute;left:24px;right:24px;bottom:22px;pointer-events:none;z-index:2}
-/* Fixed polarity, like the route chart: this type sits on a scrim that is
-   always dark, so it is always light. Reading it from --paper made it invert
-   with the theme and go near-black on near-black under Negative. */
-.cover .ov h2{font-family:var(--disp);font-weight:900;color:#f2f0ea;margin:0;
+/* Reversed out, so --paper, not a literal. This was pinned to #f2f0ea on the
+   theory that the scrim below is always dark — but the scrim is a ground and
+   now inverts with .cover, and on phones the scrim is hidden entirely and the
+   type sits straight on .cover's var(--ink). Light-on-light either way. */
+.cover .ov h2{font-family:var(--disp);font-weight:900;color:var(--paper);margin:0;
   font-size:clamp(26px,4.2vw,54px);line-height:.86;letter-spacing:-.028em;text-transform:uppercase}
-.cover .ov p{margin:10px 0 0;color:#f2f0ea;font-size:15px;max-width:46ch;line-height:1.42}
+.cover .ov p{margin:10px 0 0;color:var(--paper);font-size:15px;max-width:46ch;line-height:1.42}
 .grid6{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--ink)}
 .grid6 a{background:var(--paper);padding:16px 15px 14px;text-decoration:none;color:var(--ink);
   display:flex;flex-direction:column;justify-content:space-between;min-height:96px}
