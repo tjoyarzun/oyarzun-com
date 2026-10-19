@@ -679,7 +679,7 @@ export const booksPerQuarter = [
   { quarter: "Q1 26", books: 0 },
   { quarter: "Q2 26", books: 4 },
   { quarter: "Q3 26", books: 5 },
-  { quarter: "Q4 26", books: 1 },
+  { quarter: "Q4 26", books: 2 },
 ];
 
 /**
